@@ -15,10 +15,13 @@
         <th scope="col">Username</th>
         <th scope="col">Email</th>
         <th scope="col">Admin</th>
+        <th scope="col">Premium</th>
         <th scope="col">Name</th>
         <th scope="col">Picture</th>
         <th scope="col">Bio</th>
-        <th scope="col" colspan=2>action</th>
+        <th scope="col">Is Admin</th>
+        <th scope="col">Is Premium</th>
+        <th scope="col">Profile</th>
       </tr>
     </thead>
     <tbody>
@@ -27,12 +30,26 @@
           <td><%= user.id %></td>
           <td><%= user.username %></td>
           <td><%= user.email %></td>
-          <td>Admin: <%= user.admin %></td>
+          <td><%= user.admin %></td>
+          <td><%= user.premium %></td>
           <td><%= user.fname.to_s + " " + user.lname.to_s %></td>
           <td><%= user.pic %></td>
           <td><%= user.bio %></td>
-          <td> <a href="/upgrade/<%= user.id %>" class="btn btn-success">Make Admin</a></td>
-          <td> <a href="/downgrade/<%= user.id %>" class="btn btn-danger">Remove Admin</a></td>
+          <td class="toggle">
+            <% if user.admin? %>
+              <a href="/downgrade/<%= user.id %>"><%= image_tag("tick.png") %></a></td>
+            <% else %>
+              <a href="/upgrade/<%= user.id %>"><%= image_tag("red-x.png") %></a></td>
+            <% end %>
+          </td>
+          <td class="toggle">
+            <% if user.premium? %>
+              <a href="/notprem/<%= user.id %>"><%= image_tag("tick.png") %></a></td>
+            <% else %>
+              <a href="/prem/<%= user.id %>"><%= image_tag("red-x.png") %></a></td>
+            <% end %>
+          </td>
+          <td><a href="users/<%= user.id %>">View</a></td>
         </tr>
       <% end %>
     </tbody>

@@ -31,9 +31,11 @@
 </p>
 
 <p>
-  <strong>Editable:</strong>
-  <%= @event.editable %>
+  <strong>Event Creator:</strong>
+  <%= link_to 'Creator', '/users/' + @event.user_id.to_s %>
 </p>
 
-<%= link_to 'Edit', edit_event_path(@event) %> |
+<% if current_user.id == @event.user_id %>
+  <%= link_to 'Edit', edit_event_path(@event) %> |
+<% end %>
 <%= link_to 'Back', events_path %>

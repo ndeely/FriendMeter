@@ -8,7 +8,14 @@
   <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
     <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
   <% end %>
-  
+
+  <% if current_user.admin? %>
+    <div class="field">
+      <%= f.label :"Username" %><br />
+      <%= f.text_field :username, autocomplete: "Username" %>
+    </div>
+  <% end %>
+
   <div class="field">
     <%= f.label :"First Name" %><br />
     <%= f.text_field :fname, autocomplete: "First Name" %>

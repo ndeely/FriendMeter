@@ -5,7 +5,6 @@ Rails.application.routes.draw do
   resources :events
   devise_for :users, :controllers => {
     confirmations: 'users/confirmations',
-    #omniauth_callbacks: 'users/omniauth_callbacks',
     passwords: 'users/passwords',
     registrations: 'users/registrations',
     sessions: 'users/sessions',
@@ -22,7 +21,8 @@ Rails.application.routes.draw do
   get '/users/:id' => 'static_pages#profile'
   get '/upgrade/:id' => 'static_pages#upgrade'
   get '/downgrade/:id' => 'static_pages#downgrade'
+  get '/prem/:id' => 'static_pages#prem'
+  get '/notprem/:id' => 'static_pages#notprem'
 
   get '/make_admin' => 'static_pages#make_admin'
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
