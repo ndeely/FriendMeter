@@ -1,0 +1,9 @@
+<%
+@name = @user.username
+if @b1
+    @name = @user.fname + @user.lname
+end
+%>
+<h1><%= @b1 ? @user.fname : @user.username %></h1>
+<h1><%= @name %></h1>
+<p>Find me in app/views/static_pages/profile.html.erb</p>

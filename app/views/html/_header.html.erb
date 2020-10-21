@@ -1,0 +1,43 @@
+<nav class="navbar" id="main-nav">
+  <a href="/"><%= image_tag("food-world-logo-sm.png", alt: "Logo", :class => "logo") %></a>
+  <div class="nav-links">
+    <ul class="nav">
+      <li class="nav-item">
+        <%= link_to "Home", "/", class: "nav-link" %>
+      </li>
+      <li class="nav-item">
+        <%= link_to "Help", "/help", class: "nav-link" %>
+      </li>
+      <li class="nav-item">
+        <%= link_to "About", "/about", class: "nav-link" %>
+      </li>
+      <li class="nav-item">
+        <%= link_to "Events", "/events", class: "nav-link" %>
+      </li>
+      <li class="nav-item">
+        <%= link_to "View Cart", "/cart", class: "nav-link"  %>
+      </li>
+      <% if !user_signed_in? %>
+        <li class="nav-item">
+          <%= link_to "Register", new_user_registration_path, class: "nav-link" %>
+        </li> 
+        <li class="nav-item">
+          <%= link_to "Log in", new_user_session_path, class: "nav-link" %>
+        </li>
+      <% else %>
+        <li class="nav-item">
+          <%= link_to "Profile", edit_user_registration_path, class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Logout", destroy_user_session_path, :method => :delete, class: "nav-link" %>
+        </li>
+        <% if current_user.admin? %>
+          <li class="nav-item">
+            <%= link_to "Admin", "/admin", class: "nav-link" %>
+          </li>
+        <% end %>
+      <% end %>
+    </ul>
+  </div>
+</nav>
+

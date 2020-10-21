@@ -1,0 +1,42 @@
+<div class="alert">
+  <%= alert %>
+</div>
+<div class="notice">
+  <%= notice %>
+</div>
+<div class="mainCont">
+
+  <h1>Users</h1>
+      
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">User Id</th>
+        <th scope="col">Username</th>
+        <th scope="col">Email</th>
+        <th scope="col">Admin</th>
+        <th scope="col">Name</th>
+        <th scope="col">Picture</th>
+        <th scope="col">Bio</th>
+        <th scope="col" colspan=2>action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= user.id %></td>
+          <td><%= user.username %></td>
+          <td><%= user.email %></td>
+          <td>Admin: <%= user.admin %></td>
+          <td><%= user.fname.to_s + " " + user.lname.to_s %></td>
+          <td><%= user.pic %></td>
+          <td><%= user.bio %></td>
+          <td> <a href="/upgrade/<%= user.id %>" class="btn btn-success">Make Admin</a></td>
+          <td> <a href="/downgrade/<%= user.id %>" class="btn btn-danger">Remove Admin</a></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+  

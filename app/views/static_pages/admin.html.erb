@@ -1,0 +1,40 @@
+<div class="mainCont">
+
+<h1>StaticPages only for professional administrators</h1>
+
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">View what we have in the shop</th>
+      <th scope="col">Expand the shop</th>
+      <th scope="col">All users list</th>
+      
+      
+    </tr>
+  </thead>
+  <tbody>
+
+      <tr>
+        <td>
+            <%= link_to 'All users', users_path, :role=>"button", :class => "btn btn-info mb-2" %><br>
+            <%= link_to 'All events', events_path, :role=>"button", :class => "btn btn-info mb-2"%><br>
+            <%= link_to 'All comments', comments_path, :role=>"button", :class => "btn btn-info mb-2" %><br>
+            <%= link_to 'All reviews', reviews_path, :role=>"button", :class => "btn btn-info mb-2" %><br>
+        </td>
+
+        <td><%= link_to 'New event', new_event_path, :role => "button", :class => "btn btn-success mb-2"  %><br>
+            <%= link_to 'New comment', new_comment_path, :role=>"button", :class => "btn btn-success mb-2" %><br>
+            <%= link_to 'New review', new_review_path, :role=>"button", :class => "btn btn-success mb-2" %><br>
+        </td>
+        
+        <td><%= link_to "All users List", "/users", :role => "button", :class => "btn btn-warning mb-2" %></td>
+        
+      </tr>
+      
+
+</table>
+</div>
+
+
+
+
