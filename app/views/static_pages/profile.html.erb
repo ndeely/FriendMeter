@@ -1,11 +1,9 @@
 <%
-@name = @user.username
-if @b1
-    @name = @user.fname + " " + @user.lname
-end
+@name = @b1 ? @user.fname.to_s + " " + @user.lname.to_s : @user.username.to_s
+@name = (@name.eql? " ") ? @user.username : @name
 %>
 <div class="profile">
-    <h1><%= @b1 ? @name : @user.username %></h1>
+    <h1><%= @name %></h1>
     <%= image_tag("pic-placeholder.png") %>
     
     <div class="bio">
@@ -31,7 +29,7 @@ end
                     <th>Date</th>
                     <th>Time</th>
                     <th>Pic</th>
-                    <th>Private</th>
+                    <th>Public</th>
                     <th colspan="3"></th>
                 </tr>
                 </thead>
@@ -45,10 +43,24 @@ end
                             <td><%= event.date %></td>
                             <td><%= event.time.strftime("%I:%M %p") %></td>
                             <td><%= image_tag(event.pic) %></td>
-                            <td class="toggle"><%= event.private ? image_tag("tick.png") : image_tag("red-x.png") %></td>
-                            <td><%= link_to 'View', event %></td>
-                            <% if current_user.id == @user.id %>
-                                <td><%= link_to 'Edit', edit_event_path(event) %></td>
+                            <td class="toggle"><%= !event.private ? image_tag("tick.png") : image_tag("red-x.png") %></td>
+                            <td>
+                                <button class="btn1" onclick="window.location.href='<%= event %>'">
+                                    <span class="circle" aria-hidden="true">
+                                    <span class="icon arrow"></span>
+                                    </span>
+                                    <span class="button-text">View</span>
+                                </button>
+                            </td>
+                            <% if user_signed_in? && current_user.id == @user.id %>
+                                <td>
+                                    <button class="btn1" onclick="window.location.href='<%= edit_event_path(event) %>">
+                                        <span class="circle" aria-hidden="true">
+                                        <span class="icon arrow"></span>
+                                        </span>
+                                        <span class="button-text">Edit</span>
+                                    </button>
+                                </td>
                                 <td><%= link_to 'Delete', event, method: :delete, data: { confirm: 'Are you sure?' } %></td>
                             <% end %>
                         </tr>
@@ -57,8 +69,14 @@ end
             </table>
         <% end %>
     </div>
-    <% if current_user.id == @user.id %>
-        <%= link_to "Edit Profile", edit_user_registration_path, class: "btn" %>
+    <% if user_signed_in? && current_user.id == @user.id %>
+        <td>
+            <button class="btn1" onclick="window.location.href='<%= edit_user_registration_path %>'">
+                <span class="circle" aria-hidden="true">
+                <span class="icon arrow"></span>
+                </span>
+                <span class="button-text">Edit Profile</span>
+            </button>
+        </td>
     <% end %>
-    <p>Find me in app/views/static_pages/profile.html.erb</p>
 </div>

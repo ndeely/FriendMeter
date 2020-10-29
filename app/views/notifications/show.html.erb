@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @notification.title %>
+</p>
+
+<p>
+  <strong>Text:</strong>
+  <%= @notification.text %>
+</p>
+
+<p>
+  <strong>Recipient:</strong>
+  <%= @notification.recipient %>
+</p>
+
+<p>
+  <strong>Sender:</strong>
+  <%= @notification.sender %>
+</p>
+
+<%= link_to 'Edit', edit_notification_path(@notification) %> |
+<%= link_to 'Back', notifications_path %>

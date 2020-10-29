@@ -1,15 +1,33 @@
 class EventsController < ApplicationController
+  include PermissionsHelper
+
   before_action :set_event, only: [:show, :edit, :update, :destroy]
 
   # GET /events
   # GET /events.json
   def index
-    @events = Event.all.paginate(page: params[:page], per_page: 6)
+    # TODO remove events due to distance/ sort by distance
+    require 'will_paginate/array'
+    # unfiltered events
+    @ufevents = Event.all
+    @events = []
+    @ufevents.each do |event|
+      if !event.private || user_signed_in? && event.user_id == current_user.id #|| current user is invited
+        @events.push(event)
+      end
+    end
+
+    @events = @events.paginate(page: params[:page], per_page: 6)
   end
 
   # GET /events/1
   # GET /events/1.json
   def show
+    @creator = User.find(Event.find(params[:id]).user_id)
+    @b1 = false
+    if permissions
+      @b1 = true
+    end
   end
 
   # GET /events/new
@@ -25,7 +43,6 @@ class EventsController < ApplicationController
   # POST /events.json
   def create
     @event = current_user.events.build(event_params)
-    #@event = Event.new(event_params)
 
     respond_to do |format|
       if @event.save

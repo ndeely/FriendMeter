@@ -1,41 +1,58 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Name:</strong>
-  <%= @event.name %>
-</p>
+<div class="event">
+  <p>
+    <strong>Name:</strong>
+    <%= @event.name %>
+  </p>
 
-<p>
-  <strong>Description:</strong>
-  <%= @event.description %>
-</p>
+  <p>
+    <strong>Description:</strong>
+    <%= @event.description %>
+  </p>
 
-<p>
-  <strong>Date:</strong>
-  <%= @event.date %>
-</p>
+  <p>
+    <strong>Date:</strong>
+    <%= @event.date %>
+  </p>
 
-<p>
-  <strong>Time:</strong>
-  <%= @event.time %>
-</p>
+  <p>
+    <strong>Time:</strong>
+    <%= @event.time.strftime("%I:%M %p") %>
+  </p>
 
-<p>
-  <strong>Pic:</strong>
-  <%= @event.pic %>
-</p>
+  <p>
+    <%= image_tag(@event.pic) %>
+  </p>
 
-<p>
-  <strong>Private:</strong>
-  <%= @event.private %>
-</p>
+  <p>
+    <strong>Public:</strong>
+    <%= !@event.private %>
+  </p>
 
-<p>
-  <strong>Event Creator:</strong>
-  <%= link_to 'Creator', '/users/' + @event.user_id.to_s %>
-</p>
+  <%
+  @name = User.all.find(@event.user_id).username
+  if @b1
+      @name = User.all.find(@event.user_id).fname.to_s + " " + User.all.find(@event.user_id).lname.to_s
+  end
+  %>
+  <p>
+    <strong>Event Creator:</strong>
+    <%= link_to @name, '/users/' + @event.user_id.to_s %>
+  </p>
 
-<% if current_user.id == @event.user_id %>
-  <%= link_to 'Edit', edit_event_path(@event) %> |
-<% end %>
-<%= link_to 'Back', events_path %>
+  <% if user_signed_in? && current_user.id == @event.user_id %>
+    <button class="btn1" onclick="window.location.href='<%= edit_event_path(@event) %>'">
+        <span class="circle" aria-hidden="true">
+        <span class="icon arrow"></span>
+        </span>
+        <span class="button-text">Edit</span>
+    </button>
+  <% end %>
+  <button class="btn1" onclick="window.location.href='javascript: history.go(-1)'">
+      <span class="circle" aria-hidden="true">
+      <span class="icon arrow left"></span>
+      </span>
+      <span class="button-text">Back</span>
+  </button>
+</div>

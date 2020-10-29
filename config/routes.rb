@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :notifications
+  resources :friends
   resources :profiles
   resources :reviews
   resources :comments
