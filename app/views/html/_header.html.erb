@@ -14,6 +14,7 @@
       <li class="nav-item">
         <%= link_to "Events", "/events", class: "nav-link" %>
       </li>
+      <li class="nav-item">
       <% if !user_signed_in? %>
         <li class="nav-item">
           <%= link_to "Register", new_user_registration_path, class: "nav-link" %>
@@ -22,6 +23,13 @@
           <%= link_to "Log in", new_user_session_path, class: "nav-link" %>
         </li>
       <% else %>
+      <li class="nav-item notifications">
+        <a class="nav-link" href="/notifications"><%= image_tag("notifications.png") %></a>
+        <span><%= current_user.notifications.count %></span>
+      </li>
+      <li class="nav-item">
+        <%= link_to "Friends", "/friends", class: "nav-link" %>
+      </li>
         <li class="nav-item">
           <a class="nav-link" href="/users/<%= current_user.id %>">Profile</a>
         </li>

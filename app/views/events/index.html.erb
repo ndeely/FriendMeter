@@ -2,6 +2,13 @@
 
 <h1>Events</h1>
 
+<button class="btn1" onclick="window.location.href='<%= new_event_path %>'">
+  <span class="circle" aria-hidden="true">
+  <span class="icon arrow"></span>
+  </span>
+  <span class="button-text">Create Event</span>
+</button>
+
 <table class="events">
   <thead>
     <tr>
@@ -27,19 +34,33 @@
           <td><%= event.time.strftime("%I:%M %p") %></td>
           <td><%= image_tag(event.pic) %></td>
           <%
-          @name = User.all.find(event.user_id).username
-          if @b1
-              @name = User.all.find(event.user_id).fname + " " + User.all.find(event.user_id).lname
-          end
+          @creator = User.all.find(event.user_id)
+          @b2 = @b1 || current_user.id == @creator.id
+          # get the creator's name
+          @name = @b2 ? @creator.fname.to_s + " " + @creator.lname.to_s : @creator.username
+          @name = (@name.eql?" ") ? @creator.username.to_s : @name
           %>
-          <td><%= link_to @name, '/users/' + event.user_id.to_s %></td>
-          <td><%= link_to 'View', event %></td>
+          <td>
+            <button class="btn1" onclick="window.location.href='/users/<%= event.user_id.to_s %>'">
+              <span class="circle" aria-hidden="true">
+              <span class="icon arrow"></span>
+              </span>
+              <span class="button-text"><%= @name %></span>
+            </button>
+          </td>
+          <td>
+            <button class="btn1" onclick="window.location.href='/events/<%= event.id %>'">
+              <span class="circle" aria-hidden="true">
+              <span class="icon arrow"></span>
+              </span>
+              <span class="button-text">View</span>
+            </button>
+          </td>
+          <% if @b2 %>
+            <td><%= link_to 'Delete', event, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <% end %>
         </tr>
       <% end %>
     <%= will_paginate @events %>
   </tbody>
 </table>
-
-<br>
-
-<%= link_to 'New Event', new_event_path %>

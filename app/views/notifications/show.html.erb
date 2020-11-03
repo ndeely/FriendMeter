@@ -1,24 +1,29 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Title:</strong>
-  <%= @notification.title %>
-</p>
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Desc</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
 
-<p>
-  <strong>Text:</strong>
-  <%= @notification.text %>
-</p>
-
-<p>
-  <strong>Recipient:</strong>
-  <%= @notification.recipient %>
-</p>
-
-<p>
-  <strong>Sender:</strong>
-  <%= @notification.sender %>
-</p>
-
-<%= link_to 'Edit', edit_notification_path(@notification) %> |
+  <tbody>
+    <tr>
+      <td><%= @notification.title %></td>
+      <td><%= @notification.desc %></td>
+      #friend request or event invite
+      <% if @notification.type == 1 || @notification.type == 3 %>
+        <% if @notification.type == 1 %>
+          <td><%= link_to 'Show User', User.find_by(id: @notification.sender_id) %></td>
+        <% else %>
+          <td><%= link_to 'Show Event', Event.find_by(id: @notification.sender_id) %></td>
+        <% end %>
+        <td><%= link_to 'Accept', '/notifications/' + @notification.id.to_s + '/' + @notification.type.to_s %></td>
+      <% end %>
+      <td><%= link_to 'Delete', @notification, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+  </tbody>
+</table>
 <%= link_to 'Back', notifications_path %>

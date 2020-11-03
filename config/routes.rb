@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :attendings
+  resources :invites
   resources :notifications
   resources :friends
   resources :profiles
@@ -21,6 +23,9 @@ Rails.application.routes.draw do
   get '/admin' => 'static_pages#admin'
 
   get '/users/:id' => 'static_pages#profile'
+  get '/users/:id/:id2' => 'static_pages#profile'
+  get '/notifications/:id/1' => 'notifications#accept' #accept friend request
+  get '/notifications/:id/3' => 'notifications#invite' #accept event invite
   get '/upgrade/:id' => 'static_pages#upgrade'
   get '/downgrade/:id' => 'static_pages#downgrade'
   get '/prem/:id' => 'static_pages#prem'

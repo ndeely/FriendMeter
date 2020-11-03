@@ -1,0 +1,27 @@
+<%= form_with(model: attending, local: true) do |form| %>
+  <% if attending.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(attending.errors.count, "error") %> prohibited this attending from being saved:</h2>
+
+      <ul>
+        <% attending.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :event_id %>
+    <%= form.number_field :event_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :user_id %>
+    <%= form.number_field :user_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

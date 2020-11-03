@@ -29,25 +29,20 @@
     <strong>Public:</strong>
     <%= !@event.private %>
   </p>
-
-  <%
-  @name = User.all.find(@event.user_id).username
-  if @b1
-      @name = User.all.find(@event.user_id).fname.to_s + " " + User.all.find(@event.user_id).lname.to_s
-  end
-  %>
+  
   <p>
     <strong>Event Creator:</strong>
     <%= link_to @name, '/users/' + @event.user_id.to_s %>
   </p>
 
-  <% if user_signed_in? && current_user.id == @event.user_id %>
+  <% if @b2 %>
     <button class="btn1" onclick="window.location.href='<%= edit_event_path(@event) %>'">
         <span class="circle" aria-hidden="true">
         <span class="icon arrow"></span>
         </span>
         <span class="button-text">Edit</span>
     </button>
+    <%= link_to 'Delete', @event, method: :delete, data: { confirm: 'Are you sure?' } %>
   <% end %>
   <button class="btn1" onclick="window.location.href='javascript: history.go(-1)'">
       <span class="circle" aria-hidden="true">

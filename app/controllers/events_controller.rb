@@ -8,15 +8,25 @@ class EventsController < ApplicationController
   def index
     # TODO remove events due to distance/ sort by distance
     require 'will_paginate/array'
+
+    @b1 = isadmin
     # unfiltered events
-    @ufevents = Event.all
+    @ufevents = Event.all.order('date')
     @events = []
     @ufevents.each do |event|
-      if !event.private || user_signed_in? && event.user_id == current_user.id #|| current user is invited
+
+      # work out if the user is invited
+      @invited = false
+      event.invites.each do |invite|
+        if invite.recipient_id == current_user.id
+          @invited = true
+        end
+      end
+
+      if @b1 || !event.private || (user_signed_in? && event.user_id == current_user.id) || @invited
         @events.push(event)
       end
     end
-
     @events = @events.paginate(page: params[:page], per_page: 6)
   end
 
@@ -24,10 +34,9 @@ class EventsController < ApplicationController
   # GET /events/1.json
   def show
     @creator = User.find(Event.find(params[:id]).user_id)
-    @b1 = false
-    if permissions
-      @b1 = true
-    end
+    @b2 = isadmin || (current_user.id == @creator.id) 
+    @name = @creator.fname.to_s + " " + @creator.lname.to_s
+    @name = (@name.eql?(" ") || !@b1) ? @creator.username.to_s : @name
   end
 
   # GET /events/new

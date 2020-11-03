@@ -1,35 +1,34 @@
 class FriendsController < ApplicationController
-  include PermissionsHelper
   before_action :set_friend, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!
+  include PermissionsHelper
 
   # GET /friends
   # GET /friends.json
   def index
-    checkAdmin
-    @friends = Friend.all
+    @b1 = isadmin
+    @friends = @b1 ? Friend.all : current_user.friends
   end
 
   # GET /friends/1
   # GET /friends/1.json
   def show
-    checkAdmin
   end
 
   # GET /friends/new
   def new
-    checkAdmin
+    checkadmin
     @friend = Friend.new
   end
 
   # GET /friends/1/edit
   def edit
-    checkAdmin
+    checkadmin
   end
 
   # POST /friends
   # POST /friends.json
   def create
-    checkAdmin
     @friend = Friend.new(friend_params)
 
     respond_to do |format|
@@ -46,7 +45,6 @@ class FriendsController < ApplicationController
   # PATCH/PUT /friends/1
   # PATCH/PUT /friends/1.json
   def update
-    checkAdmin
     respond_to do |format|
       if @friend.update(friend_params)
         format.html { redirect_to @friend, notice: 'Friend was successfully updated.' }
@@ -61,7 +59,6 @@ class FriendsController < ApplicationController
   # DELETE /friends/1
   # DELETE /friends/1.json
   def destroy
-    checkAdmin
     @friend.destroy
     respond_to do |format|
       format.html { redirect_to friends_url, notice: 'Friend was successfully destroyed.' }
@@ -77,6 +74,6 @@ class FriendsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def friend_params
-      params.require(:friend).permit(:f1, :f2)
+      params.require(:friend).permit(:user_id, :friend_id)
     end
 end

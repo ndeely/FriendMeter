@@ -9,6 +9,13 @@ module PermissionsHelper
     end
   end
 
+  #check that user is signed in
+  def signedin
+    if !user_signed_in?
+      redirect_to root_path, :alert => 'You must be logged in to view this page.'
+    end
+  end
+
   #return true if user is signed in and an admin
   def isadmin
     if user_signed_in?

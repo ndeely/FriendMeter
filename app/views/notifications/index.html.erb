@@ -2,32 +2,33 @@
 
 <h1>Notifications</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Text</th>
-      <th>Recipient</th>
-      <th>Sender</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+<% if @notifications.count == 0 %>
+  <p>There are no notifications to display</p>
+<% else %>
 
-  <tbody>
-    <% @notifications.each do |notification| %>
+  <table>
+    <thead>
       <tr>
-        <td><%= notification.title %></td>
-        <td><%= notification.text %></td>
-        <td><%= notification.recipient %></td>
-        <td><%= notification.sender %></td>
-        <td><%= link_to 'Show', notification %></td>
-        <td><%= link_to 'Edit', edit_notification_path(notification) %></td>
-        <td><%= link_to 'Destroy', notification, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <th>Title</th>
+        <th>Desc</th>
+        <th colspan="3"></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
 
-<br>
+    <tbody>
+      <% @notifications.each do |notification| %>
+        <tr>
+          <td><%= notification.title %></td>
+          <td><%= notification.desc %></td>
+          #friend request
+          <% if notification.type == 1 || notification.type == 3 %>
+            <td><%= link_to 'Show', notification %></td>
+            <td><%= link_to 'Accept', '/notifications/' + notification.id.to_s + '/' + notification.type.to_s %></td>
+          <% end %>
+          <td><%= link_to 'Delete', notification, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 
-<%= link_to 'New Notification', new_notification_path %>
+<% end %>

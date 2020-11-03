@@ -12,23 +12,23 @@
   <% end %>
 
   <div class="field">
+    <%= form.label :user_id %>
+    <%= form.number_field :user_id %>
+  </div>
+
+  <div class="field">
     <%= form.label :title %>
     <%= form.text_field :title %>
   </div>
 
   <div class="field">
-    <%= form.label :text %>
-    <%= form.text_field :text %>
+    <%= form.label :desc %>
+    <%= form.text_field :desc %>
   </div>
 
   <div class="field">
-    <%= form.label :recipient %>
-    <%= form.number_field :recipient %>
-  </div>
-
-  <div class="field">
-    <%= form.label :sender %>
-    <%= form.number_field :sender %>
+    <%= form.label :sender_id %>
+    <%= form.number_field :sender_id %>
   </div>
 
   <div class="actions">

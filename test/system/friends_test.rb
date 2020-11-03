@@ -14,8 +14,8 @@ class FriendsTest < ApplicationSystemTestCase
     visit friends_url
     click_on "New Friend"
 
-    fill_in "F1", with: @friend.f1
-    fill_in "F2", with: @friend.f2
+    fill_in "Friend", with: @friend.friend_id
+    fill_in "User", with: @friend.user_id
     click_on "Create Friend"
 
     assert_text "Friend was successfully created"
@@ -26,8 +26,8 @@ class FriendsTest < ApplicationSystemTestCase
     visit friends_url
     click_on "Edit", match: :first
 
-    fill_in "F1", with: @friend.f1
-    fill_in "F2", with: @friend.f2
+    fill_in "Friend", with: @friend.friend_id
+    fill_in "User", with: @friend.user_id
     click_on "Update Friend"
 
     assert_text "Friend was successfully updated"

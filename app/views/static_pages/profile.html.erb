@@ -1,18 +1,21 @@
-<%
-@name = @b1 ? @user.fname.to_s + " " + @user.lname.to_s : @user.username.to_s
-@name = (@name.eql? " ") ? @user.username : @name
-%>
 <div class="profile">
     <h1><%= @name %></h1>
     <%= image_tag("pic-placeholder.png") %>
     
     <div class="bio">
         <h2>Bio</h2>
-        <p><%= @b1 ? @user.bio : "Add this user as a friend to see their bio" %></p>
+        <p><%= @b2 ? @creator.bio : "Add this user as a friend to see their bio" %></p>
     </div>
 
-    <% if !@b1 %>
-        <!-- button to add friend -->
+    <% if !@b2 && !@frs && !@friend %>
+        <button class="btn1" onclick="window.location.href='/users/<%= @creator.id %>/<%= @current_user.id %>'">
+            <span class="circle" aria-hidden="true">
+            <span class="icon arrow"></span>
+            </span>
+            <span class="button-text">Friend Request</span>
+        </button>
+    <% elsif !@b2 && !@friend %>
+        <p>Friend Request Sent</p>
     <% end %>
 
     <div class="events">
@@ -52,7 +55,7 @@
                                     <span class="button-text">View</span>
                                 </button>
                             </td>
-                            <% if user_signed_in? && current_user.id == @user.id %>
+                            <% if @b2 %>
                                 <td>
                                     <button class="btn1" onclick="window.location.href='<%= edit_event_path(event) %>">
                                         <span class="circle" aria-hidden="true">
@@ -69,7 +72,7 @@
             </table>
         <% end %>
     </div>
-    <% if user_signed_in? && current_user.id == @user.id %>
+    <% if @b2 %>
         <td>
             <button class="btn1" onclick="window.location.href='<%= edit_user_registration_path %>'">
                 <span class="circle" aria-hidden="true">
