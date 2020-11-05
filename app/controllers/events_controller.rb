@@ -1,7 +1,7 @@
 class EventsController < ApplicationController
-  include PermissionsHelper
-
   before_action :set_event, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!
+  include PermissionsHelper
 
   # GET /events
   # GET /events.json
@@ -16,12 +16,7 @@ class EventsController < ApplicationController
     @ufevents.each do |event|
 
       # work out if the user is invited
-      @invited = false
-      event.invites.each do |invite|
-        if invite.recipient_id == current_user.id
-          @invited = true
-        end
-      end
+      @invited = isInvited(event.id, current_user.id)
 
       if @b1 || !event.private || (user_signed_in? && event.user_id == current_user.id) || @invited
         @events.push(event)
@@ -34,9 +29,9 @@ class EventsController < ApplicationController
   # GET /events/1.json
   def show
     @creator = User.find(Event.find(params[:id]).user_id)
-    @b2 = isadmin || (current_user.id == @creator.id) 
-    @name = @creator.fname.to_s + " " + @creator.lname.to_s
-    @name = (@name.eql?(" ") || !@b1) ? @creator.username.to_s : @name
+    @b2 = isadmin || (current_user.id == @creator.id)
+    @name = getName(current_user.id, @creator.id)
+    @attending = Event.find(params[:id]).attending
   end
 
   # GET /events/new
@@ -85,6 +80,39 @@ class EventsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to events_url, notice: 'Event was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  #attend an event
+  def attend
+    signedin
+    @event = Event.find_by(id: params[:id])
+    if @event != nil && !isAttending(@event.id, current_user.id)
+      @attending = @event.attending.build(:event_id => @event.id, :user_id => current_user.id)
+      @attending.save
+      respond_to do |format|
+        format.html { redirect_to event_url, notice: 'Confirmed attendance.' }
+        format.json { head :no_content }
+      end
+    else
+      redirect_to notifications_url
+    end
+  end
+
+  #invite to an event
+  def invite
+    signedin
+    @event = Event.find_by(id: params[:id])
+    @user = User.find_by(id: params[:id2])
+    if @event != nil && @user != nil && !isAttending(@event.id, @user.id)
+      @attending = @event.attending.build(:event_id => @event.id, :user_id => current_user.id)
+      @attending.save
+      respond_to do |format|
+        format.html { redirect_to event_url, notice: 'Confirmed attendance.' }
+        format.json { head :no_content }
+      end
+    else
+      redirect_to notifications_url
     end
   end
 

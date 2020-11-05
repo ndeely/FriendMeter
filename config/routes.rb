@@ -26,6 +26,8 @@ Rails.application.routes.draw do
   get '/users/:id/:id2' => 'static_pages#profile'
   get '/notifications/:id/1' => 'notifications#accept' #accept friend request
   get '/notifications/:id/3' => 'notifications#invite' #accept event invite
+  get '/events/:id/1' => 'events#attend' #accept event invite
+  get '/events/:id/:id2/1' => 'events#invite' #send event invite
   get '/upgrade/:id' => 'static_pages#upgrade'
   get '/downgrade/:id' => 'static_pages#downgrade'
   get '/prem/:id' => 'static_pages#prem'

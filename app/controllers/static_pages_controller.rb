@@ -1,4 +1,5 @@
 class StaticPagesController < ApplicationController
+  before_action :authenticate_user!
   include PermissionsHelper
 
   def home
@@ -22,38 +23,26 @@ class StaticPagesController < ApplicationController
   def profile
     @b1 = isadmin
     @creator = User.find_by(id: params[:id])
+
+    #handle friend requests
+    @friend = areFriends(@creator.id, current_user.id)
+
     @b2 = @b1 || (current_user.id == @creator.id)
-    @name = @creator.fname.to_s + " " + @creator.lname.to_s
-    @name = (@name.eql?(" ") || !@b2) ? @creator.username.to_s : @name
+    @name = getName(current_user.id, @creator.id)
+    @pic = getPic(current_user.id, @creator.id)
     @allevents = @creator.events
     @events = []
     @allevents.each do |event|
-      if !event.private || @b2
+      #check if user is invited
+      @invited = isInvited(event.id, current_user.id)
+
+      if !event.private || @b2 || @invited
         @events.push(event)
       end
     end
 
-    #handle friend requests
-    @friend = false # already friends
-    @friends = @creator.friends
-    @friends.each do |friend|
-      if friend.friend_id == current_user.id
-        @friend = true
-      end
-    end
-
-    @frs = false # friend request sent
-    @notifications = @creator.notifications
-    @notifications.each do |notification|
-      if notification.sender_id == current_user.id
-        @frs = true
-      end
-    end
-    if !@frs && params[:id2] != nil
-      @user = User.find_by(id: params[:id2])
-      @notification = @creator.notifications.build(:user_id => @creator.id, :title => 'Friend Request from ' + @user.username.to_s, :desc => @user.username.to_s + ' is awaiting your response.', :sender_id => @user.id, :type => 1)
-      @notification.save
-    end
+    #check friend request status
+    @frs = friendRequestSent(current_user.id, @creator.id, params[:id2])
   end
 
   #add/remove admin status

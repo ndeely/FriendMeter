@@ -35,6 +35,27 @@
     <%= link_to @name, '/users/' + @event.user_id.to_s %>
   </p>
 
+  <h2>Attending: <span class="count"><%= @attending.count %></span></h2>
+  <% @attending.each do |attender|
+    @user = User.find_by(id: attender.user_id)
+    @name = getName(current_user, @user)
+    @pic = getPic(current_user, @user) %>
+    <p><%= @name %></p>
+    <p><% if @pic == "ph.png" %>
+          <%= image_tag(@pic) %>
+        <% else %>
+          <img src=<%= @pic %> />
+        <% end %></p>
+  <% end %>
+  <% if !isAttending(@event.id, current_user.id) %>
+  <button class="btn1" onclick="window.location.href='/events/<%= @event.id %>/1'">
+      <span class="circle" aria-hidden="true">
+      <span class="icon arrow"></span>
+      </span>
+      <span class="button-text">Attend</span>
+  </button>
+  <% end %>
+
   <% if @b2 %>
     <button class="btn1" onclick="window.location.href='<%= edit_event_path(@event) %>'">
         <span class="circle" aria-hidden="true">

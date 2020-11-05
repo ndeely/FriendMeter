@@ -24,8 +24,7 @@
         </li>
       <% else %>
       <li class="nav-item notifications">
-        <a class="nav-link" href="/notifications"><%= image_tag("notifications.png") %></a>
-        <span><%= current_user.notifications.count %></span>
+        <a class="nav-link" href="/notifications"><%= current_user.notifications.count %></a>
       </li>
       <li class="nav-item">
         <%= link_to "Friends", "/friends", class: "nav-link" %>

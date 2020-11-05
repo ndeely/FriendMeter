@@ -13,6 +13,7 @@ class FriendsController < ApplicationController
   # GET /friends/1
   # GET /friends/1.json
   def show
+    checkadmin
   end
 
   # GET /friends/new

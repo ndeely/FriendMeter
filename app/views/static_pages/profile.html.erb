@@ -1,10 +1,14 @@
 <div class="profile">
     <h1><%= @name %></h1>
-    <%= image_tag("pic-placeholder.png") %>
+    <p><% if @pic == "ph.png" %>
+            <%= image_tag(@pic) %>
+         <% else %>
+            <img src=<%= @pic %> />
+         <% end %></p>
     
     <div class="bio">
         <h2>Bio</h2>
-        <p><%= @b2 ? @creator.bio : "Add this user as a friend to see their bio" %></p>
+        <p><%= (@b2 || @friend) ? @creator.bio : "Add this user as a friend to see their bio" %></p>
     </div>
 
     <% if !@b2 && !@frs && !@friend %>
@@ -18,15 +22,15 @@
         <p>Friend Request Sent</p>
     <% end %>
 
+    //show user events
     <div class="events">
         <h2>Events</h2>
-        <% if @events.size == 0 %>
+        <% if @events.count == 0 %>
             <p>This user has not created any events.</p>
         <% else %>
             <table>
                 <thead>
                 <tr>
-                    <th>Event ID</th>
                     <th>Name</th>
                     <th>Description</th>
                     <th>Date</th>
@@ -40,7 +44,6 @@
                 <tbody>
                     <% @events.each do |event| %>
                         <tr>
-                            <td><%= event.id %></td>
                             <td><%= event.name %></td>
                             <td><%= event.description %></td>
                             <td><%= event.date %></td>
@@ -48,7 +51,7 @@
                             <td><%= image_tag(event.pic) %></td>
                             <td class="toggle"><%= !event.private ? image_tag("tick.png") : image_tag("red-x.png") %></td>
                             <td>
-                                <button class="btn1" onclick="window.location.href='<%= event %>'">
+                                <button class="btn1" onclick="window.location.href='/events/<%= event.id %>'">
                                     <span class="circle" aria-hidden="true">
                                     <span class="icon arrow"></span>
                                     </span>
@@ -72,6 +75,52 @@
             </table>
         <% end %>
     </div>
+
+    <% if !(current_user.id == @creator.id)
+        @userEvents = current_user.events %> //user is not on their own profile
+        //show user events
+        <div class="events">
+            <h2>Your Events</h2>
+            <% if @userEvents.count == 0 %>
+                <p>You have not created any events.</p>
+            <% else %>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Pic</th>
+                        <th colspan="3"></th>
+                    </tr>
+                    </thead>
+                
+                    <tbody>
+                        <% @userEvents.each do |event| %>
+                            <tr>
+                                <td><%= event.name %></td>
+                                <td><%= event.description %></td>
+                                <td><%= event.date %></td>
+                                <td><%= event.time.strftime("%I:%M %p") %></td>
+                                <td><%= image_tag(event.pic) %></td>
+                                <td>
+                                    <button class="btn1" onclick="window.location.href='/events/<%= event.id %>'">
+                                        <span class="circle" aria-hidden="true">
+                                        <span class="icon arrow"></span>
+                                        </span>
+                                        <span class="button-text">Invite User</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+            <% end %>
+        </div>
+    
+    <% end %>
+    
     <% if @b2 %>
         <td>
             <button class="btn1" onclick="window.location.href='<%= edit_user_registration_path %>'">
