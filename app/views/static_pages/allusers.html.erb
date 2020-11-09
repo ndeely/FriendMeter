@@ -29,7 +29,13 @@
           <td><%= user.username %></td>
           <td><%= user.email %></td>
           <td><%= user.fname.to_s + " " + user.lname.to_s %></td>
-          <td><%= user.pic %></td>
+          <td class="profile">
+            <% if user.avatar.attached? %>
+              <image src="<%= url_for(user.avatar) %>">
+            <% else %>
+              <%= image_tag("ph.png") %>
+            <% end %>
+          </td>
           <td><%= user.bio %></td>
           <td class="toggle">
             <% if user.admin? %>

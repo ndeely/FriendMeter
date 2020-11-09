@@ -1,10 +1,12 @@
 <div class="profile">
     <h1><%= @name %></h1>
-    <p><% if @pic == "ph.png" %>
-            <%= image_tag(@pic) %>
+    <p>
+        <% if @creator.avatar.attached? %>
+            <image src="<%= url_for(@creator.avatar) %>">
          <% else %>
-            <img src=<%= @pic %> />
-         <% end %></p>
+            <%= image_tag("ph.png") %>
+         <% end %>
+    </p>
     
     <div class="bio">
         <h2>Bio</h2>

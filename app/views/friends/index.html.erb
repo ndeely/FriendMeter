@@ -12,11 +12,13 @@
   <a href="/users/<%= @friend.id %>">
     <div class="friend-profile-sm">
       <p><%= @name %></p>
-      <p><% if @pic == "ph.png" %>
-            <%= image_tag(@pic) %>
-         <% else %>
-            <img src=<%= @pic %> />
-         <% end %></p>
+      <p>
+      <% if @friend.avatar.attached? %>
+          <image src="<%= url_for(@friend.avatar) %>">
+      <% else %>
+          <%= image_tag("ph.png") %>
+      <% end %>
+      </p>
       <% if @b1
         @f2 = User.find_by(id: friend.user_id)
         @name = @f2.fname.to_s + " " + @f2.lname.to_s
