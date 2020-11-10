@@ -28,8 +28,9 @@ class StaticPagesController < ApplicationController
     @friend = areFriends(@creator.id, current_user.id)
 
     @b2 = @b1 || (current_user.id == @creator.id)
+    @b3 = @b2 || @friend
     @name = getName(current_user.id, @creator.id)
-    @pic = getPic(current_user.id, @creator.id)
+    #@pic = getPic(current_user.id, @creator.id)
     @allevents = @creator.events
     @events = []
     @allevents.each do |event|

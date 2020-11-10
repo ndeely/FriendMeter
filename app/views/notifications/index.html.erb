@@ -20,10 +20,9 @@
         <tr>
           <td><%= notification.title %></td>
           <td><%= notification.desc %></td>
-          #friend request
-          <% if notification.type == 1 || notification.type == 3 %>
+          <% if notification.notification_type == 1 || notification.notification_type == 3 %>
             <td><%= link_to 'Show', notification %></td>
-            <td><%= link_to 'Accept', '/notifications/' + notification.id.to_s + '/' + notification.type.to_s %></td>
+            <td><%= link_to 'Accept', '/notifications/' + notification.id.to_s + '/' + notification.notification_type.to_s %></td>
           <% end %>
           <td><%= link_to 'Delete', notification, method: :delete, data: { confirm: 'Are you sure?' } %></td>
         </tr>

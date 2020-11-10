@@ -22,7 +22,9 @@
   </p>
 
   <p>
-    <%= image_tag(@event.pic) %>
+    <% if @event.avatar.attached? %>
+      <image src="<%= url_for(@event.avatar) %>">
+    <% end %>
   </p>
 
   <p>
@@ -44,7 +46,7 @@
     <p><% if @pic == "ph.png" %>
           <%= image_tag(@pic) %>
         <% else %>
-          <img src=<%= @pic %> />
+          <img src="<%= url_for(@user.avatar) %>" />
         <% end %></p>
   <% end %>
   <% if !isAttending(@event.id, current_user.id) %>

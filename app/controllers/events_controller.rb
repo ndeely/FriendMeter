@@ -47,6 +47,7 @@ class EventsController < ApplicationController
   # POST /events.json
   def create
     @event = current_user.events.build(event_params)
+    setAvatar(@event, params[:avatar])
 
     respond_to do |format|
       if @event.save
@@ -62,6 +63,7 @@ class EventsController < ApplicationController
   # PATCH/PUT /events/1
   # PATCH/PUT /events/1.json
   def update
+    setAvatar(@event, params[:avatar])
     respond_to do |format|
       if @event.update(event_params)
         format.html { redirect_to @event, notice: 'Event was successfully updated.' }
@@ -83,7 +85,7 @@ class EventsController < ApplicationController
     end
   end
 
-  #attend an event
+  #confirm attendance to event from event ('/events/:eid/1')
   def attend
     signedin
     @event = Event.find_by(id: params[:id])
@@ -99,20 +101,20 @@ class EventsController < ApplicationController
     end
   end
 
-  #invite to an event
+  #send user an invite to an event ('/events/:eid/:uid/1')
   def invite
     signedin
-    @event = Event.find_by(id: params[:id])
-    @user = User.find_by(id: params[:id2])
-    if @event != nil && @user != nil && !isAttending(@event.id, @user.id)
-      @attending = @event.attending.build(:event_id => @event.id, :user_id => current_user.id)
-      @attending.save
+    @event = Event.find_by(id: params[:eid])
+    @user = User.find_by(id: params[:uid])
+    if @event != nil && @user != nil && !isAttending(@event.id, @user.id) && !isInvited(@event.id, @user.id)
+      @notification = @user.notifications.build(:user_id => @user.id, :title => 'You have been invited to an event!', :desc => 'The sender is awaiting your response.', :sender_id => @event.id, :notification_type => 3)
+      @notification.save
       respond_to do |format|
-        format.html { redirect_to event_url, notice: 'Confirmed attendance.' }
+        format.html { redirect_to '/users/' + @user.id.to_s, notice: 'Invite Sent.' }
         format.json { head :no_content }
       end
     else
-      redirect_to notifications_url
+      redirect_to '/users/' + @user.id.to_s
     end
   end
 
@@ -124,6 +126,6 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:name, :description, :date, :time, :pic, :private, :editable)
+      params.require(:event).permit(:name, :description, :date, :time, :avatar, :private, :editable)
     end
 end

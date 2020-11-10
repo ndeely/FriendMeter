@@ -66,8 +66,8 @@ class NotificationsController < ApplicationController
     end
   end
 
-  #accept friend request
-  def accept
+  #accept friend request ('/notifications/:id/1')
+  def acceptFriend
     signedin
     @notification = Notification.find_by(id: params[:id])
     if @notification != nil && current_user.id == @notification.user_id
@@ -87,8 +87,8 @@ class NotificationsController < ApplicationController
     end
   end
 
-  #accept event invite
-  def invite
+  #accept event invite ('/notifications/:id/3')
+  def acceptEvent
     signedin
     @notification = Notification.find_by(id: params[:id])
     if @notification != nil && current_user.id == @notification.user_id

@@ -13,14 +13,13 @@
     <tr>
       <td><%= @notification.title %></td>
       <td><%= @notification.desc %></td>
-      #friend request or event invite
-      <% if @notification.type == 1 || @notification.type == 3 %>
-        <% if @notification.type == 1 %>
+      <% if @notification.notification_type == 1 || @notification.notification_type == 3 %>
+        <% if @notification.notification_type == 1 %>
           <td><%= link_to 'Show User', User.find_by(id: @notification.sender_id) %></td>
         <% else %>
           <td><%= link_to 'Show Event', Event.find_by(id: @notification.sender_id) %></td>
         <% end %>
-        <td><%= link_to 'Accept', '/notifications/' + @notification.id.to_s + '/' + @notification.type.to_s %></td>
+        <td><%= link_to 'Accept', '/notifications/' + @notification.id.to_s + '/' + @notification.notification_type.to_s %></td>
       <% end %>
       <td><%= link_to 'Delete', @notification, method: :delete, data: { confirm: 'Are you sure?' } %></td>
     </tr>

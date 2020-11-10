@@ -50,7 +50,7 @@ module PermissionsHelper
   def friendRequestSent(u1, u2, sending)
     @notifications = User.find_by(id: u2).notifications
     @notifications.each do |notification|
-      if notification.type == 1 && notification.sender_id == u1
+      if notification.notification_type == 1 && notification.sender_id == u1
         @sent = true #request already sent
         return true
       end
@@ -59,7 +59,7 @@ module PermissionsHelper
     if !@sent && sending != nil
       @user = User.find_by(id: user_id)
       @other = User.find_by(id: other_id)
-      @notification = @other.notifications.build(:user_id => @other.id, :title => 'Friend Request from ' + @user.username.to_s, :desc => @user.username.to_s + ' is awaiting your response.', :sender_id => @user.id, :type => 1)
+      @notification = @other.notifications.build(:user_id => @other.id, :title => 'Friend Request from ' + @user.username.to_s, :desc => @user.username.to_s + ' is awaiting your response.', :sender_id => @user.id, :notification_type => 1)
       @notification.save
       return true
     end
@@ -70,7 +70,7 @@ module PermissionsHelper
   def isInvited(e1, u1)
     @notifications = User.find_by(id: u1).notifications
     @notifications.each do |notification|
-      if notification.type == 3 && notification.sender_id == e1
+      if notification.notification_type == 3 && notification.sender_id == e1
         @sent = true #invite already sent
         return true
       end
@@ -111,6 +111,16 @@ module PermissionsHelper
       end
     end
     return @pic
+  end
+
+  #set avatar (picture) for user/event (user/event, avatar)
+  def setAvatar(ue, a)
+    if(a != nil)
+      if (ue.avatar.attached?)
+        ue.avatar.purge
+      end
+      ue.avatar.attach(a)
+    end
   end
 
 end
