@@ -1,6 +1,7 @@
 class ProfilesController < ApplicationController
   include PermissionsHelper
   before_action :set_profile, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!
 
   # GET /profiles
   # GET /profiles.json
@@ -62,6 +63,32 @@ class ProfilesController < ApplicationController
       format.html { redirect_to profiles_url, notice: 'Profile was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  # get user's profile page
+  def profile
+    @b1 = isadmin
+    @creator = User.find_by(id: params[:id])
+
+    #handle friend requests
+    @friend = areFriends(@creator.id, current_user.id)
+
+    @b2 = @b1 || (current_user.id == @creator.id)
+    @b3 = @b2 || @friend
+    @name = getName(current_user.id, @creator.id)
+    #@pic = getPic(current_user.id, @creator.id)
+    @allevents = @creator.events
+    @events = []
+    @allevents.each do |event|
+      #check if user is invited
+      @invited = isInvited(event.id, current_user.id)
+
+      if !event.private || @b2 || @invited
+        @events.push(event)
+      end
+    end
+    #check friend request status
+    @frs = friendRequestSent(current_user.id, @creator.id, params[:id2])
   end
 
   private

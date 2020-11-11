@@ -11,7 +11,7 @@ module PermissionsHelper
 
   #check that user is signed in
   def signedin
-    if !user_signed_in?
+    if current_user == nil
       redirect_to root_path, :alert => 'You must be logged in to view this page.'
     end
   end
@@ -113,10 +113,21 @@ module PermissionsHelper
     return @pic
   end
 
+  #does u1 have permission to see profile picture of u2 (current_user_id, user2_id)
+  #and is there one available
+  def showPic(u1, u2)
+    if @b1 || (u1 == u2) || areFriends(u1, u2) #show real pic
+      if u2.avatar.attached?
+        return true
+      end
+    end
+    return false
+  end
+
   #set avatar (picture) for user/event (user/event, avatar)
   def setAvatar(ue, a)
-    if(a != nil)
-      if (ue.avatar.attached?)
+    if a != nil
+      if ue.avatar.attached?
         ue.avatar.purge
       end
       ue.avatar.attach(a)
