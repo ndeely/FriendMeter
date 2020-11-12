@@ -32,6 +32,9 @@ class EventsController < ApplicationController
     @b2 = isadmin || (current_user.id == @creator.id)
     @name = getName(current_user.id, @creator.id)
     @attending = Event.find(params[:id]).attending
+    if Event.find(params[:id]).private && !(@b2 || isInvited(params[:id], current_user.id) || isAttending(params[:id], current_user.id))
+      redirect_to events_url
+    end
   end
 
   # GET /events/new

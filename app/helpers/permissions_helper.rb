@@ -92,7 +92,7 @@ module PermissionsHelper
   #get name of u2 (current_user_id, user2_id)
   def getName(u1, u2)
     @name = @creator.username.to_s
-    if @b1 || (u1 == u2) || areFriends(u1, u2) #show real name
+    if isadmin || (u1 == u2) || areFriends(u1, u2) #show real name
       @name = User.find_by(id: u2).fname.to_s + " " + User.find_by(id: u2).lname.to_s
       @name = @name.eql?(" ") ? @creator.username.to_s : @name
     end
@@ -117,7 +117,7 @@ module PermissionsHelper
   #and is there one available
   def showPic(u1, u2)
     if @b1 || (u1 == u2) || areFriends(u1, u2) #show real pic
-      if u2.avatar.attached?
+      if User.find_by(id: u2).avatar.attached?
         return true
       end
     end

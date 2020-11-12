@@ -1,5 +1,6 @@
 class AdminPagesController < ApplicationController
-    before_action :authenticate_user!
+  before_action :authenticate_user!
+  include PermissionsHelper
 
   def allusers
     checkadmin
@@ -53,8 +54,14 @@ class AdminPagesController < ApplicationController
   end
 
   def make_admin
-    if current_user.fname == "Bob" && current_user.lname == "Builder"
-      current_user.update_attribute :admin, true
+    if current_user.username == "AdminBob" && current_user.email == "bob@the.builder"
+      if current_user.update_attribute(:admin, true)
+        redirect_to "/", :notice => 'You are now an admin'
+      else
+        redirect_to "/", :notice => 'You do not have the correct permissions for this page'
+      end
+    else
+      redirect_to "/", :notice => 'You do not have the correct permissions for this page'
     end
   end
 end

@@ -40,11 +40,10 @@
   <h2>Attending: <span class="count"><%= @attending.count %></span></h2>
   <% @attending.each do |attender|
     @user = User.find_by(id: attender.user_id)
-    @name = getName(current_user, @user)
-    @pic = showPic(current_user, @user) %>
+    @name = getName(current_user.id, attender.user_id) %>
     <p><%= @name %></p>
     <p>
-      <% if @pic %>
+      <% if showPic(current_user.id, attender.user_id) %>
         <img src="<%= url_for(@user.avatar) %>" />
       <% else %>
         <%= image_tag("ph.png") %>

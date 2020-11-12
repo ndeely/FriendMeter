@@ -2,7 +2,7 @@
 <div class="profile">
     <h1><%= @name %></h1>
     <p>
-        <% if @creator.avatar.attached? && @b3 %>
+        <% if showPic(current_user.id, @creator.id) %>
             <image src="<%= url_for(@creator.avatar) %>">
          <% else %>
             <%= image_tag("ph.png") %>

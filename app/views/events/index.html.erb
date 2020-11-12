@@ -41,8 +41,7 @@
           @creator = User.all.find(event.user_id)
           @b2 = @b1 || current_user.id == @creator.id
           # get the creator's name
-          @name = @b2 ? @creator.fname.to_s + " " + @creator.lname.to_s : @creator.username
-          @name = (@name.eql?" ") ? @creator.username.to_s : @name
+          @name = getName(current_user.id, @creator.id)
           %>
           <td>
             <button class="btn1" onclick="window.location.href='/users/<%= event.user_id.to_s %>'">
