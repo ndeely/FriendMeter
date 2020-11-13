@@ -17,6 +17,8 @@ gem 'pg'
 gem 'dotenv-rails'
 # use devise for user authentication
 gem 'devise', '4.7.0'
+# use bootstrap for design
+gem 'bootstrap-sass'
 
 # Use Puma as the app server
 gem 'puma', '~> 4.1'

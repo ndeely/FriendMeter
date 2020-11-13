@@ -1,35 +1,40 @@
 <div class="mainCont">
 
-<h1>StaticPages only for professional administrators</h1>
+<h1>Admin Pages</h1>
 
 <table class="table">
   <thead class="thead-dark">
     <tr>
-      <th scope="col">View what we have in the shop</th>
-      <th scope="col">Expand the shop</th>
-      <th scope="col">All users list</th>
+      <th scope="col">View All</th>
+      <th scope="col">Create New</th>
       
       
     </tr>
   </thead>
   <tbody>
 
-      <tr>
-        <td>
-            <%= link_to 'All users', users_path, :role=>"button", :class => "btn btn-info mb-2" %><br>
-            <%= link_to 'All events', events_path, :role=>"button", :class => "btn btn-info mb-2"%><br>
-            <%= link_to 'All comments', comments_path, :role=>"button", :class => "btn btn-info mb-2" %><br>
-            <%= link_to 'All reviews', reviews_path, :role=>"button", :class => "btn btn-info mb-2" %><br>
-        </td>
+    <tr>
+      <td>
+        <%= link_to 'All Users', "/users", :role=>"button", :class => "btn btn-warning mb-2" %><br>
+        <%= link_to 'All Events', events_path, :role=>"button", :class => "btn btn-info mb-2"%><br>
+        <%= link_to 'All Comments', comments_path, :role=>"button", :class => "btn btn-info mb-2" %><br>
+        <%= link_to 'All Reviews', reviews_path, :role=>"button", :class => "btn btn-info mb-2" %><br>
+        <%= link_to 'All Friends', friends_path, :role=>"button", :class => "btn btn-info mb-2" %><br>
+        <%= link_to 'All Attendings', attendings_path, :role=>"button", :class => "btn btn-info mb-2" %><br>
+        <%= link_to 'All Notifications', notifications_path, :role=>"button", :class => "btn btn-info mb-2" %><br>
+        <%= link_to 'All Profiles', profiles_path, :role=>"button", :class => "btn btn-info mb-2" %><br>
+      </td>
 
-        <td><%= link_to 'New event', new_event_path, :role => "button", :class => "btn btn-success mb-2"  %><br>
-            <%= link_to 'New comment', new_comment_path, :role=>"button", :class => "btn btn-success mb-2" %><br>
-            <%= link_to 'New review', new_review_path, :role=>"button", :class => "btn btn-success mb-2" %><br>
-        </td>
-        
-        <td><%= link_to "All users List", "/users", :role => "button", :class => "btn btn-warning mb-2" %></td>
-        
-      </tr>
+      <td>
+        <%= link_to 'New Event', new_event_path, :role => "button", :class => "btn btn-success mb-2"  %><br>
+        <%= link_to 'New Comment', new_comment_path, :role=>"button", :class => "btn btn-success mb-2" %><br>
+        <%= link_to 'New Review', new_review_path, :role=>"button", :class => "btn btn-success mb-2" %><br>
+        <%= link_to 'New Friend', new_friend_path, :role=>"button", :class => "btn btn-success mb-2" %><br>
+        <%= link_to 'New Attending', new_attending_path, :role=>"button", :class => "btn btn-success mb-2" %><br>
+        <%= link_to 'New Notification', new_notification_path, :role=>"button", :class => "btn btn-success mb-2" %><br>
+        <%= link_to 'New Profile', new_profile_path, :role=>"button", :class => "btn btn-success mb-2" %><br>
+      </td>
+    </tr>
       
 
 </table>

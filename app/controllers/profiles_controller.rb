@@ -60,7 +60,7 @@ class ProfilesController < ApplicationController
   def destroy
     @profile.destroy
     respond_to do |format|
-      format.html { redirect_to profiles_url, notice: 'Profile was successfully destroyed.' }
+      format.html { redirect_to profiles_url, notice: 'Profile was successfully deleted.' }
       format.json { head :no_content }
     end
   end
@@ -76,14 +76,14 @@ class ProfilesController < ApplicationController
     @b2 = @b1 || (current_user.id == @creator.id)
     @b3 = @b2 || @friend
     @name = getName(current_user.id, @creator.id)
-    #@pic = getPic(current_user.id, @creator.id)
     @allevents = @creator.events
     @events = []
     @allevents.each do |event|
-      #check if user is invited
+      #check if user is invited/attending
       @invited = isInvited(event.id, current_user.id)
+      @attending = isAttending(event.id, current_user.id)
 
-      if !event.private || @b2 || @invited
+      if !event.private || @b2 || @invited || @attending
         @events.push(event)
       end
     end

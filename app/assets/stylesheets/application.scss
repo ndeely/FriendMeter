@@ -1,43 +1,18 @@
-li.notifications {
-    background:url("notifications.png") no-repeat;
-    background-size:contain;
-}
+@import "reset.scss";
 
- a {
-     text-decoration:none;
- }
+//@import "bootstrap-sprockets";
+@import "bootstrap";
 
- a:hover {
-     background: none !important;
-     color:#00f;
- }
-
-ul {
-    list-style-type:none;
-    margin:0px;
-    padding:0px;
-    border:1px solid #e7e7e7;
-    background-color:#f3f3f3;
-    overflow:hidden;
-}
-
-ul li {
-    float:left;
-}
-
-ul li a {
-    display:block;
-    color:#666;
-    text-align:center;
-    padding:14px 16px;
-}
-
-td.toggle img {
-    width:50px;
-}
+//navbar code
+@import "nav.scss";
 
 .profile img, .event img, .events img, .friend-profile-sm img {
-    width:150px;
+    max-width:150px;
+}
+
+//bootstrap buttons
+a.btn, button {
+    margin:5px;
 }
 
 //new buttons

@@ -47,11 +47,14 @@ module PermissionsHelper
   end
 
   # check friend request status (current_user_id, other_user_id, sending [nil if false])
+  # will return true if users are already friends
   def friendRequestSent(u1, u2, sending)
+    if areFriends(u1, u2)
+      return true
+    end
     @notifications = User.find_by(id: u2).notifications
     @notifications.each do |notification|
       if notification.notification_type == 1 && notification.sender_id == u1
-        @sent = true #request already sent
         return true
       end
     end
@@ -131,6 +134,16 @@ module PermissionsHelper
         ue.avatar.purge
       end
       ue.avatar.attach(a)
+    end
+  end
+
+  #delete notification if it exists (event id, user id)
+  def deleteNotificationIfExists(e, u)
+    @notifications = Notification.all
+    @notifications.each do |n|
+      if n.notification_type == 3 && n.user_id == u && n.sender_id == e
+        n.destroy
+      end
     end
   end
 

@@ -15,10 +15,11 @@ class EventsController < ApplicationController
     @events = []
     @ufevents.each do |event|
 
-      # work out if the user is invited
+      # work out if the user is invited or attending
       @invited = isInvited(event.id, current_user.id)
+      @attending = isAttending(event.id, current_user.id)
 
-      if @b1 || !event.private || (user_signed_in? && event.user_id == current_user.id) || @invited
+      if @b1 || !event.private || (user_signed_in? && event.user_id == current_user.id) || @invited || @attending
         @events.push(event)
       end
     end
@@ -92,15 +93,18 @@ class EventsController < ApplicationController
   def attend
     signedin
     @event = Event.find_by(id: params[:id])
-    if @event != nil && !isAttending(@event.id, current_user.id)
-      @attending = @event.attending.build(:event_id => @event.id, :user_id => current_user.id)
-      @attending.save
-      respond_to do |format|
-        format.html { redirect_to event_url, notice: 'Confirmed attendance.' }
-        format.json { head :no_content }
+    if @event != nil && (@event.private ? isInvited(@event.id, current_user.id) : true)
+      if !isAttending(@event.id, current_user.id)
+        @attending = @event.attending.build(:event_id => @event.id, :user_id => current_user.id)
+        @attending.save
+        deleteNotificationIfExists(@event.id, current_user.id)
+        respond_to do |format|
+          format.html { redirect_to event_url, notice: 'Confirmed attendance.' }
+          format.json { head :no_content }
+        end
+      else
+        redirect_to notifications_url
       end
-    else
-      redirect_to notifications_url
     end
   end
 
@@ -119,6 +123,35 @@ class EventsController < ApplicationController
     else
       redirect_to '/users/' + @user.id.to_s
     end
+  end
+
+  # GET /myevents
+  # GET /myevents.json
+  def myevents
+    signedin
+    require 'will_paginate/array'
+
+    @b1 = isadmin
+    # unfiltered events
+    @ufevents = Event.all.order('date')
+    @events1 = current_user.events #user events
+    @events2 = [] #attending
+    @events3 = [] #invited
+    @ufevents.each do |event|
+
+      # work out if the user is invited/attending and doesn't own the event
+      @invited = isInvited(event.id, current_user.id) && (current_user.id != event.user_id)
+      @attending = isAttending(event.id, current_user.id) && (current_user.id != event.user_id)
+
+      if @invited
+        @events3.push(event)
+      elsif @attending
+        @events2.push(event)
+      end
+    end
+    @events1 = @events1.paginate(page: params[:page], per_page: 6)
+    @events2 = @events2.paginate(page: params[:page], per_page: 6)
+    @events3 = @events3.paginate(page: params[:page], per_page: 6)
   end
 
   private
