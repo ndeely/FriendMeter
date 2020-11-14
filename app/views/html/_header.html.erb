@@ -28,37 +28,37 @@
             <li><%= link_to "My Events", "/myevents", class: "nav-link" %></li>
           </ul>
         </li>
-        <li class="dropdown">
+        <% if user_signed_in? %>
+          <li class="dropdown">
             <a class="dropbtn">Account <b class="caret"></b></a>
             <ul class="dropdown-menu">  
-              <% if !user_signed_in? %>
-                <li>
-                  <%= link_to "Register", new_user_registration_path, class: "nav-link" %>
-                </li>
-                <li>
-                  <%= link_to "Log in", new_user_session_path, class: "nav-link" %>
-                </li>
-              <% else %>
-                <li class="notifications">
+              <li class="notifications">
                 <%= link_to "Notifications (" + current_user.notifications.count.to_s + ")", "/notifications", class: "nav-link" %>
-                </li>
-                <li>
-                  <%= link_to "Friends (" + current_user.friends.count.to_s + ")", "/friends", class: "nav-link" %>
-                </li>
-                <li>
-                  <a class="nav-link" href="/users/<%= current_user.id %>">Profile</a>
-                </li>
-                <% if current_user.admin? %>
-                  <li class="nav-item">
-                    <%= link_to "Admin", "/admin", class: "nav-link" %>
-                  </li>
-                <% end %>
+              </li>
+              <li>
+                <%= link_to "Friends (" + current_user.friends.count.to_s + ")", "/friends", class: "nav-link" %>
+              </li>
+              <li>
+                <a class="nav-link" href="/users/<%= current_user.id %>">Profile</a>
+              </li>
+              <% if current_user.admin? %>
                 <li class="nav-item">
-                  <%= link_to "Logout", destroy_user_session_path, :method => :delete, class: "nav-link" %>
+                  <%= link_to "Admin", "/admin", class: "nav-link" %>
                 </li>
               <% end %>
             </ul>
           </li>
+          <li class="nav-item">
+            <%= link_to "Logout", destroy_user_session_path, :method => :delete, class: "nav-link" %>
+          </li>
+        <% else %>
+          <li>
+            <%= link_to "Register", new_user_registration_path, class: "nav-link" %>
+          </li>
+          <li>
+            <%= link_to "Log in", new_user_session_path, class: "nav-link" %>
+          </li>
+        <% end %>
       </ul>
     </nav>
   </div>

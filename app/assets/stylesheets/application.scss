@@ -1,10 +1,20 @@
-@import "reset.scss";
+@import "reset";
 
 //@import "bootstrap-sprockets";
 @import "bootstrap";
 
-//navbar code
-@import "nav.scss";
+//navbar (header for all pages) code
+@import "nav";
+
+//footer for all pages code
+@import "footer";
+
+//forms css
+@import "forms";
+
+body {
+    font-family:"Montserrat", "Open Sans";
+}
 
 .profile img, .event img, .events img, .friend-profile-sm img {
     max-width:150px;
