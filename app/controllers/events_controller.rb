@@ -92,18 +92,18 @@ class EventsController < ApplicationController
   #confirm attendance to event from event ('/events/:eid/1')
   def attend
     signedin
-    @event = Event.find_by(id: params[:id])
+    @event = Event.find_by(id: params[:eid])
     if @event != nil && (@event.private ? isInvited(@event.id, current_user.id) : true)
       if !isAttending(@event.id, current_user.id)
         @attending = @event.attending.build(:event_id => @event.id, :user_id => current_user.id)
         @attending.save
         deleteNotificationIfExists(@event.id, current_user.id)
         respond_to do |format|
-          format.html { redirect_to event_url, notice: 'Confirmed attendance.' }
+          format.html { redirect_to "/events/" + @event.id.to_s, notice: 'Confirmed attendance.' }
           format.json { head :no_content }
         end
       else
-        redirect_to notifications_url
+        redirect_to events_url
       end
     end
   end
