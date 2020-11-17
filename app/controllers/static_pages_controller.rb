@@ -3,7 +3,8 @@ class StaticPagesController < ApplicationController
   include StaticPagesHelper
 
   def home
-    
+    @fUsers = getFeaturedUsers
+    @fEvents = getFeaturedEvents
   end
 
   def help

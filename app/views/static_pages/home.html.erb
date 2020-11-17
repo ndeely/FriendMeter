@@ -1,2 +1,54 @@
-<h1>StaticPages#home</h1>
-<p>Find me in app/views/static_pages/home.html.erb</p>
+<h1>FriendMeter</h1>
+
+<div class="desc">
+    <p>FriendMeter is a Social Media site where you can meet new people, and create and attend events in your area.</p>
+    <p>Currently boasting a whopping <strong><%= User.count %></strong> users, who have created <strong><%= Event.count %></strong> events, we are on track to be the biggest social media website in the world!</p>
+</div>
+
+<!-- featured users -->
+<div class="col-xs-12 col-md-6">
+    <h2>Featured Users</h2>
+    <% if @fUsers.count == 0 %>
+        <p>There are no users to display.</p>
+    <% else %>
+        <% @fUsers.each do |user| %>
+            <div class="user-sm">  
+                <a href="/users/<%= user.id %>">
+                    <p><%= user.username %></p>
+                    <p>
+                    <% if user.avatar.attached? %>
+                        <image src="<%= url_for(user.avatar) %>">
+                    <% else %>
+                        <%= image_tag("ph.png") %>
+                    <% end %>
+                    </p>
+                    <p>Friends Made: <%= user.friends.count %></p>
+                    <p>Events Created: <%= user.events.count %></p>
+                </a>
+            </div>
+        <% end %>
+    <% end %>
+</div>
+
+<!-- featured events -->
+<div class="col-xs-12 col-md-6">
+    <h2>Featured Events</h2>
+    <% if @fEvents.count == 0 %>
+        <p>There are no events to display.</p>
+    <% else %>
+        <% @fEvents.each do |event| %>
+            <div class="user-sm">
+                <a href="/events/<%= event.id %>">
+                    <p><%= event.name %></p>
+                    <p>
+                    <% if event.avatar.attached? %>
+                        <image src="<%= url_for(event.avatar) %>">
+                    <% end %>
+                    </p>
+                    <p>Attendees: <%= Attending.where(event_id: event.id).count %></p>
+                    <p>Created By: <%= User.find_by(id: event.user_id).username %></p>
+                </a>
+            </div>
+        <% end %>
+    <% end %>
+</div>
