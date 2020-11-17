@@ -37,7 +37,8 @@ Rails.application.routes.draw do
   get '/notifications/:id/3' => 'notifications#acceptEvent' #accept event invite from notifications
 
   #attend event or send invite
-  get '/events/:eid/1' => 'events#attend' #accept event invite from event
+  get '/events/:eid/1' => 'events#attend' #agree to attend event from event
+  get '/events/:eid/2' => 'events#unattend' #unattend event from event
   get '/events/:eid/:uid/1' => 'events#invite' #send event invite
 
   #get user events, or events where user is invited or is attending

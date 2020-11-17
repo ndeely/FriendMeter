@@ -108,6 +108,21 @@ class EventsController < ApplicationController
     end
   end
 
+  #unattend event from event ('/events/:eid/2')
+  def unattend
+    signedin
+    @attending = Attending.find_by(event_id: params[:eid], user_id: current_user.id)
+    if @attending != nil
+      @attending.destroy
+      respond_to do |format|
+        format.html { redirect_to "/events/" + params[:eid].to_s, notice: 'You are no longer attending this event.' }
+        format.json { head :no_content }
+      end
+    else
+      redirect_to "/events/" + params[:eid].to_s, notice: 'You were not attending this event.'
+    end
+  end
+
   #send user an invite to an event ('/events/:eid/:uid/1')
   def invite
     signedin

@@ -1,39 +1,18 @@
 <div class="event">
-  <p>
-    <strong>Name:</strong>
-    <%= @event.name %>
-  </p>
+  <h2><%= @event.name %></h2>
 
-  <p>
-    <strong>Description:</strong>
-    <%= @event.description %>
-  </p>
-
-  <p>
-    <strong>Date:</strong>
-    <%= @event.date %>
-  </p>
-
-  <p>
-    <strong>Time:</strong>
-    <%= @event.time.strftime("%I:%M %p") %>
-  </p>
-
-  <p>
+  <div class="col-xs-12 col-md-6">
     <% if @event.avatar.attached? %>
       <image src="<%= url_for(@event.avatar) %>">
     <% end %>
-  </p>
+  </div>
 
-  <p>
-    <strong>Public:</strong>
-    <%= !@event.private %>
-  </p>
-  
-  <p>
-    <strong>Event Creator:</strong>
-    <%= link_to @name, '/users/' + @event.user_id.to_s %>
-  </p>
+  <div class="col-xs-12 col-md-6">
+    <p><%= @event.description %></p>
+    <p><%= @event.date %> <%= @event.time.strftime("%I:%M %p") %></p>
+    <p>Public: <%= !@event.private ? "Yes" : "No" %></p>
+    <p>Organised By: <%= link_to @name, '/users/' + @event.user_id.to_s %></p>
+  </div>
 
   <!-- show event buttons -->
   <% if @b2 %>
@@ -56,7 +35,7 @@
 <!-- show attending users -->
 <h2>Attending: <span class="count"><%= @attending.count %></span></h2>
 <% if @attending.count == 0 %>
-  <p>There are no confirmed attendees yet</p>
+  <p>There are no confirmed attendees yet.</p>
 <% else %>
   <% @attending.each do |attender|
     @user = User.find_by(id: attender.user_id)
@@ -76,12 +55,19 @@
   <% end %>
   <div class="clear"></div>
   <% if !isAttending(@event.id, current_user.id) %>
-  <button class="btn1" onclick="window.location.href='/events/<%= @event.id %>/1'">
+    <button class="btn1" onclick="window.location.href='/events/<%= @event.id %>/1'">
+        <span class="circle" aria-hidden="true">
+        <span class="icon arrow"></span>
+        </span>
+        <span class="button-text">Attend</span>
+    </button>
+  <% else %> <!--show unattend button -->
+    <button class="btn1" onclick="window.location.href='/events/<%= @event.id %>/2'">
       <span class="circle" aria-hidden="true">
       <span class="icon arrow"></span>
       </span>
-      <span class="button-text">Attend</span>
-  </button>
+      <span class="button-text">Unattend</span>
+    </button>
   <% end %>
 <% end %>
 

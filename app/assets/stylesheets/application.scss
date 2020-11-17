@@ -38,8 +38,12 @@ h1, h2, h3, h4 {
     text-align:center;
 }
 
-.profile img, .event img, .events img {
+.profile img, .events img {
     max-width:150px;
+}
+
+.event img {
+    max-width:300px;
 }
 
 //small profile view
