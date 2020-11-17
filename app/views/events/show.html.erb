@@ -53,22 +53,22 @@
       </a>
     </div>
   <% end %>
-  <div class="clear"></div>
-  <% if !isAttending(@event.id, current_user.id) %>
-    <button class="btn1" onclick="window.location.href='/events/<%= @event.id %>/1'">
-        <span class="circle" aria-hidden="true">
-        <span class="icon arrow"></span>
-        </span>
-        <span class="button-text">Attend</span>
-    </button>
-  <% else %> <!--show unattend button -->
-    <button class="btn1" onclick="window.location.href='/events/<%= @event.id %>/2'">
+<% end %>
+<div class="clear"></div>
+<% if !@isAttending %>
+  <button class="btn1" onclick="window.location.href='/events/<%= @event.id %>/1'">
       <span class="circle" aria-hidden="true">
       <span class="icon arrow"></span>
       </span>
-      <span class="button-text">Unattend</span>
-    </button>
-  <% end %>
+      <span class="button-text">Attend</span>
+  </button>
+<% else %> <!--show unattend button -->
+  <button class="btn1" onclick="window.location.href='/events/<%= @event.id %>/2'">
+    <span class="circle" aria-hidden="true">
+    <span class="icon arrow"></span>
+    </span>
+    <span class="button-text">Unattend</span>
+  </button>
 <% end %>
 
 <!-- show event comments -->

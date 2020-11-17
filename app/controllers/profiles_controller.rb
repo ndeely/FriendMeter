@@ -1,5 +1,7 @@
 class ProfilesController < ApplicationController
   include PermissionsHelper
+  include FriendsHelper
+  include EventsHelper
   before_action :set_profile, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
 
@@ -65,30 +67,66 @@ class ProfilesController < ApplicationController
     end
   end
 
-  # get user's profile page
+  # get user's profile page ("/users/{id}")
   def profile
+    signedin
     @b1 = isadmin
     @creator = User.find_by(id: params[:id])
+    if @creator == nil
+      redirect_to root_url, notice: "This user does not exist"
+    else
+      #handle friend requests
+      @friend = areFriends(params[:id], current_user.id)
 
-    #handle friend requests
-    @friend = areFriends(@creator.id, current_user.id)
+      @b2 = @b1 || (current_user.id == @creator.id)
+      @b3 = @b2 || @friend
+      @name = getName(current_user.id, @creator.id)
+      @allevents = @creator.events
+      @events = []
+      @allevents.each do |event|
+        #check if user is invited/attending
+        @invited = isInvited(event.id, current_user.id)
+        @attending = isAttending(event.id, current_user.id)
 
-    @b2 = @b1 || (current_user.id == @creator.id)
-    @b3 = @b2 || @friend
-    @name = getName(current_user.id, @creator.id)
-    @allevents = @creator.events
-    @events = []
-    @allevents.each do |event|
-      #check if user is invited/attending
-      @invited = isInvited(event.id, current_user.id)
-      @attending = isAttending(event.id, current_user.id)
+        if !event.private || @b2 || @invited || @attending
+          @events.push(event)
+        end
+      end
+      #check friend request status
+      @frs = friendRequestSent(current_user.id, @creator.id)
+    end
+  end
 
-      if !event.private || @b2 || @invited || @attending
-        @events.push(event)
+  #add user id as friend from id2 ('/users/:id/:id2')
+  def friend
+    signedin
+    if current_user.id.to_s != params[:id2]
+      redirect_to "/users/" + params[:id], notice: "You do not have permissions for this action."
+    elsif areFriends(params[:id], params[:id2])
+      redirect_to "/users/" + params[:id], notice: "You are already friends with this user."
+    else
+      if friendUsers(params[:id2], params[:id])
+        redirect_to "/users/" + params[:id], notice: "Your friend request has been sent."
+      else
+        redirect_to "/users/" + params[:id], notice: "There was a problem processing your request."
       end
     end
-    #check friend request status
-    @frs = friendRequestSent(current_user.id, @creator.id, params[:id2])
+  end
+
+  #unfriend user ('/users/:id/:id2/1')
+  def unfriend
+    signedin
+    if current_user.id.to_s != params[:id2]
+      redirect_to "/users/" + params[:id], notice: "You do not have permissions for this action."
+    elsif !areFriends(params[:id], params[:id2])
+      redirect_to "/users/" + params[:id], notice: "You are not friends with this user."
+    else
+      if unfriendUsers(params[:id2], params[:id])
+        redirect_to "/users/" + params[:id], notice: "You have successfully unfriended this user."
+      else
+        redirect_to "/users/" + params[:id], notice: "There was a problem processing your request."
+      end
+    end
   end
 
   private

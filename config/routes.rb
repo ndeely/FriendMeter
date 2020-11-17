@@ -28,9 +28,10 @@ Rails.application.routes.draw do
   get '/prem/:id' => 'admin_pages#prem'
   get '/notprem/:id' => 'admin_pages#notprem'
 
-  #user profile and friend request
-  get '/users/:id' => 'profiles#profile'
-  get '/users/:id/:id2' => 'profiles#profile'
+  #profile
+  get '/users/:id' => 'profiles#profile' #user profile
+  get '/users/:id/:id2' => 'profiles#friend' #friend request
+  get '/users/:id/:id2/1' => 'profiles#unfriend' #unfriend
 
   #notifications
   get '/notifications/:id/1' => 'notifications#acceptFriend' #accept friend request

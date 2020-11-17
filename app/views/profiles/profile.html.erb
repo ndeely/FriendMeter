@@ -1,27 +1,35 @@
 <div class="profile">
-    <h1><%= @name %></h1>
-    <p>
+    <h2><%= @name %></h2>
+    <div class="col-xs-12 col-md-6">
         <% if showPic(current_user.id, @creator.id) %>
             <image src="<%= url_for(@creator.avatar) %>">
          <% else %>
             <%= image_tag("ph.png") %>
          <% end %>
-    </p>
+    </div>
     
-    <div class="bio">
-        <h2>Bio</h2>
-        <p><%= @b3 ? @creator.bio : "Add this user as a friend to see their bio" %></p>
+    <div class="col-xs-12 col-md-6">
+        <h4>Bio</h4>
+        <p><%= @b3 ? @creator.bio : "Add this user as a friend to see their bio." %></p>
+
+        <% if !@b3 && !@frs %>
+            <button class="btn1" onclick="window.location.href='/users/<%= @creator.id %>/<%= @current_user.id %>'">
+                <span class="circle" aria-hidden="true">
+                <span class="icon arrow"></span>
+                </span>
+                <span class="button-text">Friend Request</span>
+            </button>
+        <% elsif @friend %>
+            <button class="btn1" onclick="window.location.href='/users/<%= @creator.id %>/<%= @current_user.id %>/1'">
+                <span class="circle" aria-hidden="true">
+                <span class="icon arrow"></span>
+                </span>
+                <span class="button-text">Unfriend</span>
+            </button>
+        <% end %>
     </div>
 
-    <% if !@b3 && !@frs %>
-        <button class="btn1" onclick="window.location.href='/users/<%= @creator.id %>/<%= @current_user.id %>'">
-            <span class="circle" aria-hidden="true">
-            <span class="icon arrow"></span>
-            </span>
-            <span class="button-text">Friend Request</span>
-        </button>
-    <% end %>
-
+    <div class="clear"></div>
     <!-- show user events -->
     <div class="events">
         <h2><%= @name %>'s Events</h2>
@@ -95,7 +103,7 @@
                             <th>Date</th>
                             <th>Time</th>
                             <th>Image</th>
-                            <th colspan="1"></th>
+                            <th colspan="4"></th>
                         </tr>
                     </thead>
                 
@@ -111,6 +119,23 @@
                                         <image src="<%= url_for(event.avatar) %>">
                                     <% end %>
                                 </td>
+                                <td>
+                                    <button class="btn1" onclick="window.location.href='/events/<%= event.id %>'">
+                                        <span class="circle" aria-hidden="true">
+                                        <span class="icon arrow"></span>
+                                        </span>
+                                        <span class="button-text">View</span>
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn1" onclick="window.location.href='<%= edit_event_path(event) %>'">
+                                        <span class="circle" aria-hidden="true">
+                                        <span class="icon arrow"></span>
+                                        </span>
+                                        <span class="button-text">Edit</span>
+                                    </button>
+                                </td>
+                                <td><%= link_to 'Delete', event, method: :delete, :role=>"button", :class => "btn btn-danger mb-2", data: { confirm: 'Are you sure?' } %></td>
                                 <td>
                                     <% if !isInvited(event.id, @creator.id) %>
                                         <button class="btn1" onclick="window.location.href='/events/<%= event.id %>/<%= @creator.id %>/1'">

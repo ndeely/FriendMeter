@@ -2,6 +2,8 @@ class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
   include PermissionsHelper
+  include EventsHelper
+  include FriendsHelper
 
   # GET /events
   # GET /events.json
@@ -36,6 +38,7 @@ class EventsController < ApplicationController
     if Event.find(params[:id]).private && !(@b2 || isInvited(params[:id], current_user.id) || isAttending(params[:id], current_user.id))
       redirect_to events_url
     end
+    @isAttending = isAttending(params[:id], current_user.id)
   end
 
   # GET /events/new
@@ -84,7 +87,7 @@ class EventsController < ApplicationController
   def destroy
     @event.destroy
     respond_to do |format|
-      format.html { redirect_to events_url, notice: 'Event was successfully destroyed.' }
+      format.html { redirect_to events_url, notice: 'Event was successfully deleted.' }
       format.json { head :no_content }
     end
   end
@@ -103,7 +106,7 @@ class EventsController < ApplicationController
           format.json { head :no_content }
         end
       else
-        redirect_to events_url
+        redirect_to "/events/" + @event.id.to_s, notice: "You are already attending this event."
       end
     end
   end
@@ -126,18 +129,7 @@ class EventsController < ApplicationController
   #send user an invite to an event ('/events/:eid/:uid/1')
   def invite
     signedin
-    @event = Event.find_by(id: params[:eid])
-    @user = User.find_by(id: params[:uid])
-    if @event != nil && @user != nil && !isAttending(@event.id, @user.id) && !isInvited(@event.id, @user.id)
-      @notification = @user.notifications.build(:user_id => @user.id, :title => 'You have been invited to an event!', :desc => 'The sender is awaiting your response.', :sender_id => @event.id, :notification_type => 3)
-      @notification.save
-      respond_to do |format|
-        format.html { redirect_to '/users/' + @user.id.to_s, notice: 'Invite Sent.' }
-        format.json { head :no_content }
-      end
-    else
-      redirect_to '/users/' + @user.id.to_s
-    end
+    sendEventInvite(params[:eid], params[:uid], current_user.id)
   end
 
   # GET /myevents

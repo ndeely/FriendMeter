@@ -1,47 +1,49 @@
-<%= form_with(model: event, local: true) do |form| %>
-  <% if event.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(event.errors.count, "error") %> prohibited this event from being saved:</h2>
+<div class="form-wrapper">
+  <%= form_with(model: event, local: true, class: "form") do |form| %>
+    <% if event.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(event.errors.count, "error") %> prohibited this event from being saved:</h2>
 
-      <ul>
-        <% event.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+        <ul>
+          <% event.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="field">
+      <%= form.label :name %>
+      <%= form.text_field :name %>
     </div>
-  <% end %>
 
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
-  </div>
+    <div class="field">
+      <%= form.label :description %>
+      <%= form.text_field :description %>
+    </div>
 
-  <div class="field">
-    <%= form.label :description %>
-    <%= form.text_field :description %>
-  </div>
+    <div class="field">
+      <%= form.label :date %>
+      <%= form.date_select :date %>
+    </div>
 
-  <div class="field">
-    <%= form.label :date %>
-    <%= form.date_select :date %>
-  </div>
+    <div class="field">
+      <%= form.label :time %>
+      <%= form.time_select :time %>
+    </div>
 
-  <div class="field">
-    <%= form.label :time %>
-    <%= form.time_select :time %>
-  </div>
+    <div class="field">
+      <%= form.label :"Event Picture" %>
+      <%= form.file_field :avatar %>
+    </div>
 
-  <div class="field">
-    <%= form.label :"Event Picture" %>
-    <%= form.file_field :avatar %>
-  </div>
+    <div class="field">
+      <%= form.label :private %>
+      <%= form.check_box :private %>
+    </div>
 
-  <div class="field">
-    <%= form.label :private %>
-    <%= form.check_box :private %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit %>
+    <div class="actions">
+      <%= form.submit %>
+    </div>
   </div>
 <% end %>
