@@ -1,14 +1,13 @@
 <h1>Friends</h1>
 
-
 <% @friends.each do |friend| %>
   <% @friend = User.find_by(id: friend.friend_id)
     @name = @friend.fname.to_s + " " + @friend.lname.to_s
     @name = @name.eql?(" ") ? @friend.username.to_s : @name
     @pic = getPic(current_user.id, @friend.id)
   %>
-  <a href="/users/<%= @friend.id %>">
-    <div class="friend-profile-sm">
+  <div class="user-sm">  
+    <a href="/users/<%= @friend.id %>">
       <p><%= @name %></p>
       <p>
       <% if @friend.avatar.attached? %>
@@ -24,6 +23,7 @@
       %>
         <p>Friends with <%= @name %></p>
       <% end %>
-    </div>
-  </a>
+    </a>
+  </div>
 <% end %>
+<div class="clear"></div>

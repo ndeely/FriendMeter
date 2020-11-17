@@ -11,13 +11,60 @@
 
 //forms css
 @import "forms";
+html, body {
+    margin:0;
+    padding:0;
+    height:100%;
+}
 
 body {
     font-family:"Montserrat", "Open Sans";
 }
 
-.profile img, .event img, .events img, .friend-profile-sm img {
+#body {
+    padding-bottom:120px;
+}
+
+#container {
+    min-height:100%;
+    position:relative;
+}
+
+.clear {
+    clear:both;
+}
+
+h1, h2, h3, h4 {
+    text-align:center;
+}
+
+.profile img, .event img, .events img {
     max-width:150px;
+}
+
+//small profile view
+.user-sm, .event-sm {
+    width:160px;
+    float:left;
+    position:relative;
+    display:block;
+    a {
+        text-decoration:none;
+    }
+    p {
+        text-align:center;
+        color:#000;
+        font-weight:bold;
+    }
+    img {
+        max-width:150px;
+        margin:auto;
+    }
+}
+
+//small event view
+.event-sm {
+
 }
 
 //bootstrap buttons

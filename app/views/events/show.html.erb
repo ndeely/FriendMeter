@@ -35,28 +35,7 @@
     <%= link_to @name, '/users/' + @event.user_id.to_s %>
   </p>
 
-  <h2>Attending: <span class="count"><%= @attending.count %></span></h2>
-  <% @attending.each do |attender|
-    @user = User.find_by(id: attender.user_id)
-    @name = getName(current_user.id, attender.user_id) %>
-    <p><%= @name %></p>
-    <p>
-      <% if showPic(current_user.id, attender.user_id) %>
-        <img src="<%= url_for(@user.avatar) %>" />
-      <% else %>
-        <%= image_tag("ph.png") %>
-      <% end %>
-    </p>
-  <% end %>
-  <% if !isAttending(@event.id, current_user.id) %>
-  <button class="btn1" onclick="window.location.href='/events/<%= @event.id %>/1'">
-      <span class="circle" aria-hidden="true">
-      <span class="icon arrow"></span>
-      </span>
-      <span class="button-text">Attend</span>
-  </button>
-  <% end %>
-
+  <!-- show event buttons -->
   <% if @b2 %>
     <button class="btn1" onclick="window.location.href='<%= edit_event_path(@event) %>'">
         <span class="circle" aria-hidden="true">
@@ -73,3 +52,39 @@
       <span class="button-text">Back</span>
   </button>
 </div>
+
+<!-- show attending users -->
+<h2>Attending: <span class="count"><%= @attending.count %></span></h2>
+<% if @attending.count == 0 %>
+  <p>There are no confirmed attendees yet</p>
+<% else %>
+  <% @attending.each do |attender|
+    @user = User.find_by(id: attender.user_id)
+    @name = getName(current_user.id, attender.user_id) %>
+    <div class="user-sm">
+      <a href="/users/<%= @user.id.to_s %>">
+        <p><%= @name %></p>
+        <p>
+          <% if showPic(current_user.id, attender.user_id) %>
+            <img src="<%= url_for(@user.avatar) %>" />
+          <% else %>
+            <%= image_tag("ph.png") %>
+          <% end %>
+        </p>
+      </a>
+    </div>
+  <% end %>
+  <div class="clear"></div>
+  <% if !isAttending(@event.id, current_user.id) %>
+  <button class="btn1" onclick="window.location.href='/events/<%= @event.id %>/1'">
+      <span class="circle" aria-hidden="true">
+      <span class="icon arrow"></span>
+      </span>
+      <span class="button-text">Attend</span>
+  </button>
+  <% end %>
+<% end %>
+
+<!-- show event comments -->
+
+<!-- show event reviews -->
