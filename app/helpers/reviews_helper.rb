@@ -12,4 +12,9 @@ module ReviewsHelper
         return @html
     end
 
+    #check if user has already left a review on this event (current user id, event id)
+    def hasReviewed(u, e)
+        return Event.find_by(id: e).reviews.find_by(user_id: u) != nil
+    end
+
 end

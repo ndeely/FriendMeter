@@ -61,16 +61,20 @@ class EventsController < ApplicationController
   # POST /events
   # POST /events.json
   def create
-    @event = current_user.events.build(event_params)
-    setAvatar(@event, params[:avatar])
+    if Date.today > Date.civil(event_params["date(1i)"].to_i, event_params["date(2i)"].to_i, event_params["date(3i)"].to_i)
+      redirect_to "/events/new", notice: "Invalid date. You cannot create an event occurring in the past."
+    else
+      @event = current_user.events.build(event_params)
+      setAvatar(@event, params[:avatar])
 
-    respond_to do |format|
-      if @event.save
-        format.html { redirect_to @event, notice: 'Event was successfully created.' }
-        format.json { render :show, status: :created, location: @event }
-      else
-        format.html { render :new }
-        format.json { render json: @event.errors, status: :unprocessable_entity }
+      respond_to do |format|
+        if @event.save
+          format.html { redirect_to @event, notice: 'Event was successfully created.' }
+          format.json { render :show, status: :created, location: @event }
+        else
+          format.html { render :new }
+          format.json { render json: @event.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
