@@ -7,7 +7,7 @@
       @name = @friend.fname.to_s + " " + @friend.lname.to_s
       @name = @name.eql?(" ") ? @friend.username.to_s : @name
     %>
-    <div class="user-sm">  
+    <div class="user-sm col-xs-4 col-md-2">  
       <a href="/users/<%= @friend.id %>">
         <p><%= @name %></p>
         <p>

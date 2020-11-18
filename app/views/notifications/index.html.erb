@@ -18,11 +18,17 @@
         <tr>
           <td><%= notification.title %></td>
           <td><%= notification.desc %></td>
-          <% if notification.notification_type == 1 || notification.notification_type == 3 %>
-            <td><%= link_to 'Show', notification %></td>
-            <td><%= link_to 'Accept', '/notifications/' + notification.id.to_s + '/' + notification.notification_type.to_s %></td>
+          <td><%= link_to 'Show Notification', notification, class: "btn btn-info" %></td>
+          <% if notification.notification_type == 1 || notification.notification_type == 2 %>
+            <td><%= link_to 'User', "/users/" + notification.sender_id.to_s, class: "btn btn-info" %></td>
           <% end %>
-          <td><%= link_to 'Delete', notification, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <% if notification.notification_type == 3 || notification.notification_type == 4 %>
+            <td><%= link_to 'Event', "/events/" + notification.sender_id.to_s, class: "btn btn-info" %></td>
+          <% end %>
+          <% if notification.notification_type == 1 || notification.notification_type == 3 %>
+            <td><%= link_to 'Accept', '/notifications/' + notification.id.to_s + '/' + notification.notification_type.to_s, class: "btn btn-success" %></td>
+          <% end %>
+          <td><%= link_to 'Delete', notification, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %></td>
         </tr>
       <% end %>
     </tbody>

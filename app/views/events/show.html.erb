@@ -40,7 +40,7 @@
   <% @attending.each do |attender|
     @user = User.find_by(id: attender.user_id)
     @name = getName(current_user.id, attender.user_id) %>
-    <div class="user-sm">
+    <div class="user-sm col-xs-4 col-md-2">
       <a href="/users/<%= @user.id.to_s %>">
         <p><%= @name %></p>
         <p>
@@ -72,5 +72,31 @@
 <% end %>
 
 <!-- show event comments -->
+<h2 id="comments">Comments (<%= @comments.count %>)</h2>
+<% @comments.each do |comment|
+  @name = getName(current_user.id, comment.user_id) %>
+  <div class="comment">
+    <div class="col-xs-4 col-md-2">
+      <% if showPic(current_user.id, comment.user_id) %>
+        <image src="<%= url_for(@creator.avatar) %>">
+      <% else %>
+        <%= image_tag("ph.png") %>
+      <% end %>
+    </div>
+    <div class="col-xs-6 col-md-8">
+      <p class="name <%= getChatColor(current_user.id, comment.user_id, @event.user_id) %>"><%= @name %></p>
+      <p><%= comment.text %></p>
+    </div>
+    <% if @b1 || comment.user_id == current_user.id %>
+    <div class="col-xs-2 col-md-2">
+      <%= link_to 'Delete', comment, method: :delete, :role=>"button", :class => "btn btn-danger mb-2", data: { confirm: 'Are you sure?' } %>
+    </div>
+    <% end %>
+  </div>
+  <div class="clear"></div>
+<% end %>
+<% if @isi %>
+  <%= render 'cform', comment: @comment %>
+<% end %>
 
 <!-- show event reviews -->

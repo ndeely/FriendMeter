@@ -11,6 +11,7 @@
 
 //forms css
 @import "forms";
+
 html, body {
     margin:0;
     padding:0;
@@ -42,16 +43,35 @@ h1, h2, h3 {
     max-width:150px;
 }
 
+.comment {
+    width:650px;
+    margin:auto;
+    img {
+        max-width:100px;
+    }
+    .name {
+        font-weight:bold;
+        &.you {
+            color:blue;
+        }
+        &.other {
+            color:green;
+        }
+        &.creator {
+            color:red;
+        }
+    }
+}
+
 .profile img, .event img {
     max-width:300px;
 }
 
-//small profile view
+//small profile/event view
 .user-sm, .event-sm {
-    width:160px;
-    float:left;
     position:relative;
     display:block;
+    height:250px;
     a {
         text-decoration:none;
     }
@@ -66,9 +86,14 @@ h1, h2, h3 {
     }
 }
 
-//small event view
-.event-sm {
-
+//featured users/events
+.featured {
+    h2 {
+        background-color:#030;
+        color:#fff;
+        border:1px solid #030;
+        border-radius:25px 25px 0px 0px;
+    }
 }
 
 //bootstrap buttons

@@ -18,8 +18,8 @@ module EventsHelper
         return false
     end
 
-    #send u an invite to event e owned by cu
-    def sendEventInvite(u, e, cu)
+    #send u an invite to event e owned by cu (event id, user id, current user id)
+    def sendEventInvite(e, u, cu)
         @e = User.find_by(id: cu).events.find_by(id: e)
         @u = User.find_by(id: u)
 
@@ -41,5 +41,15 @@ module EventsHelper
         end
     end
 
+    #get color of name in chat messages (current_user.id, comment.user_id, @event.user_id)
+    def getChatColor(cuid, uid, euid)
+        if cuid == uid
+            return "you"
+        elsif uid == euid
+            return "creator"
+        else
+            return "other"
+        end
+    end
 
 end

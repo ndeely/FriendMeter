@@ -9,11 +9,16 @@ module PermissionsHelper
     end
   end
 
-  #check that user is signed in
+  #redirect if user is not signed in
   def signedin
     if current_user == nil
       redirect_to root_path, :alert => 'You must be logged in to view this page.'
     end
+  end
+
+  #check if user is signed in
+  def isSignedIn
+    return current_user != nil
   end
 
   #return true if user is signed in and an admin
@@ -36,12 +41,16 @@ module PermissionsHelper
 
   #get name of u2 (current_user_id, user2_id)
   def getName(u1, u2)
-    @name = " "
-    if isadmin || (u1 == u2) || areFriends(u1, u2) #show real name
-      @name = User.find_by(id: u2).fname.to_s + " " + User.find_by(id: u2).lname.to_s
+    if u1 == nil
+      return User.find_by(id: u2).username.to_s
+    else
+      @name = " "
+      if isadmin || (u1 == u2) || areFriends(u1, u2) #show real name
+        @name = User.find_by(id: u2).fname.to_s + " " + User.find_by(id: u2).lname.to_s
+      end
+      @name = @name.eql?(" ") ? User.find_by(id: u2).username.to_s : @name
+      return @name
     end
-    @name = @name.eql?(" ") ? User.find_by(id: u2).username.to_s : @name
-    return @name
   end
 
   #does u1 have permission to see profile picture of u2 (current_user_id, user2_id)

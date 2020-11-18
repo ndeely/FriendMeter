@@ -6,13 +6,13 @@
 </div>
 
 <!-- featured users -->
-<div class="col-xs-12 col-md-6">
+<div class="featured col-xs-12 col-md-6">
     <h2>Featured Users</h2>
     <% if @fUsers.count == 0 %>
         <p>There are no users to display.</p>
     <% else %>
         <% @fUsers.each do |user| %>
-            <div class="user-sm">  
+            <div class="user-sm col-xs-6 col-md-4">  
                 <a href="/users/<%= user.id %>">
                     <p><%= user.username %></p>
                     <p>
@@ -31,13 +31,13 @@
 </div>
 
 <!-- featured events -->
-<div class="col-xs-12 col-md-6">
+<div class="featured col-xs-12 col-md-6">
     <h2>Featured Events</h2>
     <% if @fEvents.count == 0 %>
         <p>There are no events to display.</p>
     <% else %>
         <% @fEvents.each do |event| %>
-            <div class="user-sm">
+            <div class="event-sm col-xs-6 col-md-4">
                 <a href="/events/<%= event.id %>">
                     <p><%= event.name %></p>
                     <p>
@@ -52,3 +52,5 @@
         <% end %>
     <% end %>
 </div>
+
+<div class="clear"></div>

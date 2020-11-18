@@ -39,6 +39,13 @@ class EventsController < ApplicationController
       redirect_to events_url
     end
     @isAttending = isAttending(params[:id], current_user.id)
+
+    #comments and reviews
+    @isi = isSignedIn
+    @comments = Event.find(params[:id]).comments
+    @comment = Comment.new
+    @reviews = Event.find(params[:id]).reviews
+    @review = Review.new
   end
 
   # GET /events/new

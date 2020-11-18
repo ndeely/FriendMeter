@@ -11,15 +11,15 @@
     <tr>
       <td><%= @notification.title %></td>
       <td><%= @notification.desc %></td>
-      <% if @notification.notification_type == 1 || @notification.notification_type == 3 %>
-        <% if @notification.notification_type == 1 %>
-          <td><%= link_to 'Show User', User.find_by(id: @notification.sender_id) %></td>
-        <% else %>
-          <td><%= link_to 'Show Event', Event.find_by(id: @notification.sender_id) %></td>
-        <% end %>
-        <td><%= link_to 'Accept', '/notifications/' + @notification.id.to_s + '/' + @notification.notification_type.to_s %></td>
+      <% if @notification.notification_type == 1 %>
+        <td><a class="btn btn-info" href="/users/<%= @notification.sender_id %>">Show User</a></td>
+      <% elsif @notification.notification_type == 3 || @notification.notification_type == 4 %>
+        <td><a class="btn btn-info" href="/events/<%= @notification.sender_id %>">Show Event</a></td>
       <% end %>
-      <td><%= link_to 'Delete', @notification, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      <% if @notification.notification_type == 1 || @notification.notification_type == 3 %>
+        <td><%= link_to 'Accept', '/notifications/' + @notification.id.to_s + '/' + @notification.notification_type.to_s, class: "btn btn-success" %></td>
+      <% end %>
+      <td><%= link_to 'Delete', @notification, method: :delete, class: "btn btn-danger", data: { confirm: 'Are you sure?' } %></td>
     </tr>
   </tbody>
 </table>
