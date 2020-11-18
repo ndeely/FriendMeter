@@ -68,7 +68,7 @@ class CommentsController < ApplicationController
     @eventid = @comment.event_id
     @comment.destroy
     respond_to do |format|
-      format.html { redirect_to "/events/" + @eventid.to_s, notice: 'Comment was successfully destroyed.' }
+      format.html { redirect_to "/events/" + @eventid.to_s + "#comments", notice: 'Comment was successfully deleted.' }
       format.json { head :no_content }
     end
   end

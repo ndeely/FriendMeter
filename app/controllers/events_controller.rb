@@ -4,6 +4,7 @@ class EventsController < ApplicationController
   include PermissionsHelper
   include EventsHelper
   include FriendsHelper
+  include ReviewsHelper
 
   # GET /events
   # GET /events.json
