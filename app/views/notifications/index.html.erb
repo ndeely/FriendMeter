@@ -3,35 +3,22 @@
 <% if @notifications.count == 0 %>
   <p>There are no notifications to display</p>
 <% else %>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Desc</th>
-        <th colspan="3"></th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @notifications.each do |notification| %>
-        <tr>
-          <td><%= notification.title %></td>
-          <td><%= notification.desc %></td>
-          <td><%= link_to 'Show Notification', notification, class: "btn btn-info" %></td>
-          <% if notification.notification_type == 1 || notification.notification_type == 2 %>
-            <td><%= link_to 'User', "/users/" + notification.sender_id.to_s, class: "btn btn-info" %></td>
-          <% end %>
-          <% if notification.notification_type == 3 || notification.notification_type == 4 %>
-            <td><%= link_to 'Event', "/events/" + notification.sender_id.to_s, class: "btn btn-info" %></td>
-          <% end %>
-          <% if notification.notification_type == 1 || notification.notification_type == 3 %>
-            <td><%= link_to 'Accept', '/notifications/' + notification.id.to_s + '/' + notification.notification_type.to_s, class: "btn btn-success" %></td>
-          <% end %>
-          <td><%= link_to 'Delete', notification, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-
+  <% @notifications.each do |notification| %>
+    <div class="notification">
+      <h4><%= notification.title %></h4>
+      <p><%= notification.desc %></p>
+      <p class="buttons">
+        <% if notification.notification_type == 1 || notification.notification_type == 2 %>
+          <%= link_to 'User', "/users/" + notification.sender_id.to_s, class: "btn btn-info" %>
+        <% end %>
+        <% if notification.notification_type == 3 || notification.notification_type == 4 %>
+          <%= link_to 'Event', "/events/" + notification.sender_id.to_s, class: "btn btn-info" %>
+        <% end %>
+        <% if notification.notification_type == 1 || notification.notification_type == 3 %>
+          <%= link_to 'Accept', '/notifications/' + notification.id.to_s + '/' + notification.notification_type.to_s, class: "btn btn-success" %>
+        <% end %>
+        <%= link_to 'Delete', notification, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
+      </p>
+    </div>
+  <% end %>
 <% end %>

@@ -1,2 +1,11 @@
-<h1>StaticPages#about</h1>
-<p>Find me in app/views/static_pages/about.html.erb</p>
+<h1>About</h1>
+<div id='map'></div>
+<script>
+mapboxgl.accessToken = 'pk.eyJ1Ijoidnl2eCIsImEiOiJja2hvNHpoNWMwdzY5MnBxcXVkZW1ldG5sIn0.H34EuAUYbhKcNbvq2wRnYw';
+var map = new mapboxgl.Map({
+container: 'map',
+style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
+center: [-74.5, 40], // starting position [lng, lat]
+zoom: 9 // starting zoom
+});
+</script>

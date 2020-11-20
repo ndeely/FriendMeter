@@ -24,48 +24,47 @@
   </thead>
 
   <tbody>
-    <%= will_paginate @events %>
-      <% @events.each do |event| %>
-        <tr>
-          <% if @b1 %>
-            <td><%= event.id %></td>
-          <% end %>
-          <td><%= event.name %></td>
-          <td><%= event.description %></td>
-          <td><%= event.date %></td>
-          <td><%= event.time.strftime("%I:%M %p") %></td>
-          <td>
-          <% if event.avatar.attached? %>
-              <image src="<%= url_for(event.avatar) %>">
-          <% end %>
-          </td>
-          <%
-          @creator = User.all.find(event.user_id)
-          @b2 = @b1 || current_user.id == @creator.id
-          # get the creator's name
-          @name = getName(current_user.id, @creator.id)
-          %>
-          <td>
-            <button class="btn1" onclick="window.location.href='/users/<%= event.user_id.to_s %>'">
-              <span class="circle" aria-hidden="true">
-              <span class="icon arrow"></span>
-              </span>
-              <span class="button-text"><%= @name %></span>
-            </button>
-          </td>
-          <td>
-            <button class="btn1" onclick="window.location.href='/events/<%= event.id %>'">
-              <span class="circle" aria-hidden="true">
-              <span class="icon arrow"></span>
-              </span>
-              <span class="button-text">View</span>
-            </button>
-          </td>
-          <% if @b2 %>
-            <td><%= link_to 'Delete', event, method: :delete, :role=>"button", :class => "btn btn-danger mb-2", data: { confirm: 'Are you sure?' } %></td>
-          <% end %>
-        </tr>
-      <% end %>
-    <%= will_paginate @events %>
+    <% @events.each do |event| %>
+      <tr>
+        <% if @b1 %>
+          <td><%= event.id %></td>
+        <% end %>
+        <td><%= event.name %></td>
+        <td><%= event.description %></td>
+        <td><%= event.date %></td>
+        <td><%= event.time.strftime("%I:%M %p") %></td>
+        <td>
+        <% if event.avatar.attached? %>
+            <image src="<%= url_for(event.avatar) %>">
+        <% end %>
+        </td>
+        <%
+        @creator = User.all.find(event.user_id)
+        @b2 = @b1 || current_user.id == @creator.id
+        # get the creator's name
+        @name = getName(current_user.id, @creator.id)
+        %>
+        <td>
+          <button class="btn1" onclick="window.location.href='/users/<%= event.user_id.to_s %>'">
+            <span class="circle" aria-hidden="true">
+            <span class="icon arrow"></span>
+            </span>
+            <span class="button-text"><%= @name %></span>
+          </button>
+        </td>
+        <td>
+          <button class="btn1" onclick="window.location.href='/events/<%= event.id %>'">
+            <span class="circle" aria-hidden="true">
+            <span class="icon arrow"></span>
+            </span>
+            <span class="button-text">View</span>
+          </button>
+        </td>
+        <% if @b2 %>
+          <td><%= link_to 'Delete', event, method: :delete, :role=>"button", :class => "btn btn-danger mb-2", data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
+      </tr>
+    <% end %>
   </tbody>
 </table>
+<%= will_paginate @events %>

@@ -2,7 +2,7 @@ module EventsHelper
 
     #check if user u is invited to event e (event_id, user_id)
     def isInvited(e, u)
-        @n = Notification.find_by(notification_type: 3, sender_id: e)
+        @n = User.find_by(id: u).notifications.find_by(notification_type: 3, sender_id: e)
         if @n != nil
         return true
         end
@@ -50,6 +50,11 @@ module EventsHelper
         else
             return "other"
         end
+    end
+
+    #find out if event e has ended (event id)
+    def eventEnded(e)
+        return Date.today > Event.find_by(id: e).date
     end
 
 end

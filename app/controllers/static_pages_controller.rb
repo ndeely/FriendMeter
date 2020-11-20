@@ -1,6 +1,7 @@
 class StaticPagesController < ApplicationController
   include PermissionsHelper
   include StaticPagesHelper
+  include ReviewsHelper
 
   def home
     @fUsers = getFeaturedUsers

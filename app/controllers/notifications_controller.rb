@@ -13,6 +13,7 @@ class NotificationsController < ApplicationController
   # GET /notifications/1
   # GET /notifications/1.json
   def show
+    checkadmin
   end
 
   # GET /notifications/new

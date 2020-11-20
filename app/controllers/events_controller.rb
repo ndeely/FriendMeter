@@ -6,11 +6,12 @@ class EventsController < ApplicationController
   include FriendsHelper
   include ReviewsHelper
 
+  require 'will_paginate/array'
+
   # GET /events
   # GET /events.json
   def index
     # TODO remove events due to distance/ sort by distance
-    require 'will_paginate/array'
 
     @b1 = isadmin
     # unfiltered events
@@ -22,7 +23,7 @@ class EventsController < ApplicationController
       @invited = isInvited(event.id, current_user.id)
       @attending = isAttending(event.id, current_user.id)
 
-      if @b1 || !event.private || (user_signed_in? && event.user_id == current_user.id) || @invited || @attending
+      if !eventEnded(event.id) && (@b1 || !event.private || (user_signed_in? && event.user_id == current_user.id) || @invited || @attending)
         @events.push(event)
       end
     end
@@ -35,7 +36,7 @@ class EventsController < ApplicationController
     @creator = User.find(Event.find(params[:id]).user_id)
     @b2 = isadmin || (current_user.id == @creator.id)
     @name = getName(current_user.id, @creator.id)
-    @attending = Event.find(params[:id]).attending
+    @attending = Event.find(params[:id]).attending.paginate(page: params[:page], per_page: 8)
     if Event.find(params[:id]).private && !(@b2 || isInvited(params[:id], current_user.id) || isAttending(params[:id], current_user.id))
       redirect_to events_url
     end
@@ -97,10 +98,12 @@ class EventsController < ApplicationController
   # DELETE /events/1
   # DELETE /events/1.json
   def destroy
-    @event.destroy
-    respond_to do |format|
-      format.html { redirect_to events_url, notice: 'Event was successfully deleted.' }
-      format.json { head :no_content }
+    if !eventEnded(@event.id) || isadmin
+      @event.destroy
+      respond_to do |format|
+        format.html { redirect_to events_url, notice: 'Event was successfully deleted.' }
+        format.json { head :no_content }
+      end
     end
   end
 
@@ -153,24 +156,37 @@ class EventsController < ApplicationController
     @b1 = isadmin
     # unfiltered events
     @ufevents = Event.all.order('date')
-    @events1 = current_user.events #user events
+    @events1 = [] #user events
     @events2 = [] #attending
     @events3 = [] #invited
+    @events4 = [] #expired events created or attended
     @ufevents.each do |event|
 
-      # work out if the user is invited/attending and doesn't own the event
-      @invited = isInvited(event.id, current_user.id) && (current_user.id != event.user_id)
-      @attending = isAttending(event.id, current_user.id) && (current_user.id != event.user_id)
+      #user events
+      @ue = (current_user.id == event.user_id) && !eventEnded(event.id)
+      # work out if the user is invited/attending, doesn't own the event, and the event isn't over
+      @attending = isAttending(event.id, current_user.id) && !eventEnded(event.id)
+      @invited = isInvited(event.id, current_user.id) && (current_user.id != event.user_id) && !eventEnded(event.id)
+      #past events
+      @pe = eventEnded(event.id) && ((current_user.id == event.user_id) || isAttending(event.id, current_user.id))
 
-      if @invited
-        @events3.push(event)
-      elsif @attending
+      if @ue
+        @events1.push(event)
+      end
+      if @attending
         @events2.push(event)
       end
+      if @invited
+        @events3.push(event)
+      end
+      if @pe
+        @events4.push(event)
+      end
     end
-    @events1 = @events1.paginate(page: params[:page], per_page: 6)
-    @events2 = @events2.paginate(page: params[:page], per_page: 6)
-    @events3 = @events3.paginate(page: params[:page], per_page: 6)
+    @events1 = @events1.paginate(page: params[:page1], per_page: 6)
+    @events2 = @events2.paginate(page: params[:page2], per_page: 6)
+    @events3 = @events3.paginate(page: params[:page3], per_page: 6)
+    @events4 = @events4.paginate(page: params[:page4], per_page: 6)
   end
 
   private

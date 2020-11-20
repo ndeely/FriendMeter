@@ -24,6 +24,7 @@
                     </p>
                     <p>Friends Made: <%= user.friends.count %></p>
                     <p>Events Created: <%= user.events.count %></p>
+                    <p>Average User rating:<br><%= getAvgUserStarRating(user) %></p>
                 </a>
             </div>
         <% end %>

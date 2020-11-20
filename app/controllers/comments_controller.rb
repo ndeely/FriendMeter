@@ -41,7 +41,7 @@ class CommentsController < ApplicationController
       @c.save
       #inform owner of event that there's a new comment
       @owner = User.find_by(id: @event.user_id)
-      @n = @owner.notifications.build(:user_id => @owner, :title => current_user.username.to_s + " has commented on your event " + @event.title + ".", :desc => current_user.username.to_s + ' is awaiting your response.', :sender_id => @event.id, :notification_type => 4)
+      @n = @owner.notifications.build(:user_id => @owner, :title => current_user.username.to_s + " has commented on your event " + @event.name + ".", :desc => current_user.username.to_s + ' is awaiting your response.', :sender_id => @event.id, :notification_type => 4)
       @n.save
       redirect_to "/events/" + @event.id.to_s + "#comments", notice: "Your comment has been posted."
     end
