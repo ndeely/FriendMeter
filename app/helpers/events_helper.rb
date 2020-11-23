@@ -57,4 +57,28 @@ module EventsHelper
         return Date.today > Event.find_by(id: e).date
     end
 
+    #get user's events that haven't ended (user id)
+    def getUnfinishedEvents(u)
+        @es = []
+        @alles = User.find_by(id: u).events
+        @alles.each do |e|
+            if !eventEnded(e)
+                @es.push(e)
+            end
+        end
+        return @es
+    end
+
+    #get user's events that have ended (user id, boolean includePrivate)
+    def getFinishedEvents(u, b)
+        @es = []
+        @alles = User.find_by(id: u).events
+        @alles.each do |e|
+            if eventEnded(e) && (b ? e.private : true)
+                @es.push(e)
+            end
+        end
+        return @es
+    end
+
 end

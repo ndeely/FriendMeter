@@ -1,7 +1,7 @@
 <h1>My Events</h1>
 <h2>Events Created</h2>
 <% if @events1.count == 0 %>
-    <p>You have not created any events.</p>
+    <p>You have not created any upcoming events.</p>
 <% else %>
     <table class="table events">
         <thead class="thead-dark">
@@ -55,7 +55,7 @@
 
 <h2>Attending</h2>
 <% if @events2.count == 0 %>
-    <p>You are not attending any events.</p>
+    <p>You are not attending any upcoming events.</p>
 <% else %>
     <table class="table events">
         <thead class="thead-dark">

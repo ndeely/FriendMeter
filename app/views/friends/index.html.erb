@@ -3,28 +3,6 @@
   <p>You have not made any friends here yet.</p>
 <% else %>
   <% @friends.each do |friend| %>
-    <% @friend = User.find_by(id: friend.friend_id)
-      @name = @friend.fname.to_s + " " + @friend.lname.to_s
-      @name = @name.eql?(" ") ? @friend.username.to_s : @name
-    %>
-    <div class="user-sm col-xs-4 col-md-2">  
-      <a href="/users/<%= @friend.id %>">
-        <p><%= @name %></p>
-        <p>
-        <% if @friend.avatar.attached? %>
-            <image src="<%= url_for(@friend.avatar) %>">
-        <% else %>
-            <%= image_tag("ph.png") %>
-        <% end %>
-        </p>
-        <% if @b1
-          @f2 = User.find_by(id: friend.user_id)
-          @name = @f2.fname.to_s + " " + @f2.lname.to_s
-          @name = @name.eql?(" ") ? @f2.username.to_s : @name
-        %>
-          <p>Friends with <%= @name %></p>
-        <% end %>
-      </a>
-    </div>
+    <%= getFriendSm(friend.id) %>
   <% end %>
 <% end %>

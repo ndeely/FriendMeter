@@ -44,10 +44,6 @@ h1, h2, h3 {
     text-align:center;
 }
 
-.events img {
-    max-width:150px;
-}
-
 .comment, .review {
     width:650px;
     margin:auto;
@@ -76,6 +72,11 @@ h1, h2, h3 {
     max-width:300px;
 }
 
+//must be after .profile img
+.events img {
+    max-width:150px;
+}
+
 //small profile/event view
 .user-sm, .event-sm {
     position:relative;
@@ -88,6 +89,10 @@ h1, h2, h3 {
         text-align:center;
         color:#000;
         font-weight:bold;
+        
+        &.name {
+            color:blue;
+        }
     }
     img {
         max-width:150px;

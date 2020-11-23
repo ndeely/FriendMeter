@@ -88,7 +88,7 @@ class ProfilesController < ApplicationController
         @invited = isInvited(event.id, current_user.id)
         @attending = isAttending(event.id, current_user.id)
 
-        if !event.private || @b2 || @invited || @attending
+        if (!event.private || @b2 || @invited || @attending) && !eventEnded(event.id)
           @events.push(event)
         end
       end

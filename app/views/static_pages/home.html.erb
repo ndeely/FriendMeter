@@ -12,21 +12,7 @@
         <p>There are no users to display.</p>
     <% else %>
         <% @fUsers.each do |user| %>
-            <div class="user-sm col-xs-6 col-md-4">  
-                <a href="/users/<%= user.id %>">
-                    <p><%= user.username %></p>
-                    <p>
-                    <% if user.avatar.attached? %>
-                        <image src="<%= url_for(user.avatar) %>">
-                    <% else %>
-                        <%= image_tag("ph.png") %>
-                    <% end %>
-                    </p>
-                    <p>Friends Made: <%= user.friends.count %></p>
-                    <p>Events Created: <%= user.events.count %></p>
-                    <p>Average User rating:<br><%= getAvgUserStarRating(user) %></p>
-                </a>
-            </div>
+            <%= getUserSm(user.id) %>
         <% end %>
     <% end %>
 </div>
@@ -38,18 +24,7 @@
         <p>There are no events to display.</p>
     <% else %>
         <% @fEvents.each do |event| %>
-            <div class="event-sm col-xs-6 col-md-4">
-                <a href="/events/<%= event.id %>">
-                    <p><%= event.name %></p>
-                    <p>
-                    <% if event.avatar.attached? %>
-                        <image src="<%= url_for(event.avatar) %>">
-                    <% end %>
-                    </p>
-                    <p>Attendees: <%= Attending.where(event_id: event.id).count %></p>
-                    <p>Created By: <%= User.find_by(id: event.user_id).username %></p>
-                </a>
-            </div>
+            <%= getEventSm(event.id) %>
         <% end %>
     <% end %>
 </div>

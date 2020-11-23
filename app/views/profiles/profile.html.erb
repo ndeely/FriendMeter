@@ -34,7 +34,7 @@
     <div class="events">
         <h2><%= @name %>'s Events</h2>
         <% if @events.count == 0 %>
-            <p>This user has not created any events.</p>
+            <p>This user has not created any upcoming events.</p>
         <% else %>
             <table class="table events">
                 <thead class="thead-dark">
@@ -89,11 +89,11 @@
     </div>
 
     <% if !(current_user.id == @creator.id)
-        @userEvents = current_user.events %>
+        @userEvents = getUnfinishedEvents(current_user.id) %>
         <div class="events">
             <h2>Your Events</h2>
             <% if @userEvents.count == 0 %>
-                <p>You have not created any events.</p>
+                <p>You have not created any upcoming events.</p>
             <% else %>
                 <table class="table events">
                     <thead class="thead-dark">
@@ -137,15 +137,17 @@
                                 </td>
                                 <td><%= link_to 'Delete', event, method: :delete, :role=>"button", :class => "btn btn-danger mb-2", data: { confirm: 'Are you sure?' } %></td>
                                 <td>
-                                    <% if !isInvited(event.id, @creator.id) %>
+                                    <% if isInvited(event.id, @creator.id) %>
+                                        <p>This user has been invited.</p>
+                                    <% elsif isAttending(event.id, @creator.id) %>
+                                        <p>This user is attending.</p>
+                                    <% else %>
                                         <button class="btn1" onclick="window.location.href='/events/<%= event.id %>/<%= @creator.id %>/1'">
                                             <span class="circle" aria-hidden="true">
                                             <span class="icon arrow"></span>
                                             </span>
                                             <span class="button-text">Invite User</span>
                                         </button>
-                                    <% else %>
-                                        <p>This user has been invited.</p>
                                     <% end %>
                                 </td>
                             </tr>
