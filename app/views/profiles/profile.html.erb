@@ -32,7 +32,7 @@
     <div class="clear"></div>
     <!-- show user events -->
     <div class="events">
-        <h2><%= @name %>'s Events</h2>
+        <h2><%= @name %>'s Upcoming Events</h2>
         <% if @events.count == 0 %>
             <p>This user has not created any upcoming events.</p>
         <% else %>
@@ -91,7 +91,7 @@
     <% if !(current_user.id == @creator.id)
         @userEvents = getUnfinishedEvents(current_user.id) %>
         <div class="events">
-            <h2>Your Events</h2>
+            <h2>Your Upcoming Events</h2>
             <% if @userEvents.count == 0 %>
                 <p>You have not created any upcoming events.</p>
             <% else %>

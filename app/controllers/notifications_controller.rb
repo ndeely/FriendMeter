@@ -2,6 +2,7 @@ class NotificationsController < ApplicationController
   before_action :set_notification, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
   include PermissionsHelper
+  include NotificationsHelper
 
   # GET /notifications
   # GET /notifications.json
@@ -62,9 +63,21 @@ class NotificationsController < ApplicationController
   def destroy
     @notification.destroy
     respond_to do |format|
-      format.html { redirect_to notifications_url, notice: 'Notification was successfully destroyed.' }
+      format.html { redirect_to notifications_url, notice: 'Notification was successfully deleted.' }
       format.json { head :no_content }
     end
+  end
+
+  def deleteAll
+    if current_user.id != params[:uid]
+      redirect_to "/notifications", notice: "You cannot delete someone else's notifications."
+    else
+      deleteUserNotifications(params[:uid])
+    end
+  end
+
+  def deleteForEvent
+    deleteEventNotifications(current_user.id, params[:eid])
   end
 
   #accept friend request ('/notifications/:id/1')

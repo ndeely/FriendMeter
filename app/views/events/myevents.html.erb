@@ -26,6 +26,8 @@
                     <td>
                         <% if event.avatar.attached? %>
                             <image src="<%= url_for(event.avatar) %>">
+                        <% else %>
+                            <%= image_tag("eph.png") %>
                         <% end %>
                     </td>
                     <td class="toggle"><%= !event.private ? image_tag("tick.png") : image_tag("red-x.png") %></td>
@@ -80,6 +82,8 @@
                     <td>
                         <% if event.avatar.attached? %>
                             <image src="<%= url_for(event.avatar) %>">
+                        <% else %>
+                            <%= image_tag("eph.png") %>
                         <% end %>
                     </td>
                     <td class="toggle"><%= !event.private ? image_tag("tick.png") : image_tag("red-x.png") %></td>
@@ -125,6 +129,8 @@
                     <td>
                         <% if event.avatar.attached? %>
                             <image src="<%= url_for(event.avatar) %>">
+                        <% else %>
+                            <%= image_tag("eph.png") %>
                         <% end %>
                     </td>
                     <td class="toggle"><%= !event.private ? image_tag("tick.png") : image_tag("red-x.png") %></td>
@@ -178,6 +184,8 @@
                     <td>
                         <% if event.avatar.attached? %>
                             <image src="<%= url_for(event.avatar) %>">
+                        <% else %>
+                            <%= image_tag("eph.png") %>
                         <% end %>
                     </td>
                     <td class="toggle"><%= !event.private ? image_tag("tick.png") : image_tag("red-x.png") %></td>

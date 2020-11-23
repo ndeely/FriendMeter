@@ -38,7 +38,7 @@ module StaticPagesHelper
             '<a href="/events/' + e.to_s + '">' +
             '<p class="name">' + @e.name.to_s + '</p>' +
             '<p>'
-        @html += @e.avatar.attached? ? '<image src="' + url_for(@e.avatar) + '">' : ''
+        @html += @e.avatar.attached? ? '<image src="' + url_for(@e.avatar) + '">' : image_tag("eph.png")
         @html += '</p>' +
             '<p>Attendees: ' + Attending.where(event_id: e).count.to_s + '</p>' +
             '<p>Created By: ' + User.find_by(id: @e.user_id).username + '</p>' +

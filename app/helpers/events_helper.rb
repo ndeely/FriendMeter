@@ -4,7 +4,7 @@ module EventsHelper
     def isInvited(e, u)
         @n = User.find_by(id: u).notifications.find_by(notification_type: 3, sender_id: e)
         if @n != nil
-        return true
+            return true
         end
         return false
     end
@@ -13,7 +13,7 @@ module EventsHelper
     def isAttending(e, u)
         @a = Attending.find_by(event_id: e, user_id: u)
         if @a != nil
-        return true
+            return true
         end
         return false
     end
@@ -80,5 +80,14 @@ module EventsHelper
         end
         return @es
     end
+
+    #delete all x (array x)
+    #used by events#destroy for deleting info for event being deleted
+    def deleteAll(xs)
+        xs.each do |x|
+            x.destroy
+        end
+    end
+
 
 end

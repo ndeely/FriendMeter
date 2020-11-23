@@ -38,6 +38,12 @@
 
     <div class="field">
       <%= form.label :"Event Picture" %>
+      <br>
+      <% if event.avatar.attached? %>
+        <img src="<%= url_for(event.avatar) %>">
+      <% else %>
+        <%= image_tag("eph.png") %>
+      <% end %>
       <%= form.file_field :avatar %>
     </div>
 

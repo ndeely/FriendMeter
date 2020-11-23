@@ -36,6 +36,9 @@ form.form {
 
     .field, .actions {
         margin-top:10px;
+        img {
+            max-width:300px;
+        }
     }
 
     .actions {

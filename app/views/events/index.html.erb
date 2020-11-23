@@ -34,9 +34,11 @@
         <td><%= event.date %></td>
         <td><%= event.time.strftime("%I:%M %p") %></td>
         <td>
-        <% if event.avatar.attached? %>
-            <image src="<%= url_for(event.avatar) %>">
-        <% end %>
+          <% if event.avatar.attached? %>
+            <img src="<%= url_for(event.avatar) %>">
+          <% else %>
+            <%= image_tag("eph.png") %>
+          <% end %>
         </td>
         <%
         @creator = User.all.find(event.user_id)

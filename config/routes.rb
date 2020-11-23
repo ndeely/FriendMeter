@@ -36,6 +36,8 @@ Rails.application.routes.draw do
   #notifications
   get '/notifications/:id/1' => 'notifications#acceptFriend' #accept friend request
   get '/notifications/:id/3' => 'notifications#acceptEvent' #accept event invite from notifications
+  get '/notifications/:uid/9' => 'notifications#deleteAll' #delete all notifications for current user
+  get '/notifications/:eid/8' => 'notifications#deleteForEvent' #delete all notifications related to event for current user
 
   #attend event or send invite
   get '/events/:eid/1' => 'events#attend' #agree to attend event from event

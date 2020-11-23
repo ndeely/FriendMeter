@@ -5,6 +5,7 @@ class EventsController < ApplicationController
   include EventsHelper
   include FriendsHelper
   include ReviewsHelper
+  include NotificationsHelper
 
   require 'will_paginate/array'
 
@@ -99,6 +100,13 @@ class EventsController < ApplicationController
   # DELETE /events/1.json
   def destroy
     if !eventEnded(@event.id) || isadmin
+      #delete all attendings/comments/invites/notifications for event
+      @as = @event.attendings
+      deleteAll(@as)
+      @cs = @event.comments
+      deleteAll(@cs)
+      deleteEventNotifications(nil, @event.id)
+
       @event.destroy
       respond_to do |format|
         format.html { redirect_to events_url, notice: 'Event was successfully deleted.' }
