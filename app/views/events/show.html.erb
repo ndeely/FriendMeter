@@ -21,12 +21,7 @@
 
   <!-- show event buttons -->
   <% if @b1 || !eventEnded(@event.id) %>
-    <button class="btn1" onclick="window.location.href='<%= edit_event_path(@event) %>'">
-        <span class="circle" aria-hidden="true">
-        <span class="icon arrow"></span>
-        </span>
-        <span class="button-text">Edit</span>
-    </button>
+    <a class="btn btn-warning" href="<%= edit_event_path(@event) %>">Edit</a>
     <%= link_to 'Delete', @event, method: :delete, :role=>"button", :class => "btn btn-danger mb-2", data: { confirm: 'Are you sure?' } %>
   <% end %>
   <button class="btn1" onclick="window.location.href='javascript: history.go(-1)'">
@@ -45,17 +40,19 @@
   <% @attending.each do |a|
     @user = User.find_by(id: a.user_id)
     @name = getName(current_user.id, a.user_id) %>
-    <div class="user-sm col-xs-4 col-md-2">
-      <a href="/users/<%= @user.id.to_s %>">
-        <p><%= @name %></p>
-        <p>
-          <% if showPic(current_user.id, a.user_id) %>
-            <img src="<%= url_for(@user.avatar) %>" />
-          <% else %>
-            <%= image_tag("ph.png") %>
-          <% end %>
-        </p>
-      </a>
+    <div class="col-xs-4 col-md-2">
+      <div class="user-sm">
+        <a href="/users/<%= @user.id.to_s %>">
+          <p><%= @name %></p>
+          <p>
+            <% if showPic(current_user.id, a.user_id) %>
+              <img src="<%= url_for(@user.avatar) %>" />
+            <% else %>
+              <%= image_tag("ph.png") %>
+            <% end %>
+          </p>
+        </a>
+      </div>
     </div>
   <% end %>
 <% end %>

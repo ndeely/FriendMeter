@@ -3,215 +3,42 @@
 <% if @events1.count == 0 %>
     <p>You have not created any upcoming events.</p>
 <% else %>
-    <table class="table events">
-        <thead class="thead-dark">
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Image</th>
-                <th>Public</th>
-                <th colspan="3"></th>
-            </tr>
-        </thead>
-    
-        <tbody>
-            <% @events1.each do |event| %>
-                <tr>
-                    <td><%= event.name %></td>
-                    <td><%= event.description %></td>
-                    <td><%= event.date %></td>
-                    <td><%= event.time.strftime("%I:%M %p") %></td>
-                    <td>
-                        <% if event.avatar.attached? %>
-                            <image src="<%= url_for(event.avatar) %>">
-                        <% else %>
-                            <%= image_tag("eph.png") %>
-                        <% end %>
-                    </td>
-                    <td class="toggle"><%= !event.private ? image_tag("tick.png") : image_tag("red-x.png") %></td>
-                    <td>
-                        <button class="btn1" onclick="window.location.href='/events/<%= event.id %>'">
-                            <span class="circle" aria-hidden="true">
-                            <span class="icon arrow"></span>
-                            </span>
-                            <span class="button-text">View</span>
-                        </button>
-                    </td>
-                    <td>
-                        <button class="btn1" onclick="window.location.href='<%= edit_event_path(event) %>'">
-                            <span class="circle" aria-hidden="true">
-                            <span class="icon arrow"></span>
-                            </span>
-                            <span class="button-text">Edit</span>
-                        </button>
-                    </td>
-                    <td><%= link_to 'Delete', event, method: :delete, :role=>"button", :class => "btn btn-danger mb-2", data: { confirm: 'Are you sure?' } %></td>
-                </tr>
-            <% end %>
-        </tbody>
-    </table>
+    <% @events1.each do |event| %>
+        <%= getEventMd(event.id, nil) %>
+    <% end %>
 <% end %>
 <%= will_paginate @events1 %>
+<div class="clear"></div>
 
 <h2>Attending</h2>
 <% if @events2.count == 0 %>
     <p>You are not attending any upcoming events.</p>
 <% else %>
-    <table class="table events">
-        <thead class="thead-dark">
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Image</th>
-                <th>Public</th>
-                <th colspan="1"></th>
-            </tr>
-        </thead>
-    
-        <tbody>
-            <% @events2.each do |event| %>
-                <tr>
-                    <td><%= event.name %></td>
-                    <td><%= event.description %></td>
-                    <td><%= event.date %></td>
-                    <td><%= event.time.strftime("%I:%M %p") %></td>
-                    <td>
-                        <% if event.avatar.attached? %>
-                            <image src="<%= url_for(event.avatar) %>">
-                        <% else %>
-                            <%= image_tag("eph.png") %>
-                        <% end %>
-                    </td>
-                    <td class="toggle"><%= !event.private ? image_tag("tick.png") : image_tag("red-x.png") %></td>
-                    <td>
-                        <button class="btn1" onclick="window.location.href='/events/<%= event.id %>'">
-                            <span class="circle" aria-hidden="true">
-                            <span class="icon arrow"></span>
-                            </span>
-                            <span class="button-text">View</span>
-                        </button>
-                    </td>
-                </tr>
-            <% end %>
-        </tbody>
-    </table>
+    <% @events2.each do |event| %>
+        <%= getEventMd(event.id, nil) %>
+    <% end %>
 <% end %>
 <%= will_paginate @events2 %>
+<div class="clear"></div>
 
 <h2>Invited</h2>
 <% if @events3.count == 0 %>
     <p>You have not been invited to any events.</p>
 <% else %>
-    <table class="table events">
-        <thead class="thead-dark">
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Image</th>
-                <th>Public</th>
-                <th colspan="2"></th>
-            </tr>
-        </thead>
-    
-        <tbody>
-            <% @events3.each do |event| %>
-                <tr>
-                    <td><%= event.name %></td>
-                    <td><%= event.description %></td>
-                    <td><%= event.date %></td>
-                    <td><%= event.time.strftime("%I:%M %p") %></td>
-                    <td>
-                        <% if event.avatar.attached? %>
-                            <image src="<%= url_for(event.avatar) %>">
-                        <% else %>
-                            <%= image_tag("eph.png") %>
-                        <% end %>
-                    </td>
-                    <td class="toggle"><%= !event.private ? image_tag("tick.png") : image_tag("red-x.png") %></td>
-                    <td>
-                        <button class="btn1" onclick="window.location.href='/events/<%= event.id %>'">
-                            <span class="circle" aria-hidden="true">
-                            <span class="icon arrow"></span>
-                            </span>
-                            <span class="button-text">View</span>
-                        </button>
-                    </td>
-                    <td>
-                        <button class="btn1" onclick="window.location.href='/events/<%= event.id %>/1'">
-                            <span class="circle" aria-hidden="true">
-                            <span class="icon arrow"></span>
-                            </span>
-                            <span class="button-text">Attend</span>
-                        </button>
-                    </td>
-                </tr>
-            <% end %>
-        </tbody>
-    </table>
+    <% @events3.each do |event| %>
+        <%= getEventMd(event.id, nil) %>
+    <% end %>
 <% end %>
 <%= will_paginate @events3 %>
+<div class="clear"></div>
 
 <h2>Past Events</h2>
 <% if @events4.count == 0 %>
     <p>You do not have any past events.</p>
 <% else %>
-    <table class="table events">
-        <thead class="thead-dark">
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Image</th>
-                <th>Public</th>
-                <th colspan="2"></th>
-            </tr>
-        </thead>
-    
-        <tbody>
-            <% @events4.each do |event| %>
-                <tr>
-                    <td><%= event.name %></td>
-                    <td><%= event.description %></td>
-                    <td><%= event.date %></td>
-                    <td><%= event.time.strftime("%I:%M %p") %></td>
-                    <td>
-                        <% if event.avatar.attached? %>
-                            <image src="<%= url_for(event.avatar) %>">
-                        <% else %>
-                            <%= image_tag("eph.png") %>
-                        <% end %>
-                    </td>
-                    <td class="toggle"><%= !event.private ? image_tag("tick.png") : image_tag("red-x.png") %></td>
-                    <td>
-                        <button class="btn1" onclick="window.location.href='/events/<%= event.id %>'">
-                            <span class="circle" aria-hidden="true">
-                            <span class="icon arrow"></span>
-                            </span>
-                            <span class="button-text">View</span>
-                        </button>
-                    </td>
-                    <td>
-                        <% if !hasReviewed(current_user.id, event.id) %>
-                            <button class="btn1" onclick="window.location.href='/events/<%= event.id %>#reviews'">
-                                <span class="circle" aria-hidden="true">
-                                <span class="icon arrow"></span>
-                                </span>
-                                <span class="button-text">Review</span>
-                            </button>
-                        <% else %>
-                            <%= getUserStarRating(current_user.id, event.id) %>
-                        <% end %>
-                    </td>
-                </tr>
-            <% end %>
-        </tbody>
-    </table>
+    <% @events4.each do |event| %>
+        <%= getEventMd(event.id, nil) %>
+    <% end %>
 <% end %>
 <%= will_paginate @events4 %>
+<div class="clear"></div>

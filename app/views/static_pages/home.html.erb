@@ -19,11 +19,23 @@
 
 <!-- featured events -->
 <div class="featured col-xs-12 col-md-6">
-    <h2>Featured Events</h2>
+    <h2>Featured Upcoming Events</h2>
     <% if @fEvents.count == 0 %>
         <p>There are no events to display.</p>
     <% else %>
         <% @fEvents.each do |event| %>
+            <%= getEventSm(event.id) %>
+        <% end %>
+    <% end %>
+</div>
+
+<!-- featured past events -->
+<div class="featured col-xs-12 col-md-6">
+    <h2>Featured Past Events</h2>
+    <% if @fpEvents.count == 0 %>
+        <p>There are no events to display.</p>
+    <% else %>
+        <% @fpEvents.each do |event| %>
             <%= getEventSm(event.id) %>
         <% end %>
     <% end %>

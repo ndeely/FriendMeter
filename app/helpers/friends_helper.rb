@@ -40,4 +40,25 @@ module FriendsHelper
             return true
         end
     end
+
+    #get user-sm for friend (friend id)
+    #used on friends main page
+    def getFriendSm(f)
+        @f = User.find_by(id: Friend.find_by(id: f).friend_id)
+        @name = getName(current_user.id, @f.id)
+        @html = '<div class="user-sm col-xs-4 col-md-2">' +
+            '<a href="/users/' + f.to_s + '">' +
+            '<p class="image">'
+        @html += @f.avatar.attached? ? '<image src="' + url_for(@f.avatar) + '">' : image_tag("ph.png")
+        @html += '</p>' +
+            '<p class="name">' + @name + '</p>'
+        if isadmin
+            @f2 = User.find_by(id: Friend.find_by(id: f).user_id)
+            @name = getName(current_user.id, @f2.id)
+            @html += '<p>Friends with: ' + @name + '</p>'
+        end
+        @html += '</a>' +
+            '</div>'
+        return @html.html_safe
+    end
 end

@@ -116,13 +116,43 @@ module EventsHelper
         end
     end
 
+    #get event-sm for event (event id)
+    #used on homepage
+    def getEventSm(e)
+        @e = Event.find_by(id: e)
+        @html = '<div class="col-xs-6 col-md-4">' +
+            '<div class="event-sm">' +
+            '<a href="/events/' + e.to_s + '">' +
+            '<p class="image">'
+        @html += @e.avatar.attached? ? '<image src="' + url_for(@e.avatar) + '">' : image_tag("eph.png")
+        @html += '</p>' +
+            '<p class="name">' + @e.name.to_s + '</p>' +
+            '<p>' + @e.date.to_s + " " + @e.time.strftime("%I:%M %p").to_s + '</p>' +
+            '<p>Attendees: ' + Attending.where(event_id: e).count.to_s + '</p>' +
+            '</a>' +
+            '<a href="/users/' + @e.user_id.to_s + '">' +
+            '<p>Created By: ' + User.find_by(id: @e.user_id).username + '</p>' +
+            '</a>'
+        if eventEnded(e) #show reviews
+            @html += '<a href="/events/' + e.to_s + '#reviews">' +
+                '<p>' + getAvgStarRating(e) + '</p>' +
+                '<p class="red">Reviews (' + @e.reviews.count.to_s + ')</p></a>'
+        else #show comments
+            @html += '<a href="/events/' + e.to_s + '#comments">' +
+                '<p class="red">Comments (' + @e.comments.count.to_s + ')</p></a>'
+        end
+        @html += '</div>' +
+            '</div>'
+        return @html.html_safe
+    end
+
     #get medium sized event (event id, user id who's profile current user is on)
     def getEventMd(e, u)
         @e = Event.find_by(id: e)
         @html = '<a href="/events/' + @e.id.to_s + '">' +
             '<div class="col-xs-12 col-md-6">' +
             '<div class="event-md">' +
-            '<p>'
+            '<p class="image">'
         @html += @e.avatar.attached? ? '<image src="' + url_for(@e.avatar) + '">' : image_tag("eph.png")
         @html += '</p>' +
             '<p class="name">' + @e.name + '</p>' +
@@ -131,27 +161,39 @@ module EventsHelper
         @html += (current_user.id == @e.user_id) ? "<p>Public: " + (!@e.private ? image_tag("tick.png") : image_tag("red-x.png")) + "</p>" : ""
         @html += '</a>'
         # show invited/attending status if on user's profile
-        if @e.user_id == current_user.id && !eventEnded(e) #this is current user's event
+        if @e.user_id == current_user.id && !eventEnded(e) && u != nil #this is current user's event
             if isInvited(e, u)
-                @html += '<p class="green">This user has been invited.</p>'
+                @html += '<p class="green">Invited</p>'
             elsif isAttending(e, u)
-                @html += '<p class="green">This user is attending.</p>'
+                @html += '<p class="green">Attending</p>'
             else
                 @html += '<a class="btn btn-success" href="/events/' + @e.id.to_s + '/' + u.to_s + '/1">Invite User</a>'
             end
-        elsif @e.user_id == u && !eventEnded(e) #this is other user's event
+        elsif (@e.user_id == u || u == nil) && !eventEnded(e) #this is other user's event
             if isAttending(e, current_user.id)
                 @html += '<p class="green">You are attending this event.</p>' +
                 '<p><a class="btn btn-danger" href="/events/' + @e.id.to_s + '/2">Unattend Event</a></p>'
             elsif isInvited(e, current_user.id)
                 @html += '<p class="green">You are invited to this event.</p>' +
-                    '<p><a class="btn btn-success" href="/events/' + @e.id.to_s + '/' + u.to_s + '/2">Accept Invitation</a></p>'
+                    '<p><a class="btn btn-success" href="/events/' + @e.id.to_s + '/' + @e.user_id.to_s + '/2">Accept Invitation</a></p>'
             else
                 @html += '<p class="red">You are not attending this event.</p>' +
                     '<p><a class="btn btn-success" href="/events/' + @e.id.to_s + '/1">Attend Event</a></p>'
             end
+        elsif eventEnded(e)
+            if isAttending(e, current_user.id)
+                if !(hasReviewed(current_user.id, e))
+                    @html += '<p><a class="btn btn-success" href="/events/' + e.to_s + '#reviews">Review</a></p>'
+                else
+                    @html += '<p>Your Review: ' + getUserStarRating(current_user.id, e) + '</p>'
+                end
+            end
+            @html += '<p>Average Review: ' + getAvgStarRating(e) + '</p>'
         end
-        @html += '</div>' +
+        @html += '<a href="/users/' + @e.user_id.to_s + '">' +
+            '<p>Created By: ' + getName(current_user.id, @e.user_id) + '</p>' +
+            '</a>' +
+            '</div>' +
             '</div>'
         return @html.html_safe
     end

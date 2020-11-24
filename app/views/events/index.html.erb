@@ -1,72 +1,9 @@
-<h1>Events</h1>
+<a class="btn btn-success" href="/events/new">Create New Event</a>
+<div class="clear"></div>
 
-<button class="btn1" onclick="window.location.href='<%= new_event_path %>'">
-  <span class="circle" aria-hidden="true">
-  <span class="icon arrow"></span>
-  </span>
-  <span class="button-text">Create Event</span>
-</button>
-
-<table class="table events">
-  <thead class="thead-dark">
-    <tr>
-      <% if @b1 %>
-        <th>Event ID</th>
-      <% end %>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Date</th>
-      <th>Time</th>
-      <th>Pic</th>
-      <th>Creator</th>
-      <th>View Event</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @events.each do |event| %>
-      <tr>
-        <% if @b1 %>
-          <td><%= event.id %></td>
-        <% end %>
-        <td><%= event.name %></td>
-        <td><%= event.description %></td>
-        <td><%= event.date %></td>
-        <td><%= event.time.strftime("%I:%M %p") %></td>
-        <td>
-          <% if event.avatar.attached? %>
-            <img src="<%= url_for(event.avatar) %>">
-          <% else %>
-            <%= image_tag("eph.png") %>
-          <% end %>
-        </td>
-        <%
-        @creator = User.all.find(event.user_id)
-        @b2 = @b1 || current_user.id == @creator.id
-        # get the creator's name
-        @name = getName(current_user.id, @creator.id)
-        %>
-        <td>
-          <button class="btn1" onclick="window.location.href='/users/<%= event.user_id.to_s %>'">
-            <span class="circle" aria-hidden="true">
-            <span class="icon arrow"></span>
-            </span>
-            <span class="button-text"><%= @name %></span>
-          </button>
-        </td>
-        <td>
-          <button class="btn1" onclick="window.location.href='/events/<%= event.id %>'">
-            <span class="circle" aria-hidden="true">
-            <span class="icon arrow"></span>
-            </span>
-            <span class="button-text">View</span>
-          </button>
-        </td>
-        <% if @b2 %>
-          <td><%= link_to 'Delete', event, method: :delete, :role=>"button", :class => "btn btn-danger mb-2", data: { confirm: 'Are you sure?' } %></td>
-        <% end %>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<% @events.each do |event| %>
+  <%= getEventMd(event.id, nil) %>
+<% end %>
 <%= will_paginate @events %>
+
+<div class="clear"></div>
