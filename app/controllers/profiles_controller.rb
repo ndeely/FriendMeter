@@ -2,6 +2,7 @@ class ProfilesController < ApplicationController
   include PermissionsHelper
   include FriendsHelper
   include EventsHelper
+  include ReviewsHelper
   before_action :set_profile, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
 
@@ -127,6 +128,12 @@ class ProfilesController < ApplicationController
         redirect_to "/users/" + params[:id], notice: "There was a problem processing your request."
       end
     end
+  end
+
+  #show reviews for user ('/user/:uid/reviews')
+  def reviews
+    @u = User.find_by(id: params[:uid])
+    @rs = getUserReviews(params[:uid])
   end
 
   private

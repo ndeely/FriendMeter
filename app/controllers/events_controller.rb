@@ -152,7 +152,13 @@ class EventsController < ApplicationController
   #send user an invite to an event ('/events/:eid/:uid/1')
   def invite
     signedin
-    sendEventInvite(params[:eid], params[:uid], current_user.id)
+    sendEventInvite(params[:eid], params[:uid])
+  end
+
+  #accept invite to event ('/events/:eid/:uid/2')
+  def acceptInvite
+    signedin
+    acceptEventInvite(params[:eid], params[:uid])
   end
 
   # GET /myevents

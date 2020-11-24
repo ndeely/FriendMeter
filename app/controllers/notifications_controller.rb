@@ -8,7 +8,7 @@ class NotificationsController < ApplicationController
   # GET /notifications.json
   def index
     @b1 = isadmin
-    @notifications = @b1 ? Notification.all : current_user.notifications
+    @ns = @b1 ? Notification.all : current_user.notifications
   end
 
   # GET /notifications/1
@@ -68,14 +68,16 @@ class NotificationsController < ApplicationController
     end
   end
 
+  #delete all notifications ('/notifications/:uid/9')
   def deleteAll
-    if current_user.id != params[:uid]
+    if current_user.id != params[:uid].to_i
       redirect_to "/notifications", notice: "You cannot delete someone else's notifications."
     else
       deleteUserNotifications(params[:uid])
     end
   end
 
+  #delete all notifications for specific event ('/notifications/:eid/8')
   def deleteForEvent
     deleteEventNotifications(current_user.id, params[:eid])
   end
@@ -83,15 +85,15 @@ class NotificationsController < ApplicationController
   #accept friend request ('/notifications/:id/1')
   def acceptFriend
     signedin
-    @notification = Notification.find_by(id: params[:id])
-    if @notification != nil && current_user.id == @notification.user_id
-      @user1 = User.find_by(id: @notification.user_id)
-      @user2 = User.find_by(id: @notification.sender_id)
+    @n = Notification.find_by(id: params[:id])
+    if @n != nil && current_user.id == @n.user_id
+      @user1 = User.find_by(id: @n.user_id)
+      @user2 = User.find_by(id: @n.sender_id)
       @friend12 = @user1.friends.build(:user_id => @user1.id, :friend_id => @user2.id)
       @friend12.save
       @friend21 = @user2.friends.build(:user_id => @user2.id, :friend_id => @user1.id)
       @friend21.save
-      @notification.destroy #delete notification after
+      @n.destroy #delete notification after
       respond_to do |format|
         format.html { redirect_to notifications_url, notice: 'Friend request accepted.' }
         format.json { head :no_content }
@@ -104,13 +106,13 @@ class NotificationsController < ApplicationController
   #accept event invite ('/notifications/:id/3')
   def acceptEvent
     signedin
-    @notification = Notification.find_by(id: params[:id])
-    if @notification != nil && current_user.id == @notification.user_id
-      @user = User.find_by(id: @notification.user_id)
-      @event = Event.find_by(id: @notification.sender_id)
-      @attending = @event.attending.build(:event_id => @event.id, :user_id => @user.id)
-      @attending.save
-      @notification.destroy #delete notification after
+    @n = Notification.find_by(id: params[:id])
+    if @n != nil && current_user.id == @n.user_id
+      @user = User.find_by(id: @n.user_id)
+      @event = Event.find_by(id: @n.sender_id)
+      @a = @event.attending.build(:event_id => @event.id, :user_id => @user.id)
+      @a.save
+      @n.destroy #delete notification after
       respond_to do |format|
         format.html { redirect_to notifications_url, notice: 'Invite accepted.' }
         format.json { head :no_content }

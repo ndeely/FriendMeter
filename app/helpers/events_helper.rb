@@ -18,10 +18,11 @@ module EventsHelper
         return false
     end
 
-    #send u an invite to event e owned by cu (event id, user id, current user id)
-    def sendEventInvite(e, u, cu)
-        @e = User.find_by(id: cu).events.find_by(id: e)
+    #send u an invite to event e owned by current user (event id, user id)
+    def sendEventInvite(e, u)
+        @e = current_user.events.find_by(id: e)
         @u = User.find_by(id: u)
+        @name = getName(u, current_user)
 
         if @e == nil
             redirect_to '/users/' + u, notice: "You do not own this event."
@@ -32,7 +33,7 @@ module EventsHelper
         elsif isInvited(e, u)
             redirect_to '/users/' + u, notice: "This user is already invited to this event."
         else
-            @n = @u.notifications.build(:user_id => u, :title => 'You have been invited to an event!', :desc => 'The sender is awaiting your response.', :sender_id => e, :notification_type => 3)
+            @n = @u.notifications.build(:user_id => u, :title => 'New Event Invite', :desc => @name + " has invited you to attend their event " + @e.name + ".", :sender_id => e, :notification_type => 3)
             @n.save
             respond_to do |format|
                 format.html { redirect_to '/users/' + u, notice: 'Invitation Sent.' }
@@ -41,9 +42,35 @@ module EventsHelper
         end
     end
 
-    #get color of name in chat messages (current_user.id, comment.user_id, @event.user_id)
-    def getChatColor(cuid, uid, euid)
-        if cuid == uid
+    #user u is accepting an invited to event e (event id, user id)
+    def acceptEventInvite(e, u)
+        @e = current_user.events.find_by(id: e)
+        @u = User.find_by(id: u)
+
+        if @e == nil
+            redirect_to '/events/', notice: "This event does not exist."
+        elsif @u == nil
+            redirect_to root_url, notice: "This user does not exist."
+        elsif isAttending(e, u)
+            redirect_to '/events/' + e.to_s, notice: "You are already attending this event."
+        elsif !isInvited(e, u)
+            redirect_to '/events/', notice: "You have not been invited to this event."
+        else
+            @a = @e.attending.build(event_id => e, user_id => u)
+            @a.save
+            # delete notification after
+            @n = @u.notifications.find_by(user_id: u, sender_id: e, notification_type: 3)
+            @n.destroy
+            respond_to do |format|
+                format.html { redirect_to '/events/' + e.to_s, notice: 'Invitation Accepted.' }
+                format.json { head :no_content }
+            end
+        end
+    end
+
+    #get color of name in chat messages (comment.user_id, @event.user_id)
+    def getChatColor(uid, euid)
+        if current_user.id == uid
             return "you"
         elsif uid == euid
             return "creator"
@@ -87,6 +114,46 @@ module EventsHelper
         xs.each do |x|
             x.destroy
         end
+    end
+
+    #get medium sized event (event id, user id who's profile current user is on)
+    def getEventMd(e, u)
+        @e = Event.find_by(id: e)
+        @html = '<a href="/events/' + @e.id.to_s + '">' +
+            '<div class="col-xs-12 col-md-6">' +
+            '<div class="event-md">' +
+            '<p>'
+        @html += @e.avatar.attached? ? '<image src="' + url_for(@e.avatar) + '">' : image_tag("eph.png")
+        @html += '</p>' +
+            '<p class="name">' + @e.name + '</p>' +
+            '<p>' + @e.description + '</p>' +
+            '<p>' + @e.date.to_s + " " + @e.time.strftime("%I:%M %p") + '</p>'
+        @html += (current_user.id == @e.user_id) ? "<p>Public: " + (!@e.private ? image_tag("tick.png") : image_tag("red-x.png")) + "</p>" : ""
+        @html += '</a>'
+        # show invited/attending status if on user's profile
+        if @e.user_id == current_user.id && !eventEnded(e) #this is current user's event
+            if isInvited(e, u)
+                @html += '<p class="green">This user has been invited.</p>'
+            elsif isAttending(e, u)
+                @html += '<p class="green">This user is attending.</p>'
+            else
+                @html += '<a class="btn btn-success" href="/events/' + @e.id.to_s + '/' + u.to_s + '/1">Invite User</a>'
+            end
+        elsif @e.user_id == u && !eventEnded(e) #this is other user's event
+            if isAttending(e, current_user.id)
+                @html += '<p class="green">You are attending this event.</p>' +
+                '<p><a class="btn btn-danger" href="/events/' + @e.id.to_s + '/2">Unattend Event</a></p>'
+            elsif isInvited(e, current_user.id)
+                @html += '<p class="green">You are invited to this event.</p>' +
+                    '<p><a class="btn btn-success" href="/events/' + @e.id.to_s + '/' + u.to_s + '/2">Accept Invitation</a></p>'
+            else
+                @html += '<p class="red">You are not attending this event.</p>' +
+                    '<p><a class="btn btn-success" href="/events/' + @e.id.to_s + '/1">Attend Event</a></p>'
+            end
+        end
+        @html += '</div>' +
+            '</div>'
+        return @html.html_safe
     end
 
 

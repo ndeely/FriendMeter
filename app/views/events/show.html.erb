@@ -42,14 +42,14 @@
 <% if @attending.count == 0 %>
   <p>There are no confirmed attendees yet.</p>
 <% else %>
-  <% @attending.each do |attender|
-    @user = User.find_by(id: attender.user_id)
-    @name = getName(current_user.id, attender.user_id) %>
+  <% @attending.each do |a|
+    @user = User.find_by(id: a.user_id)
+    @name = getName(current_user.id, a.user_id) %>
     <div class="user-sm col-xs-4 col-md-2">
       <a href="/users/<%= @user.id.to_s %>">
         <p><%= @name %></p>
         <p>
-          <% if showPic(current_user.id, attender.user_id) %>
+          <% if showPic(current_user.id, a.user_id) %>
             <img src="<%= url_for(@user.avatar) %>" />
           <% else %>
             <%= image_tag("ph.png") %>
@@ -62,35 +62,30 @@
 <div class="clear"></div>
 <%= will_paginate @attending %>
 <% if !eventEnded(@event.id) %>
-  <button class="btn1" onclick="window.location.href='/events/<%= @event.id %>/<%= @isAttending ? 2 : 1 %>'">
-    <span class="circle" aria-hidden="true">
-    <span class="icon arrow"></span>
-    </span>
-    <span class="button-text"><%= @isAttending ? "Unattend" : "Attend" %></span>
-  </button>
+  <p><a class="btn <%= @isAttending ? "btn-danger" : "btn-success" %>" href="/events/<%= @event.id.to_s %>/<%= @isAttending ? 2 : 1 %>"><%= @isAttending ? "Unattend" : "Attend" %> Event</a></p>
 <% end %>
 
 <% if !eventEnded(@event.id) %>
 
   <!-- show event comments -->
   <h2 id="comments">Comments (<%= @comments.count %>)</h2>
-  <% @comments.each do |comment|
-    @name = getName(current_user.id, comment.user_id) %>
+  <% @comments.each do |c|
+    @name = getName(current_user.id, c.user_id) %>
     <div class="comment">
       <div class="col-xs-4 col-md-2">
-        <% if showPic(current_user.id, comment.user_id) %>
-          <image src="<%= url_for(User.find_by(id: comment.user_id).avatar) %>">
+        <% if showPic(current_user.id, c.user_id) %>
+          <image src="<%= url_for(User.find_by(id: c.user_id).avatar) %>">
         <% else %>
           <%= image_tag("ph.png") %>
         <% end %>
       </div>
       <div class="col-xs-6 col-md-8">
-        <p class="name <%= getChatColor(current_user.id, comment.user_id, @event.user_id) %>"><%= @name %></p>
-        <p><%= comment.text %></p>
+        <p class="name <%= getChatColor(c.user_id, @event.user_id) %>"><%= @name %></p>
+        <p><%= c.text %></p>
       </div>
-      <% if @b1 || comment.user_id == current_user.id %>
+      <% if @b1 || c.user_id == current_user.id %>
       <div class="col-xs-2 col-md-2">
-        <%= link_to 'Delete', comment, method: :delete, :role=>"button", :class => "btn btn-danger mb-2", data: { confirm: 'Are you sure?' } %>
+        <%= link_to 'Delete', c, method: :delete, :role=>"button", :class => "btn btn-danger mb-2", data: { confirm: 'Are you sure?' } %>
       </div>
       <% end %>
     </div>
@@ -104,29 +99,29 @@
 
   <!-- show event reviews -->
   <h2 id="reviews">Reviews (<%= @reviews.count %>)</h2>
-  <% @reviews.each do |review|
-    @name = getName(current_user.id, review.user_id) %>
+  <% @reviews.each do |r|
+    @name = getName(current_user.id, r.user_id) %>
     <div class="review">
       <div class="col-xs-4 col-md-2">
-        <% if showPic(current_user.id, review.user_id) %>
-          <image src="<%= url_for(User.find_by(id: review.user_id).avatar) %>">
+        <% if showPic(current_user.id, r.user_id) %>
+          <img src="<%= url_for(User.find_by(id: r.user_id).avatar) %>">
         <% else %>
           <%= image_tag("ph.png") %>
         <% end %>
       </div>
       <div class="col-xs-6 col-md-8">
-        <p class="name <%= getChatColor(current_user.id, review.user_id, @event.user_id) %>"><%= @name %> <%= reviewRating(review.rating) %></p>
-        <p><%= review.text %></p>
+        <p class="name <%= getChatColor(r.user_id, @event.user_id) %>"><%= @name %> <%= reviewRating(r.rating) %></p>
+        <p><%= r.text %></p>
       </div>
-      <% if @b1 || review.user_id == current_user.id %>
+      <% if @b1 || r.user_id == current_user.id %>
       <div class="col-xs-2 col-md-2">
-        <%= link_to 'Delete', review, method: :delete, :role=>"button", :class => "btn btn-danger mb-2", data: { confirm: 'Are you sure?' } %>
+        <%= link_to 'Delete', r, method: :delete, :role=>"button", :class => "btn btn-danger mb-2", data: { confirm: 'Are you sure?' } %>
       </div>
       <% end %>
     </div>
     <div class="clear"></div>
   <% end %>
-  <% if @isi && !hasReviewed(current_user.id, @event.id) %>
+  <% if @isi && isAttending(@event.id, current_user.id) && !hasReviewed(current_user.id, @event.id) %>
     <%= render 'rform', review: @review %>
   <% end %>
 

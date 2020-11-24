@@ -1,0 +1,8 @@
+<h2>Reviews for <%= getName(current_user.id, @u.id) %></h2>
+<% if @rs.count == 0 %>
+    <p>There are no reviews yet for this user.</p>
+<% else
+    @rs.each do |r| %>
+        <%= getReviewSm(r) %>
+    <% end
+end %>

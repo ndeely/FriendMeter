@@ -32,6 +32,8 @@ Rails.application.routes.draw do
   get '/users/:id' => 'profiles#profile' #user profile
   get '/users/:id/:id2' => 'profiles#friend' #friend request
   get '/users/:id/:id2/1' => 'profiles#unfriend' #unfriend
+  get '/user/:uid/reviews' => 'profiles#reviews' #user reviews
+  
 
   #notifications
   get '/notifications/:id/1' => 'notifications#acceptFriend' #accept friend request
@@ -43,6 +45,7 @@ Rails.application.routes.draw do
   get '/events/:eid/1' => 'events#attend' #agree to attend event from event
   get '/events/:eid/2' => 'events#unattend' #unattend event from event
   get '/events/:eid/:uid/1' => 'events#invite' #send event invite
+  get '/events/:eid/:uid/2' => 'events#acceptInvite' #accept event invite
 
   #get user events, or events where user is invited or is attending
   get '/myevents' => 'events#myevents'

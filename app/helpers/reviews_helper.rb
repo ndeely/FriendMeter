@@ -51,19 +51,25 @@ module ReviewsHelper
         return (getAvgRating(e) != "None") ? reviewRating(getAvgRating(e)) : "None".html_safe
     end
 
-    #get average user number rating for user (user id)
-    def getAvgUserNumberRating(u)
-        @count = 0
+    #get all reviews for user
+    def getUserReviews(u)
         @allR = []
         @es = User.find_by(id: u).events
         @es.each do |e|
             @rs = e.reviews
             @rs.each do |r|
-                @allR.push(r.rating)
+                @allR.push(r)
             end
         end
+        return @allR
+    end
+
+    #get average user number rating for user (user id)
+    def getAvgUserNumberRating(u)
+        @count = 0
+        @allR = getUserReviews(u)
         @allR.each do |r|
-            @count += r
+            @count += r.rating
         end
         return (@allR.count == 0) ? "None" : @count/@allR.count 
     end
@@ -72,5 +78,21 @@ module ReviewsHelper
     def getAvgUserStarRating(u)
         return (getAvgUserNumberRating(u) != "None") ? reviewRating(getAvgUserNumberRating(u)) : "None".html_safe
     end
+
+    #get review small (review)
+    def getReviewSm(r)
+        @html = '<div class="col-xs-4 col-md-2">' +
+            '<div class="review-sm">'
+        @html += showPic(current_user.id, r.user_id) ? '<img src="<%= url_for(User.find_by(id: r.user_id).avatar) %>">' : image_tag("ph.png")
+        @html += '<a href="/users/' + r.user_id.to_s + '">' +
+            '<p class="name">' + getName(current_user.id, r.user_id) + '</p></a>' +
+            '<a href="/events/' + r.event_id.to_s + '"><p>Review for <strong>' + Event.find_by(id: r.event_id).name + '</strong></p></a>' +
+            '<p>' + reviewRating(r.rating) + '</p>' +
+            '<p>' + r.text + '</p>' +
+            '</div>' +
+            '</div>'
+        return @html.html_safe
+    end
+
 
 end

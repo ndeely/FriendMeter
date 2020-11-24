@@ -16,16 +16,19 @@ module StaticPagesHelper
     #used on homepage
     def getUserSm(u)
         @u = User.find_by(id: u)
-        @html = '<div class="user-sm col-xs-6 col-md-4">' +
+        @html = '<div class="col-xs-6 col-md-4">' +
+            '<div class="user-sm">' +
             '<a href="/users/' + u.to_s + '">' +
-            '<p class="name">' + @u.username.to_s + '</p>' +
             '<p>'
         @html += @u.avatar.attached? ? '<image src="' + url_for(@u.avatar) + '">' : image_tag("ph.png")
         @html += '</p>' +
+            '<p class="name">' + @u.username + '</p>' +
             '<p>Friends Made: ' + @u.friends.count.to_s + '</p>' +
             '<p>Events Created: ' + @u.events.count.to_s + '</p>' +
-            '<p>Average User rating:<br>' + getAvgUserStarRating(u) + '</p>' +
+            '<p>' + getAvgUserStarRating(@u) + '</p>' +
             '</a>' +
+            '<a href="/user/' + @u.id.to_s + '/reviews"><p class="red">Reviews (' + getUserReviews(@u).count.to_s + ')</p></a>' +
+            '</div>' +
             '</div>'
         return @html.html_safe
     end
@@ -34,15 +37,17 @@ module StaticPagesHelper
     #used on homepage
     def getEventSm(e)
         @e = Event.find_by(id: e)
-        @html = '<div class="event-sm col-xs-6 col-md-4">' +
+        @html = '<div class="col-xs-6 col-md-4">' +
+            '<div class="event-sm">'
             '<a href="/events/' + e.to_s + '">' +
-            '<p class="name">' + @e.name.to_s + '</p>' +
             '<p>'
         @html += @e.avatar.attached? ? '<image src="' + url_for(@e.avatar) + '">' : image_tag("eph.png")
         @html += '</p>' +
+            '<p class="name">' + @e.name.to_s + '</p>' +
             '<p>Attendees: ' + Attending.where(event_id: e).count.to_s + '</p>' +
             '<p>Created By: ' + User.find_by(id: @e.user_id).username + '</p>' +
             '</a>' +
+            '</div>' +
             '</div>'
         return @html.html_safe
     end

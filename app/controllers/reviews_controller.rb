@@ -39,10 +39,12 @@ class ReviewsController < ApplicationController
     else
       @r = @event.reviews.build(review_params)
       @r.save
-      #inform owner of event that there's a new review
-      @owner = User.find_by(id: @event.user_id)
-      @n = @owner.notifications.build(:user_id => @owner.id, :title => "New Event Review", :desc => current_user.username.to_s + " has reviewed your event " + @event.name + ".", :sender_id => @event.id, :notification_type => 4)
-      @n.save
+      #inform owner of event that there's a new review, if the owner isn't the poster
+      if current_user.id != @event.user_id
+        @owner = User.find_by(id: @event.user_id)
+        @n = @owner.notifications.build(:user_id => @owner.id, :title => "New Event Review", :desc => current_user.username.to_s + " has reviewed your event " + @event.name + ".", :sender_id => @event.id, :notification_type => 4)
+        @n.save
+      end
       redirect_to "/events/" + @event.id.to_s + "#reviews", notice: "Your review has been posted."
     end
   end
