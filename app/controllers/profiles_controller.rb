@@ -3,6 +3,7 @@ class ProfilesController < ApplicationController
   include FriendsHelper
   include EventsHelper
   include ReviewsHelper
+  include ProfilesHelper
   before_action :set_profile, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
 

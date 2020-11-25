@@ -130,9 +130,7 @@ module EventsHelper
             '<p>' + @e.date.to_s + " " + @e.time.strftime("%I:%M %p").to_s + '</p>' +
             '<p>Attendees: ' + Attending.where(event_id: e).count.to_s + '</p>' +
             '</a>' +
-            '<a href="/users/' + @e.user_id.to_s + '">' +
-            '<p>Created By: ' + User.find_by(id: @e.user_id).username + '</p>' +
-            '</a>'
+            '<p>Organised By: ' + (link_to User.find_by(id: @e.user_id).username, '/users/' + @e.user_id.to_s) + '</p>'
         if eventEnded(e) #show reviews
             @html += '<a href="/events/' + e.to_s + '#reviews">' +
                 '<p>' + getAvgStarRating(e) + '</p>' +
@@ -190,13 +188,42 @@ module EventsHelper
             end
             @html += '<p>Average Review: ' + getAvgStarRating(e) + '</p>'
         end
-        @html += '<a href="/users/' + @e.user_id.to_s + '">' +
-            '<p>Created By: ' + getName(current_user.id, @e.user_id) + '</p>' +
-            '</a>' +
+        @html += '<p>Organised By: ' + (link_to getName(current_user.id, @e.user_id), '/users/' + @e.user_id.to_s) + '</p>' +
             '</div>' +
             '</div>'
         return @html.html_safe
     end
 
+    #get large main event (event id)
+    def getEventL(e)
+        @e = Event.find_by(id: e)
+        @b1 = isadmin
+        @b2 = @b1 || (current_user.id == @e.user_id)
+        
+        @html = eventEnded(e) ? '<p class="summary">This event has ended.<br>Average Rating: ' + getAvgStarRating(e) + '</p>' : ""
+        @html += '<h2>' + @e.name + '</h2>' +
+            '<div class="event-l">' +
+            '<div class="col-xs-12 col-md-6">' +
+            '<p class="image">'
+        @html += @e.avatar.attached? ? '<image src="' + url_for(@e.avatar).to_s + '">' : image_tag("eph.png")
+        @html += '</p>' +
+            '</div>' +
+            '<div class="col-xs-12 col-md-6">' +
+            '<p class="name">' + @e.description + '</p>' +
+            '<p>' + @e.date.to_s + ' ' + @e.time.strftime("%I:%M %p").to_s + '</p>' +
+            '<p>Public: ' + (!@e.private ? "Yes" : "No") + '</p>' +
+            '<p>Organised By: ' + (link_to getName(current_user.id, @e.user_id), '/users/' + @e.user_id.to_s) + '</p>' +
+            '<p>'
+        if @b1 || (@b2 && !eventEnded(e)) #show event buttons
+            @html += '<a class="btn btn-warning" href="' + edit_event_path(@e) + '">Edit</a>' +
+                (link_to 'Delete', @e, method: :delete, :role=>"button", :class => "btn btn-danger", data: { confirm: 'Are you sure?' })
+        end
+        @html += '<a class="btn btn-info" href="javascript: history.go(-1)">Back</a>' +
+            '</p>' +
+            '</div>' +
+            '<div class="clear"></div>' +
+            '</div>'
+        return @html.html_safe
+    end
 
 end

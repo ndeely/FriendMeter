@@ -1,71 +1,56 @@
-<div class="profile">
-    <h2><%= @name %></h2>
-    <div class="col-xs-12 col-md-6">
-        <% if showPic(current_user.id, @creator.id) %>
-            <image src="<%= url_for(@creator.avatar) %>">
-         <% else %>
-            <%= image_tag("ph.png") %>
-         <% end %>
-    </div>
-    
-    <div class="col-xs-12 col-md-6">
-        <h4>Bio</h4>
-        <p><%= @b3 ? @creator.bio : "Add this user as a friend to see their bio." %></p>
+<%= getProfileL(@creator.id) %>
 
-        <% if !@b3 && !@frs %>
-            <button class="btn1" onclick="window.location.href='/users/<%= @creator.id %>/<%= @current_user.id %>'">
-                <span class="circle" aria-hidden="true">
-                <span class="icon arrow"></span>
-                </span>
-                <span class="button-text">Friend Request</span>
-            </button>
-        <% elsif @friend %>
-            <button class="btn1" onclick="window.location.href='/users/<%= @creator.id %>/<%= @current_user.id %>/1'">
-                <span class="circle" aria-hidden="true">
-                <span class="icon arrow"></span>
-                </span>
-                <span class="button-text">Unfriend</span>
-            </button>
+<div class="clear"></div>
+<!-- show user events -->
+<div class="events">
+    <h2><%= @name %>'s Upcoming Events</h2>
+    <% if @events.count == 0 %>
+        <p>This user has not created any upcoming events.</p>
+    <% else %>
+        <% @events.each do |e| %>
+            <%= getEventMd(e, @creator.id) %>
         <% end %>
-    </div>
+    <% end %>
+</div>
+<div class="clear"></div>
 
-    <div class="clear"></div>
-    <!-- show user events -->
+<% if !(current_user.id == @creator.id)
+    @userEvents = getUnfinishedEvents(current_user.id) %>
     <div class="events">
-        <h2><%= @name %>'s Upcoming Events</h2>
-        <% if @events.count == 0 %>
-            <p>This user has not created any upcoming events.</p>
+        <h2>Your Upcoming Events</h2>
+        <% if @userEvents.count == 0 %>
+            <p>You have not created any upcoming events.</p>
         <% else %>
-            <% @events.each do |e| %>
+            <% @userEvents.each do |e| %>
                 <%= getEventMd(e, @creator.id) %>
             <% end %>
         <% end %>
     </div>
-    <div class="clear"></div>
+<% end %>
+<div class="clear"></div>
 
-    <% if !(current_user.id == @creator.id)
-        @userEvents = getUnfinishedEvents(current_user.id) %>
-        <div class="events">
-            <h2>Your Upcoming Events</h2>
-            <% if @userEvents.count == 0 %>
-                <p>You have not created any upcoming events.</p>
-            <% else %>
-                <% @userEvents.each do |e| %>
-                    <%= getEventMd(e, @creator.id) %>
-                <% end %>
-            <% end %>
-        </div>
-    <% end %>
-    <div class="clear"></div>
-    
-    <% if @b2 %>
-        <td>
-            <button class="btn1" onclick="window.location.href='<%= edit_user_registration_path %>'">
-                <span class="circle" aria-hidden="true">
-                <span class="icon arrow"></span>
-                </span>
-                <span class="button-text">Edit Profile</span>
-            </button>
-        </td>
+<% @pEvents = getFinishedEvents(@creator.id, false) %>
+<div class="clear"></div>
+<!-- show user past events -->
+<div class="events">
+    <h2><%= @name %>'s Past Events</h2>
+    <% if @events.count == 0 %>
+        <p>This user does not have any past events.</p>
+    <% else %>
+        <% @pEvents.each do |e| %>
+            <%= getEventMd(e, @creator.id) %>
+        <% end %>
     <% end %>
 </div>
+<div class="clear"></div>
+
+<% if @b2 %>
+    <td>
+        <button class="btn1" onclick="window.location.href='<%= edit_user_registration_path %>'">
+            <span class="circle" aria-hidden="true">
+            <span class="icon arrow"></span>
+            </span>
+            <span class="button-text">Edit Profile</span>
+        </button>
+    </td>
+<% end %>

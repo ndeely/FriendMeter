@@ -66,19 +66,16 @@ h1, h2, h3 {
     max-width:20px !important;
 }
 
-.profile img, .event img {
-    max-width:300px;
-}
-
 //must be after .profile img
 .events img {
     max-width:150px;
 }
 
-//small profile/event view
-.user-sm, .event-sm, .review-sm, .notification-sm, .event-md {
+//view cards
+.user-sm, .event-sm, .review-sm, .notification-sm, .event-md, .profile-l, .event-l {
     border:1px solid #efefef;
     margin-bottom:10px;
+    padding:10px;
     a {
         text-decoration:none;
     }
@@ -104,6 +101,19 @@ h1, h2, h3 {
         max-width:100%;
         max-height:200px;
         margin:auto;
+    }
+}
+
+.profile-l, .event-l {
+    margin:10px;
+    img {
+        max-width:300px;
+    }
+    p {
+        &.image {
+            width:300px;
+            margin:auto;
+        }
     }
 }
 
