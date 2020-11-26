@@ -29,15 +29,13 @@
 <% end %>
 <div class="clear"></div>
 
-<% @pEvents = getFinishedEvents(@creator.id, false) %>
-<div class="clear"></div>
 <!-- show user past events -->
 <div class="events">
     <h2><%= @name %>'s Past Events</h2>
-    <% if @events.count == 0 %>
+    <% if @endedEvents.count == 0 %>
         <p>This user does not have any past events.</p>
     <% else %>
-        <% @pEvents.each do |e| %>
+        <% @endedEvents.each do |e| %>
             <%= getEventMd(e, @creator.id) %>
         <% end %>
     <% end %>

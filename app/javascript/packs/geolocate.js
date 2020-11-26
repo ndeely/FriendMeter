@@ -47,3 +47,7 @@ map.on('locationfound', function(e) {
 map.on('locationerror', function() {
     geolocate.innerHTML = 'Position could not be found';
 });
+
+function setLocation(lng, lat) {
+    window.location.href = "#"
+  }

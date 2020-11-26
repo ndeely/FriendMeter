@@ -85,13 +85,18 @@ class ProfilesController < ApplicationController
       @name = getName(current_user.id, @creator.id)
       @allevents = @creator.events
       @events = []
-      @allevents.each do |event|
+      @endedEvents = []
+      @allevents.each do |e|
         #check if user is invited/attending
-        @invited = isInvited(event.id, current_user.id)
-        @attending = isAttending(event.id, current_user.id)
+        @invited = isInvited(e.id, current_user.id)
+        @attending = isAttending(e.id, current_user.id)
 
-        if (!event.private || @b2 || @invited || @attending) && !eventEnded(event.id)
-          @events.push(event)
+        if (!e.private || @b2 || @invited || @attending)
+          if !eventEnded(e.id)
+            @events.push(e)
+          else
+            @endedEvents.push(e)
+          end
         end
       end
       #check friend request status

@@ -47,7 +47,7 @@ module FriendsHelper
         @f = User.find_by(id: Friend.find_by(id: f).friend_id)
         @name = getName(current_user.id, @f.id)
         @html = '<div class="user-sm col-xs-4 col-md-2">' +
-            '<a href="/users/' + f.to_s + '">' +
+            '<a href="/users/' + Friend.find_by(id: f).friend_id.to_s + '">' +
             '<p class="image">'
         @html += @f.avatar.attached? ? '<image src="' + url_for(@f.avatar) + '">' : image_tag("ph.png")
         @html += '</p>' +

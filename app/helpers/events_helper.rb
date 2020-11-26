@@ -155,7 +155,8 @@ module EventsHelper
         @html += '</p>' +
             '<p class="name">' + @e.name + '</p>' +
             '<p>' + @e.description + '</p>' +
-            '<p>' + @e.date.to_s + " " + @e.time.strftime("%I:%M %p") + '</p>'
+            '<p>' + @e.date.to_s + " " + @e.time.strftime("%I:%M %p") + '</p>' +
+            '<p>Attendees: ' + Attending.where(event_id: e).count.to_s + '</p>'
         @html += (current_user.id == @e.user_id) ? "<p>Public: " + (!@e.private ? image_tag("tick.png") : image_tag("red-x.png")) + "</p>" : ""
         @html += '</a>'
         # show invited/attending status if on user's profile
