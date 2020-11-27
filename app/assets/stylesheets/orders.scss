@@ -1,0 +1,9 @@
+#card-element {
+    width:500px;
+}
+.paymentSelectionTab {
+    display: none;
+}
+.paymentSelectionTab.active {
+    display: block !important;
+}

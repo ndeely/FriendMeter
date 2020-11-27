@@ -42,3 +42,6 @@ yarn-debug.log*
 
 # Ignore .env file for environment variables.
 /.env
+
+#payment gateway credentials
+/config/application.yml

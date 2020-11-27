@@ -50,6 +50,14 @@ Rails.application.routes.draw do
   #get user events, or events where user is invited or is attending
   get '/myevents' => 'events#myevents'
 
+  #payment routes
+  get '/orders' => 'orders#index'
+  post '/orders/submit' => 'orders#submit'
+  get '/orders/all' => 'orders#all'
+
+  post 'orders/paypal/create_payment'  => 'orders#paypal_create_payment', as: :paypal_create_payment
+  post 'orders/paypal/execute_payment'  => 'orders#paypal_execute_payment', as: :paypal_execute_payment
+
   
 
   get '/make_admin' => 'admin_pages#make_admin'

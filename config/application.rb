@@ -15,5 +15,11 @@ module Friendmeter
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
+
+    #store application.yml vars so they are available in ENV
+    config_file = Rails.application.config_for(:application)
+    config_file.each do |key,value|
+      ENV[key.to_s] = value
+    end unless config_file.nil?
   end
 end

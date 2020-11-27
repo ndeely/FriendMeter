@@ -61,3 +61,13 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+# templating tool for rendering user pages
+gem 'haml'
+# for displaying formatted money values
+gem 'money-rails'
+
+# stripe payment provider for rails
+gem 'stripe-rails'
+# paypal payment provider for rails
+gem 'paypal-sdk-rest'

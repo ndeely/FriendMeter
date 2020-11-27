@@ -1,0 +1,38 @@
+<h2>Orders</h2>
+<% if @orders.count == 0 %>
+    <p>There are no orders to display.</p>
+<% else %>
+    <table class="table">
+        <tr class="thead-dark">
+            <th>Order ID</th>
+            <th>Product ID</th>
+            <th>User ID</th>
+            <th>Status</th>
+            <th>Token</th>
+            <th>Charge ID</th>
+            <th>Error Message</th>
+            <th>Customer ID</th>
+            <th>Payment Gateway</th>
+            <th>Created At</th>
+            <th>Price Cents</th>
+        </tr>
+        <tbody>
+            <% @orders.each do |o| %>
+                <tr>
+                    <td><%= o.id %></td>
+                    <td><%= o.product_id %></td>
+                    <td><%= o.user_id %></td>
+                    <td><%= o.status %></td>
+                    <td><%= o.token %></td>
+                    <td><%= o.charge_id %></td>
+                    <td><%= o.error_message %></td>
+                    <td><%= o.customer_id %></td>
+                    <td><%= o.payment_gateway %></td>
+                    <td><%= o.created_at %></td>
+                    <td><%= o.price_cents %></td>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+
+<% end %>

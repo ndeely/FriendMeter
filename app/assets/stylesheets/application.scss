@@ -15,6 +15,9 @@
 //maps css
 @import "maps";
 
+//orders css
+@import "orders";
+
 html, body {
     margin:0;
     padding:0;
@@ -66,8 +69,7 @@ h1, h2, h3 {
     max-width:20px !important;
 }
 
-//must be after .profile img
-.events img {
+.profile img, .events img {
     max-width:150px;
 }
 
