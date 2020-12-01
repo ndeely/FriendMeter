@@ -43,12 +43,5 @@
 <div class="clear"></div>
 
 <% if @b2 %>
-    <td>
-        <button class="btn1" onclick="window.location.href='<%= edit_user_registration_path %>'">
-            <span class="circle" aria-hidden="true">
-            <span class="icon arrow"></span>
-            </span>
-            <span class="button-text">Edit Profile</span>
-        </button>
-    </td>
+    <a class="btn btn-warning" href="<%= edit_user_registration_path %>">Edit Profile</a>
 <% end %>

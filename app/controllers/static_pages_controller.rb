@@ -9,6 +9,7 @@ class StaticPagesController < ApplicationController
     @fUsers = getFeaturedUsers
     @fEvents = getFeaturedEvents
     @fpEvents = getFeaturedPastEvents
+    @rs = getRecentReviews
   end
 
   def help

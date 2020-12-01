@@ -3,6 +3,8 @@ class CommentsController < ApplicationController
   before_action :authenticate_user!
   include PermissionsHelper
   include EventsHelper
+  include FriendsHelper
+  include CommentsHelper
 
   # GET /comments
   # GET /comments.json

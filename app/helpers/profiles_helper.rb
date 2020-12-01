@@ -19,7 +19,7 @@ module ProfilesHelper
             '</div>' +
             '<div class="col-xs-12 col-md-6">' +
             '<p class="name">Bio</p>' +
-            '<p>' + (@b3 ? @u.bio : "Add this user as a friend to see their bio.") + '</p><br>' +
+            '<p>' + getBio(current_user.id, u) + '</p><br>' +
             '<p>Friends Made: ' + @u.friends.count.to_s + '</p>' +
             '<p>Events Created: ' + @u.events.count.to_s + '</p>'
         if !@b3 && !@frs

@@ -83,7 +83,7 @@ module ReviewsHelper
     def getReviewSm(r)
         @html = '<div class="col-xs-4 col-md-2">' +
             '<div class="review-sm">'
-        @html += showPic(current_user.id, r.user_id) ? '<img src="<%= url_for(User.find_by(id: r.user_id).avatar) %>">' : image_tag("ph.png")
+        @html += showPic(current_user.id, r.user_id) ? '<img src="' + url_for(User.find_by(id: r.user_id).avatar) + '">' : image_tag("ph.png")
         @html += '<a href="/users/' + r.user_id.to_s + '">' +
             '<p class="name">' + getName(current_user.id, r.user_id) + '</p></a>' +
             '<a href="/events/' + r.event_id.to_s + '"><p>Review for <strong>' + Event.find_by(id: r.event_id).name + '</strong></p></a>' +

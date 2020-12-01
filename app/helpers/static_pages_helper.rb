@@ -18,6 +18,12 @@ module StaticPagesHelper
         return @f
     end
 
+    #get recent reviews
+    def getRecentReviews
+        @rs = Review.all.order(:created_at).limit(5)
+        return @rs
+    end
+
     #get user-sm for user (user id)
     #used on homepage
     def getUserSm(u)
