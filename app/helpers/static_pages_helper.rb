@@ -32,9 +32,9 @@ module StaticPagesHelper
             '<div class="user-sm">' +
             '<a href="/users/' + u.to_s + '">' +
             '<p class="image">'
-        @html += @u.avatar.attached? ? '<image src="' + url_for(@u.avatar) + '">' : image_tag("ph.png")
+        @html += getPic(isSignedIn ? current_user.id : nil, u)
         @html += '</p>' +
-            '<p class="name">' + @u.username + '</p>' +
+            '<p class="name">' + getName(isSignedIn ? current_user.id : nil, u) + '</p>' +
             '<p>Friends Made: ' + @u.friends.count.to_s + '</p>' +
             '<p>Events Created: ' + @u.events.count.to_s + '</p>' +
             '</a>' +

@@ -58,6 +58,9 @@ module PermissionsHelper
   #does u1 have permission to see profile picture of u2 (user1_id, user2_id)
   #and is there one available
   def showPic(u1, u2)
+    if u1 == nil
+      return false
+    end
     if isadmin || (u1 == u2) || areFriends(u1, u2) #show real pic
       if User.find_by(id: u2).avatar.attached?
         return true
@@ -69,6 +72,9 @@ module PermissionsHelper
   #get u2's profile pic for u1 (user1_id, user2_id)
   #if there is one available
   def getPic(u1, u2)
+    if u1 == nil
+      return image_tag("ph.png")
+    end
     if showPic(u1, u2)
       return ('<img src="' + url_for(User.find_by(id: u2).avatar) + '">').html_safe
     else
@@ -78,6 +84,9 @@ module PermissionsHelper
 
   #get bio of u2 for u1 if there is one available (user1_id, user2_id)
   def getBio(u1, u2)
+    if u1 == nil
+      return "You must be signed in and friends with this user to see their bio."
+    end
     if isadmin || (u1 == u2) || areFriends(u1, u2)
       if User.find_by(id: u2).bio == nil
         return "This user has not created a bio yet."

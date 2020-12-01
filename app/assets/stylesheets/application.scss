@@ -27,7 +27,8 @@ html, body {
 }
 
 body {
-    font-family:"Montserrat", "Open Sans";
+    font-family:"Cambria", "Open Sans";
+    background:aliceblue;
 }
 
 #body {
@@ -37,6 +38,7 @@ body {
 #container {
     min-height:100%;
     position:relative;
+    margin-top:58px;
 }
 
 .clear {

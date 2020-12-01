@@ -1,25 +1,27 @@
 <h1>FriendMeter</h1>
 
-<div class="desc col-xs-12 col-md-6">
+<div class="desc col-xs-12 col-md-8">
     <p>FriendMeter is a Social Media site where you can meet new people, and create and attend events in your area.</p>
     <p>Currently boasting a whopping <strong><%= User.count %></strong> users, who have created <strong><%= Event.count %></strong> events, we are on track to be the biggest social media website in the world!</p>
 </div>
 
 <!-- show recent reviews in slider -->
-<div class="pic-ctn featured col-xs-12 col-md-6">
+<div class="pic-ctn featured col-xs-12 col-md-4">
     <h2>Recent Reviews</h2>
     <% if @rs.count == 0 %>
         <p>There are no reviews to display.</p>
     <% else %>
         <% @rs.each do |r| %>
             <div class="review-sm">
-                <% if showPic(current_user.id, r.user_id) %>
+                <% if !@isi %>
+                    <%= image_tag("ph.png") %>
+                <% elsif showPic(current_user.id, r.user_id) %>
                     <img src="<%= url_for(User.find_by(id: r.user_id).avatar) %>">
                 <% else %>
                     <%= image_tag("ph.png") %>
                 <% end %>
                 <a href="/users/<%= r.user_id %>">
-                <p class="name"><%= getName(current_user.id, r.user_id) %></p></a>
+                <p class="name"><%= !@isi ? User.find_by(id: r.user_id).username : getName(current_user.id, r.user_id) %></p></a>
                 <a href="/events/<%= r.event_id %>"><p>Review for <strong><%= Event.find_by(id: r.event_id).name %></strong></p></a>
                 <p><%= reviewRating(r.rating) %></p>
                 <p><%= r.text %></p>

@@ -130,7 +130,7 @@ module EventsHelper
             '<p>' + @e.date.to_s + " " + @e.time.strftime("%I:%M %p").to_s + '</p>' +
             '<p>Attendees: ' + Attending.where(event_id: e).count.to_s + '</p>' +
             '</a>' +
-            '<p>Organised By: ' + (link_to User.find_by(id: @e.user_id).username, '/users/' + @e.user_id.to_s) + '</p>'
+            '<p>Organised By: ' + (link_to getName(isSignedIn ? current_user.id : nil, @e.user_id), '/users/' + @e.user_id.to_s) + '</p>'
         if eventEnded(e) #show reviews
             @html += '<a href="/events/' + e.to_s + '#reviews">' +
                 '<p>' + getAvgStarRating(e) + '</p>' +
