@@ -212,6 +212,8 @@ module EventsHelper
             '<div class="col-xs-12 col-md-6">' +
             '<p class="name">' + @e.description + '</p>' +
             '<p>' + @e.date.to_s + ' ' + @e.time.strftime("%I:%M %p").to_s + '</p>' +
+            '<p>' + @e.address + '</p>' +
+            '<p>{' + @e.lat.to_s + ', ' + @e.lng.to_s + '}</p>' +
             '<p>Public: ' + (!@e.private ? "Yes" : "No") + '</p>' +
             '<p>Organised By: ' + (link_to getName(current_user.id, @e.user_id), '/users/' + @e.user_id.to_s) + '</p>' +
             '<p>'

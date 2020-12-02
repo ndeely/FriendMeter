@@ -71,3 +71,6 @@ gem 'money-rails'
 gem 'stripe-rails'
 # paypal payment provider for rails
 gem 'paypal-sdk-rest'
+
+# geocoder for turning coords to address, and vice versa
+gem 'geocoder'

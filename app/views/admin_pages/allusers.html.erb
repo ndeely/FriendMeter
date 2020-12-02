@@ -11,6 +11,7 @@
         <th scope="col">Name</th>
         <th scope="col">Picture</th>
         <th scope="col">Bio</th>
+        <th scope="col">Address</th>
         <th scope="col">Is Admin</th>
         <th scope="col">Is Premium</th>
         <th scope="col">Profile</th>
@@ -23,14 +24,9 @@
           <td><%= user.username %></td>
           <td><%= user.email %></td>
           <td><%= user.fname.to_s + " " + user.lname.to_s %></td>
-          <td class="profile">
-            <% if user.avatar.attached? %>
-              <image src="<%= url_for(user.avatar) %>">
-            <% else %>
-              <%= image_tag("ph.png") %>
-            <% end %>
-          </td>
+          <td class="profile"><%= getPic(current_user.id, user.id) %></td>
           <td><%= user.bio %></td>
+          <td><%= user.address %><br>{<%= user.lat %>,<%= user.lng %>}</td>
           <td class="toggle">
             <% if user.admin? %>
               <a href="/downgrade/<%= user.id %>"><%= image_tag("tick.png") %></a></td>

@@ -36,6 +36,18 @@
       </div>
     </div>
 
+    <h3>Address</h3>
+    <div class="field">
+      <%= form.label :Street %><br />
+      <%= form.text_field :street, autocomplete: "street" %>
+      <%= form.label :City %><br />
+      <%= form.text_field :city, autocomplete: "city" %>
+      <%= form.label :State %><br />
+      <%= form.text_field :state, autocomplete: "state" %>
+      <%= form.label :Country %><br />
+      <%= form.text_field :country, autocomplete: "country" %>
+    </div>
+
     <div class="field">
       <%= form.label :"Event Picture" %>
       <br>

@@ -36,6 +36,20 @@
       <%= f.label :bio %><br />
       <%= f.text_area :bio, autocomplete: "a short description of yourself" %>
     </div>
+
+    <h3>Address</h3>
+    <p>Your address is just used to determine your location, and will not be shown to other users.</p>
+    <div class="field">
+      <%= f.label :Street %><br />
+      <%= f.text_field :street, autocomplete: "street" %>
+      <%= f.label :City %><br />
+      <%= f.text_field :city, autocomplete: "city" %>
+      <%= f.label :State %><br />
+      <%= f.text_field :state, autocomplete: "state" %>
+      <%= f.label :Country %><br />
+      <%= f.text_field :country, autocomplete: "country" %>
+    </div>
+
     
     <div class="field">
       <%= f.label :email %><br />
