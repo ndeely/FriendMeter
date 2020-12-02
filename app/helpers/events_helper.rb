@@ -227,4 +227,17 @@ module EventsHelper
         return @html.html_safe
     end
 
+    #search events for word
+    def searchEvents(word)
+        @w = word.downcase()
+        @ufEvents = Event.all
+        @es = []
+        @ufEvents.each do |e|
+            if e.name.downcase().include?(@w) || e.description.downcase().include?(@w) || User.find_by(id: e.user_id).username.downcase().include?(@w)
+                @es.push(e)
+            end
+        end
+        return @es
+    end
+
 end

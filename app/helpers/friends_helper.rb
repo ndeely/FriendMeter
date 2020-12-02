@@ -61,4 +61,19 @@ module FriendsHelper
             '</div>'
         return @html.html_safe
     end
+
+    #search friends for word
+    def searchFriends(word)
+        @w = word.downcase()
+        @ufFriends = current_user.friends
+        @fs = []
+        @ufFriends.each do |f|
+            @f = User.find_by(id: f.friend_id)
+            if @f.username.downcase().include?(@w) || @f.fname.downcase().include?(@w) || @f.lname.downcase().include?(@w)
+                @fs.push(f)
+            end
+        end
+        return @fs
+    end
+
 end

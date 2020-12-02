@@ -3,12 +3,13 @@ class FriendsController < ApplicationController
   before_action :authenticate_user!
   include PermissionsHelper
   include StaticPagesHelper
+  include FriendsHelper
 
   # GET /friends
   # GET /friends.json
   def index
     @b1 = isadmin
-    @friends = @b1 ? Friend.all : current_user.friends
+    @friends = @b1 ? Friend.all : (params[:search] == nil ? current_user.friends : searchFriends(params[:search]))
   end
 
   # GET /friends/1
@@ -76,6 +77,6 @@ class FriendsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def friend_params
-      params.require(:friend).permit(:user_id, :friend_id)
+      params.require(:friend).permit(:user_id, :friend_id, :search)
     end
 end

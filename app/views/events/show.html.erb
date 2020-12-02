@@ -34,18 +34,13 @@
 
   <!-- show event comments -->
   <h2 id="comments">Comments (<%= @comments.count %>)</h2>
-  <% @comments.each do |c|
-    @name = getName(current_user.id, c.user_id) %>
+  <% @comments.each do |c| %>
     <div class="comment">
       <div class="col-xs-4 col-md-2">
-        <% if showPic(current_user.id, c.user_id) %>
-          <image src="<%= url_for(User.find_by(id: c.user_id).avatar) %>">
-        <% else %>
-          <%= image_tag("ph.png") %>
-        <% end %>
+        <%= getPic(current_user.id, c.user_id) %>
       </div>
       <div class="col-xs-6 col-md-8">
-        <p class="name <%= getChatColor(c.user_id, @event.user_id) %>"><%= @name %></p>
+        <p class="name <%= getChatColor(c.user_id, @event.user_id) %>"><%= getName(current_user.id, c.user_id) %></p>
         <p><%= c.text %></p>
       </div>
       <% if @b1 || c.user_id == current_user.id %>
@@ -64,8 +59,7 @@
 
   <!-- show event reviews -->
   <h2 id="reviews">Reviews (<%= @reviews.count %>)</h2>
-  <% @reviews.each do |r|
-    @name = getName(current_user.id, r.user_id) %>
+  <% @reviews.each do |r| %>
     <div class="review">
       <div class="col-xs-4 col-md-2">
         <% if showPic(current_user.id, r.user_id) %>
@@ -75,7 +69,7 @@
         <% end %>
       </div>
       <div class="col-xs-6 col-md-8">
-        <p class="name <%= getChatColor(r.user_id, @event.user_id) %>"><%= @name %> <%= reviewRating(r.rating) %></p>
+        <p class="name <%= getChatColor(r.user_id, @event.user_id) %>"><%= getName(current_user.id, r.user_id) %> <%= reviewRating(r.rating) %></p>
         <p><%= r.text %></p>
       </div>
       <% if @b1 || r.user_id == current_user.id %>

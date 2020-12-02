@@ -13,15 +13,10 @@
     <% else %>
         <% @rs.each do |r| %>
             <div class="review-sm">
-                <% if !@isi %>
-                    <%= image_tag("ph.png") %>
-                <% elsif showPic(current_user.id, r.user_id) %>
-                    <img src="<%= url_for(User.find_by(id: r.user_id).avatar) %>">
-                <% else %>
-                    <%= image_tag("ph.png") %>
-                <% end %>
                 <a href="/users/<%= r.user_id %>">
-                <p class="name"><%= !@isi ? User.find_by(id: r.user_id).username : getName(current_user.id, r.user_id) %></p></a>
+                    <%= getPic(isSignedIn ? current_user.id : nil, r.user_id) %>
+                    <p class="name"><%= getName(isSignedIn ? current_user.id : nil, r.user_id) %></p>
+                </a>
                 <a href="/events/<%= r.event_id %>"><p>Review for <strong><%= Event.find_by(id: r.event_id).name %></strong></p></a>
                 <p><%= reviewRating(r.rating) %></p>
                 <p><%= r.text %></p>

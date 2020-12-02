@@ -12,10 +12,10 @@
         <% end %>
     <% end %>
 </div>
+<%= will_paginate @events %>
 <div class="clear"></div>
 
-<% if !(current_user.id == @creator.id)
-    @userEvents = getUnfinishedEvents(current_user.id) %>
+<% if !(current_user.id == @creator.id) %>
     <div class="events">
         <h2>Your Upcoming Events</h2>
         <% if @userEvents.count == 0 %>
@@ -27,6 +27,7 @@
         <% end %>
     </div>
 <% end %>
+<%= will_paginate @userEvents %>
 <div class="clear"></div>
 
 <!-- show user past events -->
@@ -40,6 +41,7 @@
         <% end %>
     <% end %>
 </div>
+<%= will_paginate @endedEvents %>
 <div class="clear"></div>
 
 <% if @b2 %>

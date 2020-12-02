@@ -72,6 +72,8 @@ class ProfilesController < ApplicationController
   # get user's profile page ("/users/{id}")
   def profile
     signedin
+    require 'will_paginate/array'
+
     @b1 = isadmin
     @creator = User.find_by(id: params[:id])
     if @creator == nil
@@ -99,6 +101,9 @@ class ProfilesController < ApplicationController
           end
         end
       end
+      @events = @events.paginate(page: params[:page1], per_page: 6)
+      @userEvents = getUnfinishedEvents(current_user.id).paginate(page: params[:page2], per_page: 6)
+      @endedEvents = @endedEvents.paginate(page: params[:page3], per_page: 6)
       #check friend request status
       @frs = friendRequestSent(current_user.id, @creator.id)
     end

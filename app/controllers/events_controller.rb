@@ -16,7 +16,7 @@ class EventsController < ApplicationController
 
     @b1 = isadmin
     # unfiltered events
-    @ufevents = Event.all.order('date')
+    @ufevents = (params[:search] == nil) ? Event.all.order('date') : searchEvents(params[:search])
     @events = []
     @ufevents.each do |event|
 
@@ -211,6 +211,6 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:name, :description, :date, :time, :avatar, :private, :editable)
+      params.require(:event).permit(:name, :description, :date, :time, :avatar, :private, :editable, :search)
     end
 end
