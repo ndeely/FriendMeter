@@ -79,6 +79,15 @@ h1 {
         }
     }
 }
+
+.alert, .notice {
+    display:none;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
 //must be after .comment/.review img and .event img
 .rating img {
     max-width:15px !important;
