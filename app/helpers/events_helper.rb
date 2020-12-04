@@ -20,9 +20,8 @@ module EventsHelper
 
     #send u an invite to event e owned by current user (event id, user id)
     def sendEventInvite(e, u)
-        @e = current_user.events.find_by(id: e)
+        @e = Event.find_by(id: e)
         @u = User.find_by(id: u)
-        @name = getName(u, current_user)
 
         if @e == nil
             redirect_to '/users/' + u, notice: "You do not own this event."
@@ -33,7 +32,7 @@ module EventsHelper
         elsif isInvited(e, u)
             redirect_to '/users/' + u, notice: "This user is already invited to this event."
         else
-            @n = @u.notifications.build(:user_id => u, :title => 'New Event Invite', :desc => @name + " has invited you to attend their event " + @e.name + ".", :sender_id => e, :notification_type => 3)
+            @n = @u.notifications.build(:user_id => u, :title => 'New Event Invite', :desc => getName(u, current_user) + " has invited you to attend their event " + @e.name + ".", :sender_id => e, :notification_type => 3)
             @n.save
             respond_to do |format|
                 format.html { redirect_to '/users/' + u, notice: 'Invitation Sent.' }
@@ -44,7 +43,7 @@ module EventsHelper
 
     #user u is accepting an invited to event e (event id, user id)
     def acceptEventInvite(e, u)
-        @e = current_user.events.find_by(id: e)
+        @e = Event.find_by(id: e)
         @u = User.find_by(id: u)
 
         if @e == nil
@@ -290,11 +289,11 @@ module EventsHelper
         @es = []
         @ufEvents = Event.all
         @ufEvents.each do |e|
-            if coordsSet(current_user.id, "u") && coordsSet(e.id, "e")
-                if userDist(current_user.id, e) <= 50
-                    @es.push(e)
-                end
-            elsif addrSet(current_user.id, "u") && addrSet(e.id, "e")
+            #if coordsSet(current_user.id, "u") && coordsSet(e.id, "e")
+            #    if userDist(current_user.id, e) <= 50
+            #        @es.push(e)
+            #    end
+            if addrSet(current_user.id, "u") && addrSet(e.id, "e")
                 if User.find_by(id: current_user.id).country == Event.find_by(id: e.id).country &&
                     User.find_by(id: current_user.id).state == Event.find_by(id: e.id).state
                     @es.push(e)

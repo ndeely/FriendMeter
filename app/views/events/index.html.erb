@@ -29,7 +29,9 @@
 <div class="clear"></div>
 
 <% if params[:search] != nil %>
-    <p>Your search for "<%= params[:search] %>" yielded <%= @events.count %> result<%= @events.count != 1 ? "s" : "" %>.</p>
+  <p>Your search for "<%= params[:search] %>" yielded <%= @events.count %> result<%= @events.count != 1 ? "s" : "" %>.</p>
+<% elsif params[:nearby] == "true" %>
+  <p>Your search for events in <%= current_user.state %>, <%= current_user.country %> yielded <%= @events.count %> result<%= @events.count != 1 ? "s" : "" %>.</p>
 <% end %>
 
 <% @events.each do |event| %>
