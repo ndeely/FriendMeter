@@ -14,7 +14,7 @@
 
     <div class="field">
       <%= form.label :name %>
-      <%= form.text_field :name %>
+      <%= form.text_field :name, required: true %>
     </div>
 
     <div class="field">
@@ -39,13 +39,13 @@
     <h3>Address</h3>
     <div class="field">
       <%= form.label :Street %><br />
-      <%= form.text_field :street, autocomplete: "street" %>
+      <%= form.text_field :street, autocomplete: "street", required: true %>
       <%= form.label :City %><br />
-      <%= form.text_field :city, autocomplete: "city" %>
-      <%= form.label :State %><br />
-      <%= form.text_field :state, autocomplete: "state" %>
+      <%= form.text_field :city, autocomplete: "city", required: true %>
+      <%= form.label :"State/County" %><br />
+      <%= form.text_field :state, autocomplete: "state", required: true %>
       <%= form.label :Country %><br />
-      <%= form.text_field :country, autocomplete: "country" %>
+      <%= form.text_field :country, autocomplete: "country", required: true %>
     </div>
 
     <div class="field">

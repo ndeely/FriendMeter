@@ -16,7 +16,7 @@ class EventsController < ApplicationController
 
     @b1 = isadmin
     # unfiltered events
-    @ufevents = (params[:search] == nil) ? Event.all.order('date') : searchEvents(params[:search])
+    @ufevents = (params[:search] == nil) ? (params[:nearby] == nil ? Event.all.order('date') : nearbyEvents) : searchEvents(params[:search])
     @events = []
     @ufevents.each do |event|
 
@@ -49,6 +49,12 @@ class EventsController < ApplicationController
     @comment = Comment.new
     @reviews = Event.find(params[:id]).reviews
     @review = Review.new
+
+    #get gon lat/lngs
+    gon.cu_lat = current_user.lat
+    gon.cu_lng = current_user.lng
+    gon.e_lat = Event.find_by(id: params[:id]).lat
+    gon.e_lng = Event.find_by(id: params[:id]).lng
   end
 
   # GET /events/new

@@ -128,6 +128,8 @@ module EventsHelper
         @html += '</p>' +
             '<p class="name">' + @e.name.to_s + '</p>' +
             '<p>' + @e.date.to_s + " " + @e.time.strftime("%I:%M %p").to_s + '</p>' +
+            '<p>' + @e.address.to_s + '</p>' +
+            #(isSignedIn ? ((coordsSet(current_user.id, "u") && coordsSet(e, "e")) ? '<p>Distance: ' + userDist(current_user.id, e).round(3).to_s + ' km</p>'.html_safe : "") : "") +
             '<p>Attendees: ' + Attending.where(event_id: e).count.to_s + '</p>' +
             '</a>' +
             '<p>Organised By: ' + (link_to getName(isSignedIn ? current_user.id : nil, @e.user_id), '/users/' + @e.user_id.to_s) + '</p>'
@@ -156,6 +158,8 @@ module EventsHelper
             '<p class="name">' + @e.name + '</p>' +
             '<p>' + @e.description + '</p>' +
             '<p>' + @e.date.to_s + " " + @e.time.strftime("%I:%M %p") + '</p>' +
+            '<p>' + @e.address.to_s + '</p>' +
+            #((coordsSet(current_user.id, "u") && coordsSet(e, "e")) ? '<p>Distance: ' + userDist(current_user.id, e).round(3).to_s + ' km</p>'.html_safe : "") +
             '<p>Attendees: ' + Attending.where(event_id: e).count.to_s + '</p>'
         @html += (current_user.id == @e.user_id) ? "<p>Public: " + (!@e.private ? image_tag("tick.png") : image_tag("red-x.png")) + "</p>" : ""
         @html += '</a>'
@@ -204,16 +208,17 @@ module EventsHelper
         @html = eventEnded(e) ? '<p class="summary">This event has ended.<br>Average Rating: ' + getAvgStarRating(e) + '</p>' : ""
         @html += '<h2>' + @e.name + '</h2>' +
             '<div class="event-l">' +
-            '<div class="col-xs-12 col-md-6">' +
+            '<div class="col-xs-12 col-md-4">' +
             '<p class="image">'
         @html += @e.avatar.attached? ? '<image src="' + url_for(@e.avatar).to_s + '">' : image_tag("eph.png")
         @html += '</p>' +
             '</div>' +
-            '<div class="col-xs-12 col-md-6">' +
+            '<div class="col-xs-12 col-md-4">' +
             '<p class="name">' + @e.description + '</p>' +
             '<p>' + @e.date.to_s + ' ' + @e.time.strftime("%I:%M %p").to_s + '</p>' +
             '<p>' + @e.address.to_s + '</p>' +
-            '<p>{' + @e.lat.to_s + ', ' + @e.lng.to_s + '}</p>' +
+            #((coordsSet(current_user.id, "u") && coordsSet(e, "e")) ? '<p>Distance: ' + userDist(current_user.id, e).round(3).to_s + ' km</p>'.html_safe : "") +
+            (isadmin ? '<p>{' + @e.lat.to_s + ", " + @e.lng.to_s + '}</p>' : "") +
             '<p>Public: ' + (!@e.private ? "Yes" : "No") + '</p>' +
             '<p>Organised By: ' + (link_to getName(current_user.id, @e.user_id), '/users/' + @e.user_id.to_s) + '</p>' +
             '<p>'
@@ -223,6 +228,12 @@ module EventsHelper
         end
         @html += '<a class="btn btn-info" href="javascript: history.go(-1)">Back</a>' +
             '</p>' +
+            '</div>' +
+            '<div class="col-xs-12 col-md-4">' +
+            '<div id="map-container">' +
+            '<div id="map"></div>' +
+            '</div>' +
+            (javascript_pack_tag 'mapPoint') +
             '</div>' +
             '<div class="clear"></div>' +
             '</div>'
@@ -235,8 +246,59 @@ module EventsHelper
         @ufEvents = Event.all
         @es = []
         @ufEvents.each do |e|
-            if e.name.downcase().include?(@w) || e.description.downcase().include?(@w) || User.find_by(id: e.user_id).username.downcase().include?(@w)
+            if e.name.to_s.downcase().include?(@w) ||
+                e.description.to_s.downcase().include?(@w) ||
+                e.street.to_s.downcase().include?(@w) ||
+                e.city.to_s.downcase().include?(@w) ||
+                e.state.to_s.downcase().include?(@w) ||
+                e.country.to_s.downcase().include?(@w) ||
+                User.find_by(id: e.user_id).username.downcase().include?(@w)
                 @es.push(e)
+            end
+        end
+        return @es
+    end
+
+    #get distance between two points of lat, lng in km (lat1, lng1, lat2, lng2)
+    #TODO (get working)
+    def distanceBetween(lat1, lng1, lat2, lng2)
+        @R = 6371
+        @c1 = lat1 * Math::PI/180 #0.927
+        @c2 = lat2 * Math::PI/180 #0.931
+        @dLat = (lat2 - lat1) * Math::PI/180 #0.004
+        @dLng = (lng2 - lng1) * Math::PI/180 #-0.004
+        
+        @a = Math.sin(@dLat/2) * Math.sin(@dLng/2) +
+            Math.cos(@c1) * Math.cos(@c2) *
+            Math.sin(@dLng/2) * Math.sin(@dLng/2) #0.999737
+        
+        @c = 2 * Math.atan2(Math.sqrt(@a), Math.sqrt(1 - @a))
+
+        return @R * @c
+    end
+
+    # distance from user to event (user id, event id)
+    #TODO
+    def userDist(u, e)
+        @u = User.find_by(id: u)
+        @e = Event.find_by(id: e)
+        return distanceBetween(@u.lat, @u.lng, @e.lat, @e.lng)
+    end
+
+    #get nearby events
+    def nearbyEvents
+        @es = []
+        @ufEvents = Event.all
+        @ufEvents.each do |e|
+            if coordsSet(current_user.id, "u") && coordsSet(e.id, "e")
+                if userDist(current_user.id, e) <= 50
+                    @es.push(e)
+                end
+            elsif addrSet(current_user.id, "u") && addrSet(e.id, "e")
+                if User.find_by(id: current_user.id).country == Event.find_by(id: e.id).country &&
+                    User.find_by(id: current_user.id).state == Event.find_by(id: e.id).state
+                    @es.push(e)
+                end
             end
         end
         return @es

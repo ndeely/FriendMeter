@@ -1,3 +1,4 @@
+<%= include_gon %>
 <%= getEventL(@event.id) %>
 
 <!-- show attending users -->
@@ -6,19 +7,12 @@
   <p>There are no confirmed attendees yet.</p>
 <% else %>
   <% @attending.each do |a|
-    @user = User.find_by(id: a.user_id)
-    @name = getName(current_user.id, a.user_id) %>
+    @user = User.find_by(id: a.user_id) %>
     <div class="col-xs-4 col-md-2">
       <div class="user-sm">
         <a href="/users/<%= @user.id.to_s %>">
-          <p><%= @name %></p>
-          <p>
-            <% if showPic(current_user.id, a.user_id) %>
-              <img src="<%= url_for(@user.avatar) %>" />
-            <% else %>
-              <%= image_tag("ph.png") %>
-            <% end %>
-          </p>
+          <p><%= getName(current_user.id, a.user_id) %></p>
+          <p><%= getPic(current_user.id, a.user_id) %></p>
         </a>
       </div>
     </div>
@@ -62,11 +56,7 @@
   <% @reviews.each do |r| %>
     <div class="review">
       <div class="col-xs-4 col-md-2">
-        <% if showPic(current_user.id, r.user_id) %>
-          <img src="<%= url_for(User.find_by(id: r.user_id).avatar) %>">
-        <% else %>
-          <%= image_tag("ph.png") %>
-        <% end %>
+        <%= getPic(current_user.id, r.user_id) %>
       </div>
       <div class="col-xs-6 col-md-8">
         <p class="name <%= getChatColor(r.user_id, @event.user_id) %>"><%= getName(current_user.id, r.user_id) %> <%= reviewRating(r.rating) %></p>

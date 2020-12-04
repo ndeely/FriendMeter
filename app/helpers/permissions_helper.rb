@@ -116,4 +116,36 @@ module PermissionsHelper
     end
   end
 
+  #check user ue has location coords set (user id, "u")
+  #check event ue has location coords set (event id, "e")
+  def coordsSet(ue, s)
+    if s == "u"
+      return User.find_by(id: ue).lat != nil && 
+          User.find_by(id: ue).lng != nil
+    elsif s == "e"
+      return Event.find_by(id: ue).lat != nil && 
+          Event.find_by(id: ue).lng != nil
+    else
+      return false
+    end
+  end
+
+  #check user ue has address set (user id, "u")
+  #check event ue has address set (user id, "e")
+  def addrSet(ue, s)
+    if s == "u"
+      return User.find_by(id: ue).street != nil &&
+          User.find_by(id: ue).city != nil  &&
+          User.find_by(id: ue).state != nil  &&
+          User.find_by(id: ue).country != nil
+    elsif s == "e"
+      return Event.find_by(id: ue).street != nil &&
+          Event.find_by(id: ue).city != nil  &&
+          Event.find_by(id: ue).state != nil  &&
+          Event.find_by(id: ue).country != nil
+    else
+      return false
+    end
+  end
+
 end

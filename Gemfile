@@ -74,3 +74,6 @@ gem 'paypal-sdk-rest'
 
 # geocoder for turning coords to address, and vice versa
 gem 'geocoder'
+
+# gon for using controller vars in js (needed for maps to show coords)
+gem 'gon'
