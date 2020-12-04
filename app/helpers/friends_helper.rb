@@ -49,9 +49,18 @@ module FriendsHelper
         @html = '<div class="user-sm col-xs-4 col-md-2">' +
             '<a href="/users/' + Friend.find_by(id: f).friend_id.to_s + '">' +
             '<p class="image">'
-        @html += @f.avatar.attached? ? '<image src="' + url_for(@f.avatar) + '">' : image_tag("ph.png")
+        @html += getPic(current_user.id, @f.id)
         @html += '</p>' +
             '<p class="name">' + @name + '</p>'
+        #show buttons to invite user to your events
+        @es = current_user.events
+        if @es.count != 0
+            @es.each do |e|
+                if !eventEnded(e) && !isInvited(e.id, @f.id) && !isAttending(e.id, @f.id)
+                    @html += '<a class="btn btn-success" href="/events/' + e.id.to_s + '/' + @f.id.to_s + '/1">Invite to ' + e.name.to_s + '</a>'
+                end
+            end
+        end
         if isadmin
             @f2 = User.find_by(id: Friend.find_by(id: f).user_id)
             @name = getName(current_user.id, @f2.id)

@@ -32,7 +32,7 @@
               <%= link_to "Friends (" + current_user.friends.count.to_s + ")", "/friends", class: "nav-link" %>
             </li>
             <li class="dropdown">
-              <a class="dropbtn">Account <b class="caret"></b></a>
+              <a class="dropbtn"><%= getName(current_user.id, current_user.id) %> <b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li>
                   <a href="/users/<%= current_user.id %>">View Profile</a>
