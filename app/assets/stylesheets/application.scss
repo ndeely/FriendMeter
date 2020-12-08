@@ -80,7 +80,7 @@ h1 {
     }
 }
 
-.alert, .notice {
+#alert, #notice {
     display:none;
     padding: 15px;
     margin-bottom: 20px;
@@ -88,9 +88,8 @@ h1 {
     border-radius: 4px;
 }
 
-//must be after .comment/.review img and .event img
-.rating img {
-    max-width:15px !important;
+.alert:empty, .notice:empty {
+	display: none;
 }
 
 .profile img, .events img {
@@ -128,6 +127,18 @@ h1 {
         max-height:200px;
         margin:auto;
     }
+}
+
+.review-sm {
+    img {
+        display:block;
+    }
+}
+
+//must be after .comment/.review img, .review-sm img and .event img
+.rating img {
+    max-width:15px !important;
+    display:inline;
 }
 
 .profile-l, .event-l {

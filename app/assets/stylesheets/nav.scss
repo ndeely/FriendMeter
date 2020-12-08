@@ -1,7 +1,6 @@
 @import "fonts.scss"; //montserrat and open sans
 
 .navbar-header {
-  width:100%;
   margin:auto !important;
 }
 
@@ -15,10 +14,15 @@
   text-transform: uppercase;
   letter-spacing: 3px;
   font-size: 1.2rem;
+  max-width:100%;
 }
 
 .navbar-inverse {
   background-color: #003300;
+}
+
+.navbar-collapse {
+  max-height: none !important;
 }
 
 .navbar-inverse .navbar-nav>.active>a:hover,

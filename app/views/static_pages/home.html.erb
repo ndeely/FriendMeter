@@ -1,29 +1,36 @@
 <h1>FriendMeter</h1>
 
-<!-- show recent reviews in slider -->
-<div class="pic-ctn featured col-xs-12 col-md-4">
-    <h2>Recent Reviews</h2>
-    <% if @rs.count == 0 %>
-        <p>There are no reviews to display.</p>
-    <% else %>
-        <% @rs.each do |r| %>
-            <div class="review-sm">
-                <a href="/users/<%= r.user_id %>">
-                    <%= getPic(isSignedIn ? current_user.id : nil, r.user_id) %>
-                    <p class="name"><%= getName(isSignedIn ? current_user.id : nil, r.user_id) %></p>
-                </a>
-                <p>Review for <strong><%= link_to Event.find_by(id: r.event_id).name, "/events/" + r.event_id.to_s %></strong></p>
-                <p><%= reviewRating(r.rating) %></p>
-                <p><%= r.text %></p>
-            </div>
-        <% end %>
-    <% end %>
-</div>
-
 <div class="desc col-xs-12 col-md-8">
     <p>FriendMeter is a Social Media site where you can meet new people, and create and attend events in your area.</p>
     <p>Currently boasting a whopping <strong><%= User.count %></strong> users, who have created <strong><%= Event.count %></strong> events, we are on track to be the biggest social media website in the world!</p>
 </div>
+
+<!-- show recent reviews in slider -->
+<div class="slider-container featured col-xs-12 col-md-4">
+    <h2>Recent Reviews</h2>
+    <% if @rs.count == 0 %>
+        <p>There are no reviews to display.</p>
+    <% else %>
+        <% @alt = 1 %>
+        <div class="slider-content">
+            <% @rs.each do |r| %>
+                <div class="slider-single">
+                    <div class="review-sm slider-single-image" alt="<%= @alt.to_s %>">
+                        <a href="/users/<%= r.user_id %>">
+                            <%= getPic(isSignedIn ? current_user.id : nil, r.user_id) %>
+                            <p class="name"><%= getName(isSignedIn ? current_user.id : nil, r.user_id) %></p>
+                        </a>
+                        <p>Review for <strong><%= link_to Event.find_by(id: r.event_id).name, "/events/" + r.event_id.to_s %></strong></p>
+                        <p><%= reviewRating(r.rating) %></p>
+                        <p><%= r.text %></p>
+                    </div>
+                </div>
+                <% @alt += 1 %>
+            <% end %>
+        </div>
+    <% end %>
+</div>
+<%= javascript_pack_tag "carousel" %>
 
 <div class="clear"></div>
 
