@@ -130,41 +130,48 @@ class EventsController < ApplicationController
 
   #confirm attendance to event from event ('/events/:eid/1')
   def attend
-    signedin
-    @event = Event.find_by(id: params[:eid])
-    if @event != nil && (@event.private ? isInvited(@event.id, current_user.id) : true)
-      if !isAttending(@event.id, current_user.id)
-        @attending = @event.attending.build(:event_id => @event.id, :user_id => current_user.id)
-        @attending.save
-        deleteNotificationIfExists(@event.id, current_user.id)
-        respond_to do |format|
-          format.html { redirect_to "/events/" + @event.id.to_s, notice: 'Confirmed attendance.' }
-          format.json { head :no_content }
+    @cuid = isSignedIn ? current_user.id : nil
+    if @cuid == nil
+      redirect_to "/users/sign_in", notice: "You must be signed in to attend events."
+    else
+      @event = Event.find_by(id: params[:eid])
+      if @event != nil && (@event.private ? isInvited(@event.id, @cuid) : true)
+        if !isAttending(@event.id, @cuid)
+          @attending = @event.attending.build(:event_id => @event.id, :user_id => @cuid)
+          @attending.save
+          deleteNotificationIfExists(@event.id, @cuid)
+          respond_to do |format|
+            format.html { redirect_to "/events/" + @event.id.to_s, notice: 'Confirmed attendance.' }
+            format.json { head :no_content }
+          end
+        else
+          redirect_to "/events/" + @event.id.to_s, notice: "You are already attending this event."
         end
-      else
-        redirect_to "/events/" + @event.id.to_s, notice: "You are already attending this event."
       end
     end
   end
 
   #unattend event from event ('/events/:eid/2')
   def unattend
-    signedin
-    @attending = Attending.find_by(event_id: params[:eid], user_id: current_user.id)
-    if @attending != nil
-      @attending.destroy
-      respond_to do |format|
-        format.html { redirect_to "/events/" + params[:eid].to_s, notice: 'You are no longer attending this event.' }
-        format.json { head :no_content }
-      end
+    @cuid = isSignedIn ? current_user.id : nil
+    if @cuid == nil
+      redirect_to "/users/sign_in", notice: "You must be signed in to attend events."
     else
-      redirect_to "/events/" + params[:eid].to_s, notice: 'You were not attending this event.'
+      @attending = Attending.find_by(event_id: params[:eid], user_id: @cuid)
+      if @attending != nil
+        @attending.destroy
+        respond_to do |format|
+          format.html { redirect_to "/events/" + params[:eid].to_s, notice: 'You are no longer attending this event.' }
+          format.json { head :no_content }
+        end
+      else
+        redirect_to "/events/" + params[:eid].to_s, notice: 'You were not attending this event.'
+      end
     end
   end
 
   #send user an invite to an event ('/events/:eid/:uid/1')
   def invite
-    signedin
     sendEventInvite(params[:eid], params[:uid])
   end
 

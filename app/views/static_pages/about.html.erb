@@ -42,4 +42,14 @@
 </div>
 
 <%= javascript_pack_tag "carousel" %>
+
+<div class="col-md-8">
+    <% @as = Event.find_by(id: 10).attending %>
+    <p>Attending: <%= @as.count.to_s %></p>
+    <% @as.each do |a| %>
+        <p><%= a.user_id.to_s %></p>
+        <p><%= link_to 'Delete', a, method: :delete, :role=>"button", :class => "btn btn-danger", data: { confirm: 'Are you sure?' } %></p>
+    <% end %>
+
+</div>
 <div class="clear">

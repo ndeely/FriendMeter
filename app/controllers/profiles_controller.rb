@@ -5,7 +5,6 @@ class ProfilesController < ApplicationController
   include ReviewsHelper
   include ProfilesHelper
   before_action :set_profile, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!
 
   # GET /profiles
   # GET /profiles.json
@@ -22,16 +21,19 @@ class ProfilesController < ApplicationController
 
   # GET /profiles/new
   def new
+    signedin
     @profile = Profile.new
   end
 
   # GET /profiles/1/edit
   def edit
+    signedin
   end
 
   # POST /profiles
   # POST /profiles.json
   def create
+    signedin
     @profile = Profile.new(profile_params)
 
     respond_to do |format|
@@ -48,6 +50,7 @@ class ProfilesController < ApplicationController
   # PATCH/PUT /profiles/1
   # PATCH/PUT /profiles/1.json
   def update
+    signedin
     respond_to do |format|
       if @profile.update(profile_params)
         format.html { redirect_to @profile, notice: 'Profile was successfully updated.' }
@@ -62,6 +65,7 @@ class ProfilesController < ApplicationController
   # DELETE /profiles/1
   # DELETE /profiles/1.json
   def destroy
+    signedin
     @profile.destroy
     respond_to do |format|
       format.html { redirect_to profiles_url, notice: 'Profile was successfully deleted.' }
@@ -71,27 +75,27 @@ class ProfilesController < ApplicationController
 
   # get user's profile page ("/users/{id}")
   def profile
-    signedin
     require 'will_paginate/array'
 
+    @cuid = isSignedIn ? current_user.id : nil
     @b1 = isadmin
     @creator = User.find_by(id: params[:id])
     if @creator == nil
       redirect_to root_url, notice: "This user does not exist"
     else
       #handle friend requests
-      @friend = areFriends(params[:id], current_user.id)
+      @friend = areFriends(params[:id], @cuid)
 
-      @b2 = @b1 || (current_user.id == @creator.id)
+      @b2 = @b1 || (@cuid == @creator.id)
       @b3 = @b2 || @friend
-      @name = getName(current_user.id, @creator.id)
+      @name = getName(@cuid, @creator.id)
       @allevents = @creator.events
       @events = []
       @endedEvents = []
       @allevents.each do |e|
         #check if user is invited/attending
-        @invited = isInvited(e.id, current_user.id)
-        @attending = isAttending(e.id, current_user.id)
+        @invited = isInvited(e.id, @cuid)
+        @attending = isAttending(e.id, @cuid)
 
         if (!e.private || @b2 || @invited || @attending)
           if !eventEnded(e.id)
@@ -102,10 +106,10 @@ class ProfilesController < ApplicationController
         end
       end
       @events = @events.paginate(page: params[:page1], per_page: 6)
-      @userEvents = getUnfinishedEvents(current_user.id).paginate(page: params[:page2], per_page: 6)
+      @userEvents = getUnfinishedEvents(@cuid).paginate(page: params[:page2], per_page: 6)
       @endedEvents = @endedEvents.paginate(page: params[:page3], per_page: 6)
       #check friend request status
-      @frs = friendRequestSent(current_user.id, @creator.id)
+      @frs = friendRequestSent(@cuid, @creator.id)
     end
   end
 

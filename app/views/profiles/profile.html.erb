@@ -15,20 +15,22 @@
 <%= will_paginate @events %>
 <div class="clear"></div>
 
-<% if !(current_user.id == @creator.id) %>
-    <div class="events">
-        <h2>Your Upcoming Events</h2>
-        <% if @userEvents.count == 0 %>
-            <p>You have not created any upcoming events.</p>
-        <% else %>
-            <% @userEvents.each do |e| %>
-                <%= getEventMd(e, @creator.id) %>
+<% if isSignedIn %>
+    <% if !(@cuid == @creator.id) %>
+        <div class="events">
+            <h2>Your Upcoming Events</h2>
+            <% if @userEvents.count == 0 %>
+                <p>You have not created any upcoming events.</p>
+            <% else %>
+                <% @userEvents.each do |e| %>
+                    <%= getEventMd(e, @creator.id) %>
+                <% end %>
             <% end %>
-        <% end %>
-    </div>
+        </div>
+    <% end %>
+    <%= will_paginate @userEvents %>
+    <div class="clear"></div>
 <% end %>
-<%= will_paginate @userEvents %>
-<div class="clear"></div>
 
 <!-- show user past events -->
 <div class="events">

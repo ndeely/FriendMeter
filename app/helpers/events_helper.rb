@@ -24,49 +24,59 @@ module EventsHelper
 
     #send u an invite to event e owned by current user (event id, user id)
     def sendEventInvite(e, u)
-        @e = Event.find_by(id: e)
-        @u = User.find_by(id: u)
-
-        if @e == nil
-            redirect_to '/users/' + u, notice: "You do not own this event."
-        elsif @u == nil
-            redirect_to root_url, notice: "This user does not exist."
-        elsif isAttending(e, u)
-            redirect_to '/users/' + u, notice: "This user is already attending this event."
-        elsif isInvited(e, u)
-            redirect_to '/users/' + u, notice: "This user is already invited to this event."
+        if !isSignedIn
+            redirect_to root_url, notice: "You must be signed in to send invites."
         else
-            @n = @u.notifications.build(:user_id => u, :title => 'New Event Invite', :desc => getName(u, current_user) + " has invited you to attend their event " + @e.name + ".", :sender_id => e, :notification_type => 3)
-            @n.save
-            respond_to do |format|
-                format.html { redirect_to '/users/' + u, notice: 'Invitation Sent.' }
-                format.json { head :no_content }
+            @e = current_user.events.find_by(id: e)
+            @u = User.find_by(id: u)
+
+            if @e == nil
+                redirect_to '/users/' + u, notice: "You do not own this event."
+            elsif @u == nil
+                redirect_to root_url, notice: "This user does not exist."
+            elsif isAttending(e, u)
+                redirect_to '/users/' + u, notice: "This user is already attending this event."
+            elsif isInvited(e, u)
+                redirect_to '/users/' + u, notice: "This user is already invited to this event."
+            else
+                @n = @u.notifications.build(:user_id => u, :title => 'New Event Invite', :desc => getName(u, current_user.id) + " has invited you to attend their event " + @e.name + ".", :sender_id => e, :notification_type => 3)
+                @n.save
+                respond_to do |format|
+                    format.html { redirect_to '/users/' + u, notice: 'Invitation Sent.' }
+                    format.json { head :no_content }
+                end
             end
         end
     end
 
     #user u is accepting an invited to event e (event id, user id)
     def acceptEventInvite(e, u)
-        @e = Event.find_by(id: e)
-        @u = User.find_by(id: u)
-
-        if @e == nil
+        if e == nil
             redirect_to '/events/', notice: "This event does not exist."
-        elsif @u == nil
+        elsif u == nil
             redirect_to root_url, notice: "This user does not exist."
-        elsif isAttending(e, u)
-            redirect_to '/events/' + e.to_s, notice: "You are already attending this event."
-        elsif !isInvited(e, u)
-            redirect_to '/events/', notice: "You have not been invited to this event."
         else
-            @a = @e.attending.build(event_id => e, user_id => u)
-            @a.save
-            # delete notification after
-            @n = @u.notifications.find_by(user_id: u, sender_id: e, notification_type: 3)
-            @n.destroy
-            respond_to do |format|
-                format.html { redirect_to '/events/' + e.to_s, notice: 'Invitation Accepted.' }
-                format.json { head :no_content }
+            @e = Event.find_by(id: e)
+            @u = User.find_by(id: u)
+
+            if @e == nil
+                redirect_to '/events/', notice: "This event does not exist."
+            elsif @u == nil
+                redirect_to root_url, notice: "This user does not exist."
+            elsif isAttending(e, u)
+                redirect_to '/events/' + e.to_s, notice: "You are already attending this event."
+            elsif !isInvited(e, u)
+                redirect_to '/events/', notice: "You have not been invited to this event."
+            else
+                @a = @e.attending.build(event_id => e, user_id => u)
+                @a.save
+                # delete notification after
+                @n = @u.notifications.find_by(user_id: u, sender_id: e, notification_type: 3)
+                @n.destroy
+                respond_to do |format|
+                    format.html { redirect_to '/events/' + e.to_s, notice: 'Invitation Accepted.' }
+                    format.json { head :no_content }
+                end
             end
         end
     end
@@ -90,10 +100,12 @@ module EventsHelper
     #get user's events that haven't ended (user id)
     def getUnfinishedEvents(u)
         @es = []
-        @alles = User.find_by(id: u).events
-        @alles.each do |e|
-            if !eventEnded(e)
-                @es.push(e)
+        if u != nil
+            @alles = User.find_by(id: u).events
+            @alles.each do |e|
+                if !eventEnded(e)
+                    @es.push(e)
+                end
             end
         end
         return @es
@@ -102,10 +114,12 @@ module EventsHelper
     #get user's events that have ended (user id, boolean includePrivate)
     def getFinishedEvents(u, b)
         @es = []
-        @alles = User.find_by(id: u).events
-        @alles.each do |e|
-            if eventEnded(e) && (b ? e.private : true)
-                @es.push(e)
+        if u != nil
+            @alles = User.find_by(id: u).events
+            @alles.each do |e|
+                if eventEnded(e) && (b ? e.private : true)
+                    @es.push(e)
+                end
             end
         end
         return @es
