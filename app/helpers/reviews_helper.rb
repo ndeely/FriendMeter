@@ -81,11 +81,12 @@ module ReviewsHelper
 
     #get review small (review)
     def getReviewSm(r)
+        @cuid = isSignedIn ? current_user.id : nil
         @html = '<div class="col-xs-4 col-md-2">' +
             '<div class="review-sm">' +
             '<a href="/users/' + r.user_id.to_s + '">'
-        @html += showPic(current_user.id, r.user_id) ? '<img src="' + url_for(User.find_by(id: r.user_id).avatar) + '">' : image_tag("ph.png")
-        @html += '<p class="name">' + getName(current_user.id, r.user_id) + '</p></a>' +
+        @html += showPic(@cuid, r.user_id) ? '<img src="' + url_for(User.find_by(id: r.user_id).avatar) + '">' : image_tag("ph.png")
+        @html += '<p class="name">' + getName(@cuid, r.user_id) + '</p></a>' +
             '<p>Review for <strong>' + (link_to Event.find_by(id: r.event_id).name, "/events/" + r.event_id.to_s) + '</strong></p>' +
             '<p>' + reviewRating(r.rating) + '</p>' +
             '<p>' + r.text + '</p>' +

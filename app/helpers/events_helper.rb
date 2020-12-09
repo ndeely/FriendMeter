@@ -2,18 +2,22 @@ module EventsHelper
 
     #check if user u is invited to event e (event_id, user_id)
     def isInvited(e, u)
-        @n = User.find_by(id: u).notifications.find_by(notification_type: 3, sender_id: e)
-        if @n != nil
-            return true
+        if u != nil
+            @n = User.find_by(id: u).notifications.find_by(notification_type: 3, sender_id: e)
+            if @n != nil
+                return true
+            end
         end
         return false
     end
 
     #check if user u is attending an event e
     def isAttending(e, u)
-        @a = Attending.find_by(event_id: e, user_id: u)
-        if @a != nil
-            return true
+        if u != nil
+            @a = Attending.find_by(event_id: e, user_id: u)
+            if @a != nil
+                return true
+            end
         end
         return false
     end
@@ -69,7 +73,7 @@ module EventsHelper
 
     #get color of name in chat messages (comment.user_id, @event.user_id)
     def getChatColor(uid, euid)
-        if current_user.id == uid
+        if (isSignedIn ? current_user.id : nil) == uid
             return "you"
         elsif uid == euid
             return "creator"
@@ -147,6 +151,7 @@ module EventsHelper
 
     #get medium sized event (event id, user id who's profile current user is on)
     def getEventMd(e, u)
+        @cuid = isSignedIn ? current_user.id : nil
         @e = Event.find_by(id: e)
         @html = '<a href="/events/' + @e.id.to_s + '">' +
             '<div class="col-xs-12 col-md-6">' +
@@ -158,12 +163,12 @@ module EventsHelper
             '<p>' + @e.description + '</p>' +
             '<p>' + @e.date.to_s + " " + @e.time.strftime("%I:%M %p") + '</p>' +
             '<p>' + @e.address.to_s + '</p>' +
-            #((coordsSet(current_user.id, "u") && coordsSet(e, "e")) ? '<p>Distance: ' + userDist(current_user.id, e).round(3).to_s + ' km</p>'.html_safe : "") +
+            #((coordsSet(@cuid, "u") && coordsSet(e, "e")) ? '<p>Distance: ' + userDist(@cuid, e).round(3).to_s + ' km</p>'.html_safe : "") +
             '<p>Attendees: ' + Attending.where(event_id: e).count.to_s + '</p>'
-        @html += (current_user.id == @e.user_id) ? "<p>Public: " + (!@e.private ? image_tag("tick.png") : image_tag("red-x.png")) + "</p>" : ""
+        @html += (@cuid == @e.user_id) ? "<p>Public: " + (!@e.private ? image_tag("tick.png") : image_tag("red-x.png")) + "</p>" : ""
         @html += '</a>'
         # show invited/attending status if on user's profile
-        if @e.user_id == current_user.id && !eventEnded(e) && u != nil #this is current user's event
+        if @e.user_id == @cuid && !eventEnded(e) && u != nil #this is current user's event
             if isInvited(e, u)
                 @html += '<p class="green">Invited</p>'
             elsif isAttending(e, u)
@@ -172,10 +177,10 @@ module EventsHelper
                 @html += '<a class="btn btn-success" href="/events/' + @e.id.to_s + '/' + u.to_s + '/1">Invite User</a>'
             end
         elsif (@e.user_id == u || u == nil) && !eventEnded(e) #this is other user's event
-            if isAttending(e, current_user.id)
+            if isAttending(e, @cuid)
                 @html += '<p class="green">You are attending this event.</p>' +
                 '<p><a class="btn btn-danger" href="/events/' + @e.id.to_s + '/2">Unattend Event</a></p>'
-            elsif isInvited(e, current_user.id)
+            elsif isInvited(e, @cuid)
                 @html += '<p class="green">You are invited to this event.</p>' +
                     '<p><a class="btn btn-success" href="/events/' + @e.id.to_s + '/' + @e.user_id.to_s + '/2">Accept Invitation</a></p>'
             else
@@ -183,16 +188,16 @@ module EventsHelper
                     '<p><a class="btn btn-success" href="/events/' + @e.id.to_s + '/1">Attend Event</a></p>'
             end
         elsif eventEnded(e)
-            if isAttending(e, current_user.id)
-                if !(hasReviewed(current_user.id, e))
+            if isAttending(e, @cuid)
+                if !(hasReviewed(@cuid, e))
                     @html += '<p><a class="btn btn-success" href="/events/' + e.to_s + '#reviews">Review</a></p>'
                 else
-                    @html += '<p>Your Review: ' + getUserStarRating(current_user.id, e) + '</p>'
+                    @html += '<p>Your Review: ' + getUserStarRating(@cuid, e) + '</p>'
                 end
             end
             @html += '<p>Average Review: ' + getAvgStarRating(e) + '</p>'
         end
-        @html += '<p>Organised By: ' + (link_to getName(current_user.id, @e.user_id), '/users/' + @e.user_id.to_s) + '</p>' +
+        @html += '<p>Organised By: ' + (link_to getName(@cuid, @e.user_id), '/users/' + @e.user_id.to_s) + '</p>' +
             '</div>' +
             '</div>'
         return @html.html_safe
@@ -200,9 +205,10 @@ module EventsHelper
 
     #get large main event (event id)
     def getEventL(e)
+        @cuid = isSignedIn ? current_user.id : nil
         @e = Event.find_by(id: e)
         @b1 = isadmin
-        @b2 = @b1 || (current_user.id == @e.user_id)
+        @b2 = @b1 || (@cuid == @e.user_id)
         
         @html = eventEnded(e) ? '<p class="summary">This event has ended.<br>Average Rating: ' + getAvgStarRating(e) + '</p>' : ""
         @html += '<h2>' + @e.name + '</h2>' +
@@ -216,10 +222,10 @@ module EventsHelper
             '<p class="name">' + @e.description + '</p>' +
             '<p>' + @e.date.to_s + ' ' + @e.time.strftime("%I:%M %p").to_s + '</p>' +
             '<p>' + @e.address.to_s + '</p>' +
-            #((coordsSet(current_user.id, "u") && coordsSet(e, "e")) ? '<p>Distance: ' + userDist(current_user.id, e).round(3).to_s + ' km</p>'.html_safe : "") +
+            #((coordsSet(@cuid, "u") && coordsSet(e, "e")) ? '<p>Distance: ' + userDist(@cuid, e).round(3).to_s + ' km</p>'.html_safe : "") +
             (isadmin ? '<p>{' + @e.lat.to_s + ", " + @e.lng.to_s + '}</p>' : "") +
             '<p>Public: ' + (!@e.private ? "Yes" : "No") + '</p>' +
-            '<p>Organised By: ' + (link_to getName(current_user.id, @e.user_id), '/users/' + @e.user_id.to_s) + '</p>' +
+            '<p>Organised By: ' + (link_to getName(@cuid, @e.user_id), '/users/' + @e.user_id.to_s) + '</p>' +
             '<p>'
         if @b1 || (@b2 && !eventEnded(e)) #show event buttons
             @html += '<a class="btn btn-warning" href="' + edit_event_path(@e) + '">Edit</a>' +

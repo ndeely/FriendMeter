@@ -12,7 +12,7 @@ module PermissionsHelper
   #redirect if user is not signed in
   def signedin
     if current_user == nil
-      redirect_to root_path, :alert => 'You must be logged in to view this page.'
+      redirect_to "/users/sign_in", :alert => 'You must be logged in to view this page.'
     end
   end
 

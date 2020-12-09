@@ -11,8 +11,8 @@
     <div class="col-xs-4 col-md-2">
       <div class="user-sm">
         <a href="/users/<%= @user.id.to_s %>">
-          <p><%= getName(current_user.id, a.user_id) %></p>
-          <p><%= getPic(current_user.id, a.user_id) %></p>
+          <p><%= getName(@cuid, a.user_id) %></p>
+          <p><%= getPic(@cuid, a.user_id) %></p>
         </a>
       </div>
     </div>
@@ -20,7 +20,7 @@
 <% end %>
 <div class="clear"></div>
 <%= will_paginate @attending %>
-<% if !eventEnded(@event.id) %>
+<% if !eventEnded(@event.id) && @isi %>
   <p><a class="btn <%= @isAttending ? "btn-danger" : "btn-success" %>" href="/events/<%= @event.id.to_s %>/<%= @isAttending ? 2 : 1 %>"><%= @isAttending ? "Unattend" : "Attend" %> Event</a></p>
 <% end %>
 
@@ -31,13 +31,13 @@
   <% @comments.each do |c| %>
     <div class="comment">
       <div class="col-xs-4 col-md-2">
-        <%= getPic(current_user.id, c.user_id) %>
+        <%= getPic(@cuid, c.user_id) %>
       </div>
       <div class="col-xs-6 col-md-8">
-        <p class="name <%= getChatColor(c.user_id, @event.user_id) %>"><%= getName(current_user.id, c.user_id) %></p>
+        <p class="name <%= getChatColor(c.user_id, @event.user_id) %>"><%= getName(@cuid, c.user_id) %></p>
         <p><%= c.text %></p>
       </div>
-      <% if @b1 || c.user_id == current_user.id %>
+      <% if @b1 || c.user_id == @cuid %>
       <div class="col-xs-2 col-md-2">
         <%= link_to 'Delete', c, method: :delete, :role=>"button", :class => "btn btn-danger mb-2", data: { confirm: 'Are you sure?' } %>
       </div>
@@ -56,13 +56,13 @@
   <% @reviews.each do |r| %>
     <div class="review">
       <div class="col-xs-4 col-md-2">
-        <%= getPic(current_user.id, r.user_id) %>
+        <%= getPic(@cuid, r.user_id) %>
       </div>
       <div class="col-xs-6 col-md-8">
-        <p class="name <%= getChatColor(r.user_id, @event.user_id) %>"><%= getName(current_user.id, r.user_id) %> <%= reviewRating(r.rating) %></p>
+        <p class="name <%= getChatColor(r.user_id, @event.user_id) %>"><%= getName(@cuid, r.user_id) %> <%= reviewRating(r.rating) %></p>
         <p><%= r.text %></p>
       </div>
-      <% if @b1 || r.user_id == current_user.id %>
+      <% if @b1 || r.user_id == @cuid %>
       <div class="col-xs-2 col-md-2">
         <%= link_to 'Delete', r, method: :delete, :role=>"button", :class => "btn btn-danger mb-2", data: { confirm: 'Are you sure?' } %>
       </div>
@@ -70,7 +70,7 @@
     </div>
     <div class="clear"></div>
   <% end %>
-  <% if @isi && isAttending(@event.id, current_user.id) && !hasReviewed(current_user.id, @event.id) %>
+  <% if @isi && isAttending(@event.id, @cuid) && !hasReviewed(@cuid, @event.id) %>
     <%= render 'rform', review: @review %>
   <% end %>
 <% end %>

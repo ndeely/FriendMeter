@@ -11,20 +11,22 @@
   </div>
 </div>
 
-<% @loc = addrSet(current_user.id, "u") %>
-<div class="col-xs-12 col-md-6">
-  <div class="form-wrapper">
-    <%= form_tag(events_path, method: :get, class: "form") do %>
-      <div class="field" hidden="true">
-        <%= text_field_tag(:nearby, params[:nearby], value: true) %>
-      </div>
-      <%= !@loc ? "<p class='red'>You have not set a location yet! <a class='btn btn-success' href='/users/edit'>Set Your Location</a></p>".html_safe : "" %>
-      <div class="actions">
-        <%= submit_tag ("Find Events Near Me"), disabled: !@loc %>
-      </div>
-    <% end %>
+<% if isSignedIn %>
+  <% @loc = addrSet(@cuid, "u") %>
+  <div class="col-xs-12 col-md-6">
+    <div class="form-wrapper">
+      <%= form_tag(events_path, method: :get, class: "form") do %>
+        <div class="field" hidden="true">
+          <%= text_field_tag(:nearby, params[:nearby], value: true) %>
+        </div>
+        <%= !@loc ? "<p class='red'>You have not set a location yet! <a class='btn btn-success' href='/users/edit'>Set Your Location</a></p>".html_safe : "" %>
+        <div class="actions">
+          <%= submit_tag ("Find Events Near Me"), disabled: !@loc %>
+        </div>
+      <% end %>
+    </div>
   </div>
-</div>
+<% end %>
 
 <div class="clear"></div>
 

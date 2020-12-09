@@ -1,6 +1,5 @@
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!
   include PermissionsHelper
   include EventsHelper
   include FriendsHelper
@@ -13,7 +12,7 @@ class EventsController < ApplicationController
   # GET /events.json
   def index
     # TODO remove events due to distance/ sort by distance
-
+    @cuid = isSignedIn ? current_user.id : nil
     @b1 = isadmin
     # unfiltered events
     @ufevents = (params[:search] == nil) ? (params[:nearby] == nil ? Event.all.order('date') : nearbyEvents) : searchEvents(params[:search])
@@ -21,10 +20,10 @@ class EventsController < ApplicationController
     @ufevents.each do |event|
 
       # work out if the user is invited or attending
-      @invited = isInvited(event.id, current_user.id)
-      @attending = isAttending(event.id, current_user.id)
+      @invited = isInvited(event.id, @cuid)
+      @attending = isAttending(event.id, @cuid)
 
-      if !eventEnded(event.id) && (@b1 || !event.private || (user_signed_in? && event.user_id == current_user.id) || @invited || @attending)
+      if !eventEnded(event.id) && (@b1 || !event.private || (user_signed_in? && event.user_id == @cuid) || @invited || @attending)
         @events.push(event)
       end
     end
@@ -34,14 +33,15 @@ class EventsController < ApplicationController
   # GET /events/1
   # GET /events/1.json
   def show
+    @cuid = isSignedIn ? current_user.id : nil
     @creator = User.find(Event.find(params[:id]).user_id)
-    @b2 = isadmin || (current_user.id == @creator.id)
-    @name = getName(current_user.id, @creator.id)
+    @b2 = isadmin || @cuid == @creator.id
+    @name = getName(@cuid, @creator.id)
     @attending = Event.find(params[:id]).attending.paginate(page: params[:page], per_page: 8)
-    if Event.find(params[:id]).private && !(@b2 || isInvited(params[:id], current_user.id) || isAttending(params[:id], current_user.id))
+    if Event.find(params[:id]).private && !(@b2 || isInvited(params[:id], @cuid) || isAttending(params[:id], @cuid))
       redirect_to events_url
     end
-    @isAttending = isAttending(params[:id], current_user.id)
+    @isAttending = isAttending(params[:id], @cuid)
 
     #comments and reviews
     @isi = isSignedIn
@@ -51,24 +51,29 @@ class EventsController < ApplicationController
     @review = Review.new
 
     #get gon lat/lngs
-    gon.cu_lat = current_user.lat
-    gon.cu_lng = current_user.lng
+    if isSignedIn
+      gon.cu_lat = current_user.lat
+      gon.cu_lng = current_user.lng
+    end
     gon.e_lat = Event.find_by(id: params[:id]).lat
     gon.e_lng = Event.find_by(id: params[:id]).lng
   end
 
   # GET /events/new
   def new
+    signedin
     @event = Event.new
   end
 
   # GET /events/1/edit
   def edit
+    signedin
   end
 
   # POST /events
   # POST /events.json
   def create
+    signedin
     if Date.today > Date.civil(event_params["date(1i)"].to_i, event_params["date(2i)"].to_i, event_params["date(3i)"].to_i)
       redirect_to "/events/new", notice: "Invalid date. You cannot create an event occurring in the past."
     else
@@ -90,6 +95,7 @@ class EventsController < ApplicationController
   # PATCH/PUT /events/1
   # PATCH/PUT /events/1.json
   def update
+    signedin
     setAvatar(@event, params[:avatar])
     respond_to do |format|
       if @event.update(event_params)
@@ -105,6 +111,7 @@ class EventsController < ApplicationController
   # DELETE /events/1
   # DELETE /events/1.json
   def destroy
+    signedin
     if !eventEnded(@event.id) || isadmin
       #delete all attendings/comments/invites/notifications for event
       @as = @event.attendings
@@ -173,6 +180,7 @@ class EventsController < ApplicationController
     signedin
     require 'will_paginate/array'
 
+    @cuid = isSignedIn ? current_user.id : nil
     @b1 = isadmin
     # unfiltered events
     @ufevents = Event.all.order('date')
@@ -183,12 +191,12 @@ class EventsController < ApplicationController
     @ufevents.each do |event|
 
       #user events
-      @ue = (current_user.id == event.user_id) && !eventEnded(event.id)
+      @ue = (@cuid == event.user_id) && !eventEnded(event.id)
       # work out if the user is invited/attending, doesn't own the event, and the event isn't over
-      @attending = isAttending(event.id, current_user.id) && !eventEnded(event.id)
-      @invited = isInvited(event.id, current_user.id) && (current_user.id != event.user_id) && !eventEnded(event.id)
+      @attending = isAttending(event.id, @cuid) && !eventEnded(event.id)
+      @invited = isInvited(event.id, @cuid) && (@cuid != event.user_id) && !eventEnded(event.id)
       #past events
-      @pe = eventEnded(event.id) && ((current_user.id == event.user_id) || isAttending(event.id, current_user.id))
+      @pe = eventEnded(event.id) && ((@cuid == event.user_id) || isAttending(event.id, @cuid))
 
       if @ue
         @events1.push(event)
