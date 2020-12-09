@@ -147,6 +147,7 @@ class ProfilesController < ApplicationController
 
   #show reviews for user ('/user/:uid/reviews')
   def reviews
+    @cuid = isSignedIn ? current_user.id : nil
     @u = User.find_by(id: params[:uid])
     @rs = getUserReviews(params[:uid])
   end
