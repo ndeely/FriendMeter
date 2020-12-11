@@ -28,16 +28,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def destroy
     @cu = User.find_by(id: current_user.id)
-    @es = @cu.events
-    @es.each do |e|
-      deleteEventData(e.id)
-    end
-    deleteAll(@es)
+    deleteAll(@cu.events)
     deleteAll(@cu.notifications)
     deleteAll(Comment.where(user_id: @cu.id))
     deleteAll(Review.where(user_id: @cu.id))
     deleteAll(Friend.where(user_id: @cu.id))
     deleteAll(Friend.where(friend_id: @cu.id))
+    
     #delete account with devise method
     resource.destroy
     Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
