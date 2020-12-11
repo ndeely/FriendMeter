@@ -126,11 +126,20 @@ module EventsHelper
     end
 
     #delete all x (array x)
-    #used by events#destroy for deleting info for event being deleted
+    #used by events#destroy / users -> registrations_controller -> destroy for deleting info for event / user being deleted
     def deleteAll(xs)
         xs.each do |x|
             x.destroy
         end
+    end
+
+    #delete all attendings/comments/reviews/invites/notifications for event e (event id)
+    def deleteEventData(e)
+        @e = Event.find_by(id: e)
+        deleteAll(@e.attendings)
+        deleteAll(@e.comments)
+        deleteAll(@e.reviews)
+        deleteEventNotifications(nil, @e.id)
     end
 
     #get event-sm for event (event id)

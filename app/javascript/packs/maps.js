@@ -10,9 +10,6 @@ if (!navigator.geolocation) {
 
             geo_loc = processGeolocationResult(position);
             currLatLong = geo_loc.split(",");
-            //initializeCurrent(currLatLong[0], currLatLong[1]);
-            //document.getElementById('result').innerHTML = "{" + currLatLong[0] + ", " + currLatLong[1] + "}";
-            //console.log("{" + currLatLong[0] + ", " + currLatLong[1] + "}");
             reverseGeocoding(currLatLong[0], currLatLong[1]);
         });
     };

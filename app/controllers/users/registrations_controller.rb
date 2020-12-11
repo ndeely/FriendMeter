@@ -3,6 +3,8 @@
 class Users::RegistrationsController < Devise::RegistrationsController
    before_action :configure_sign_up_params, only: [:create]
    before_action :configure_account_update_params, only: [:update]
+   include EventsHelper #to use deleteAll / deleteEventData methods
+   include NotificationsHelper #to use deleteEventNotifications method
 
   # GET /resource/sign_up
   # def new
@@ -24,10 +26,25 @@ class Users::RegistrationsController < Devise::RegistrationsController
   #   super
   # end
 
-  # DELETE /resource
-  # def destroy
-  #   super
-  # end
+  def destroy
+    @cu = User.find_by(id: current_user.id)
+    @es = @cu.events
+    @es.each do |e|
+      deleteEventData(e.id)
+    end
+    deleteAll(@es)
+    deleteAll(@cu.notifications)
+    deleteAll(Comment.where(user_id: @cu.id))
+    deleteAll(Review.where(user_id: @cu.id))
+    deleteAll(Friend.where(user_id: @cu.id))
+    deleteAll(Friend.where(friend_id: @cu.id))
+    #delete account with devise method
+    resource.destroy
+    Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
+    set_flash_message! :notice, :destroyed
+    yield resource if block_given?
+    respond_with_navigational(resource){ redirect_to after_sign_out_path_for(resource_name) }
+  end
 
   # GET /resource/cancel
   # Forces the session data which is usually expired after sign

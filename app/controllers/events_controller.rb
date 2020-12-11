@@ -113,12 +113,7 @@ class EventsController < ApplicationController
   def destroy
     signedin
     if !eventEnded(@event.id) || isadmin
-      #delete all attendings/comments/invites/notifications for event
-      @as = @event.attendings
-      deleteAll(@as)
-      @cs = @event.comments
-      deleteAll(@cs)
-      deleteEventNotifications(nil, @event.id)
+      deleteEventData(@event.id)
 
       @event.destroy
       respond_to do |format|
