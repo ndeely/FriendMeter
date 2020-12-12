@@ -31,14 +31,6 @@ module PermissionsHelper
     return false
   end
 
-  #appropriate permissions
-  def permissions
-    if isadmin
-      return true
-    end
-    return false
-  end
-
   #does u1 have permission to see name of u2 (user1_id, user2_id)
   #and is there one available
   def getName(u1, u2)

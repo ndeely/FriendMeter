@@ -13,7 +13,6 @@ class StaticPagesController < ApplicationController
   end
 
   def help
-    @html = getCoords(current_user.address)
   end
 
   def about

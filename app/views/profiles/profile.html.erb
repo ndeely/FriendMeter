@@ -34,7 +34,7 @@
 
 <!-- show user past events -->
 <div class="events">
-    <h2><%= @name %>'s Past Events</h2>
+    <h2><%= getName(@cuid, @creator.id) %>'s Past Events</h2>
     <% if @endedEvents.count == 0 %>
         <p>This user does not have any past events.</p>
     <% else %>

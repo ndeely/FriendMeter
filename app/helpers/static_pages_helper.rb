@@ -2,7 +2,7 @@ module StaticPagesHelper
 
     #get featured users
     def getFeaturedUsers
-        @f = User.all
+        @f = User.all.limit(6)
         return @f
     end
 
