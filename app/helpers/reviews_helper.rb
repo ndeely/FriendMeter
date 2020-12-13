@@ -48,7 +48,7 @@ module ReviewsHelper
 
     #get average star rating for event (event id)
     def getAvgStarRating(e)
-        return (getAvgRating(e) != "None") ? reviewRating(getAvgRating(e)) : "None".html_safe
+        return (getAvgRating(e) != "None") ? reviewRating(getAvgRating(e)) : "No ratings".html_safe
     end
 
     #get all reviews for user
@@ -76,7 +76,7 @@ module ReviewsHelper
 
     #get average user star rating (user id)
     def getAvgUserStarRating(u)
-        return (getAvgUserNumberRating(u) != "None") ? reviewRating(getAvgUserNumberRating(u)) : "None".html_safe
+        return (getAvgUserNumberRating(u) != "None") ? reviewRating(getAvgUserNumberRating(u)) : "No ratings".html_safe
     end
 
     #get review small (review)
