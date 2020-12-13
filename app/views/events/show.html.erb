@@ -76,6 +76,9 @@
       </div>
       <div class="clear"></div>
     <% end %>
+    <p>Signed In ? <%= @isi.to_s %></p>
+    <p>Current user <%= User.find_by(id: @cuid).username.to_s %> attending ? <%= isAttending(@event.id, @cuid).to_s %></p>
+    <p>Current user <%= User.find_by(id: @cuid).username.to_s %> hasn't reviewed ? <%= (!hasReviewed(@cuid, @event.id)).to_s %></p>
     <% if @isi && isAttending(@event.id, @cuid) && (!hasReviewed(@cuid, @event.id)) %>
       <%= render 'rform', review: @review %>
     <% end %>
