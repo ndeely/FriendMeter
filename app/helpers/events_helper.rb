@@ -162,13 +162,13 @@ module EventsHelper
             '<p>Attendees: ' + Attending.where(event_id: e).count.to_s + '</p>' +
             '</a>' +
             '<p>Organised By: ' + (link_to getName(isSignedIn ? current_user.id : nil, @e.user_id), '/users/' + @e.user_id.to_s) + '</p>'
+        #show comments
+        @html += '<a href="/events/' + e.to_s + '#comments">' +
+                '<p class="red">Comments (' + @e.comments.count.to_s + ')</p></a>'
         if eventEnded(e) #show reviews
             @html += '<a href="/events/' + e.to_s + '#reviews">' +
                 '<p>' + getAvgStarRating(e) + '</p>' +
                 '<p class="red">Reviews (' + @e.reviews.count.to_s + ')</p></a>'
-        else #show comments
-            @html += '<a href="/events/' + e.to_s + '#comments">' +
-                '<p class="red">Comments (' + @e.comments.count.to_s + ')</p></a>'
         end
         @html += '</div>' +
             '</div>'
