@@ -76,7 +76,7 @@
       </div>
       <div class="clear"></div>
     <% end %>
-    <% if @isi && isAttending(@event.id, @cuid) && !hasReviewed(@cuid, @event.id) %>
+    <% if @isi && isAttending(@event.id, @cuid) && (!hasReviewed(@cuid, @event.id)) %>
       <%= render 'rform', review: @review %>
     <% end %>
   <% end %>
