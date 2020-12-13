@@ -97,13 +97,17 @@ class EventsController < ApplicationController
   def update
     signedin
     setAvatar(@event, params[:avatar])
-    respond_to do |format|
-      if @event.update(event_params)
-        format.html { redirect_to @event, notice: 'Event was successfully updated.' }
-        format.json { render :show, status: :ok, location: @event }
-      else
-        format.html { render :edit }
-        format.json { render json: @event.errors, status: :unprocessable_entity }
+    if Date.today > Date.civil(event_params["date(1i)"].to_i, event_params["date(2i)"].to_i, event_params["date(3i)"].to_i)
+      redirect_to "/events/" + @event.id.to_s + "/edit", notice: "Invalid date. This date has already passed."
+    else
+      respond_to do |format|
+        if @event.update(event_params)
+          format.html { redirect_to @event, notice: 'Event was successfully updated.' }
+          format.json { render :show, status: :ok, location: @event }
+        else
+          format.html { render :edit }
+          format.json { render json: @event.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
