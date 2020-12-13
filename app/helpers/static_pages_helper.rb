@@ -46,4 +46,19 @@ module StaticPagesHelper
         return @html.html_safe
     end
 
+    #search friends for word
+    def searchUsers(word)
+        @cuid = isSignedIn ? current_user.id : nil
+        @w = word.downcase()
+        @usUnf = User.all # users unfiltered
+        @us = []
+        @usUnf.each do |u|
+            @friend = areFriends(@cuid, u.id)
+            if u.username.downcase().include?(@w) || (@friend ? (u.fname.downcase().include?(@w) || u.lname.downcase().include?(@w)) : false)
+                @us.push(u)
+            end
+        end
+        return @us
+    end
+
 end

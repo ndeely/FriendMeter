@@ -12,15 +12,8 @@ class StaticPagesController < ApplicationController
     @rs = getRecentReviews
   end
 
-  def help
-  end
-
-  def about
-  end
-
-  def getCoords(address)
-    results = Geocoder.search("Diceys, Harcourt St, Dublin, Ireland")
-    return results.first.coordinates
+  def users
+    @users = (params[:search] == nil ? User.all : searchUsers(params[:search]))
   end
 
     

@@ -24,6 +24,9 @@
               <li><%= link_to "Create Event", "/events/new", class: "nav-link" %></li>
             </ul>
           </li>
+          <li>
+            <%= link_to "Users", "/users", class: "nav-link" %>
+          </li>
           <% if user_signed_in? %>
             <li <%= current_user.notifications.count > 0 ? 'class=blue' : "" %>>
               <%= link_to "Notifications (" + current_user.notifications.count.to_s + ")", "/notifications", class: "nav-link" %>
