@@ -144,6 +144,7 @@ class EventsController < ApplicationController
             format.json { head :no_content }
           end
         else
+          deleteNotificationIfExists(@event.id, @cuid)
           redirect_to "/events/" + @event.id.to_s, notice: "You are already attending this event."
         end
       else

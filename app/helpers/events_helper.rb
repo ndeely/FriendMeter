@@ -191,7 +191,7 @@ module EventsHelper
             '<p>' + @e.address.to_s + '</p>' +
             #((coordsSet(@cuid, "u") && coordsSet(e, "e")) ? '<p>Distance: ' + userDist(@cuid, e).round(3).to_s + ' km</p>'.html_safe : "") +
             '<p>Attendees: ' + Attending.where(event_id: e).count.to_s + '</p>'
-        @html += (@cuid == @e.user_id) ? "<p>Public: " + (!@e.private ? image_tag("tick.png") : image_tag("red-x.png")) + "</p>" : ""
+        @html += "<p>Public: " + (!@e.private ? image_tag("tick.png") : image_tag("red-x.png")) + "</p>"
         @html += '</a>'
         # show invited/attending status if on user's profile
         if @e.user_id == @cuid && !eventEnded(e) && u != nil #this is current user's event
