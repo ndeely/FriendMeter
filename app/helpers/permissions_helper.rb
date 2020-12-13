@@ -31,6 +31,17 @@ module PermissionsHelper
     return false
   end
 
+  # check two user ids are friends
+  def areFriends(u1, u2)
+    if u1 == nil || u2 == nil
+        return false
+    end
+    if User.find_by(id: u1).friends.find_by(friend_id: u2) != nil
+        return true
+    end
+    return false
+  end
+
   #does u1 have permission to see name of u2 (user1_id, user2_id)
   #and is there one available
   def getName(u1, u2)
@@ -125,7 +136,9 @@ module PermissionsHelper
   #check user ue has address set (user id, "u")
   #check event ue has address set (user id, "e")
   def addrSet(ue, s)
-    if s == "u"
+    if ue == nil
+      return false
+    elsif s == "u"
       return User.find_by(id: ue).street != nil &&
           User.find_by(id: ue).city != nil  &&
           User.find_by(id: ue).state != nil  &&
@@ -137,6 +150,18 @@ module PermissionsHelper
           Event.find_by(id: ue).country != nil
     else
       return false
+    end
+  end
+
+  #gets an address in html
+  def getAddr(u)
+    @cuid = isSignedIn ? current_user.id : nil
+    if u != @cuid
+      return ""
+    else
+      @u = User.find_by(id: u)
+      @html = '<p>' + @u.street + ', ' + @u.city + ', ' + @u.state + ', ' + @u.country + '</p>'
+      return @html.html_safe
     end
   end
 

@@ -1,16 +1,5 @@
 module FriendsHelper
 
-    # check two user ids are friends
-    def areFriends(u1, u2)
-        if u1 == nil || u2 == nil
-            return false
-        end
-        if User.find_by(id: u1).friends.find_by(friend_id: u2) != nil
-            return true
-        end
-        return false
-    end
-
     # check friend request status (current_user_id, other_user_id)
     # will return true if users are already friends
     def friendRequestSent(u1, u2)
@@ -19,6 +8,17 @@ module FriendsHelper
         end
         @n = Notification.find_by(user_id: u2, sender_id: u1, notification_type: 1)
         if @n != nil || areFriends(u1, u2)
+        return true
+        end
+    end
+
+    #checks if a friend request from u2 is in notifications of u1 (current_user.id, other_user.id)
+    def friendRequestReceived(u1, u2)
+        if u1 == nil || u2 == nil
+            return false
+        end
+        @n = Notification.find_by(user_id: u1, sender_id: u2, notification_type: 1)
+        if @n != nil
         return true
         end
     end

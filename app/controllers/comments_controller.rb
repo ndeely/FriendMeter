@@ -34,9 +34,10 @@ class CommentsController < ApplicationController
   # POST /comments.json
   def create
     @event = Event.find_by(id: comment_params[:event_id])
+    @cuid = isSignedIn ? current_user.id : nil
     if @event == nil
       redirect_to root_url, notice: "This event does not exist."
-    elsif !(@event.private ? isInvited(@event.id, current_user.id) : true)
+    elsif !(@event.private ? (isInvited(@event.id, @cuid) || isAttending(@event.id, @cuid) || @event.user_id == @cuid) : true)
       redirect_to root_url, notice: "You do not have the correct permissions to comment on this event."
     else
       @c = @event.comments.build(comment_params)
@@ -44,7 +45,7 @@ class CommentsController < ApplicationController
       #inform owner of event that there's a new comment, if the owner isn't the poster
       if current_user.id != @event.user_id
         @owner = User.find_by(id: @event.user_id)
-        @n = @owner.notifications.build(:user_id => @owner, :title => "New Comment", :desc => getName(@event.user_id, current_user.id) + " has commented on your event " + @event.name + ".", :sender_id => @event.id, :notification_type => 4)
+        @n = @owner.notifications.build(:user_id => @owner, :title => "New Comment", :desc => getName(@event.user_id, @cuid) + " has commented on your event " + @event.name + ".", :sender_id => @event.id, :notification_type => 4)
         @n.save
       end
       redirect_to "/events/" + @event.id.to_s + "#comments", notice: "Your comment has been posted."

@@ -94,6 +94,9 @@ class NotificationsController < ApplicationController
       @friend21 = @user2.friends.build(:user_id => @user2.id, :friend_id => @user1.id)
       @friend21.save
       @n.destroy #delete notification after
+      # send user confirmation that their friend request was accepted
+      @notification = @user2.notifications.build(:user_id => @user2.id, :title => 'Friend Request Accepted', :desc => getName(@user2.id, @user1.id) + ' has accepted your friend request.', :sender_id => @user1.id, :notification_type => 2)
+      @notification.save
       respond_to do |format|
         format.html { redirect_to notifications_url, notice: 'Friend request accepted.' }
         format.json { head :no_content }
@@ -110,9 +113,12 @@ class NotificationsController < ApplicationController
     if @n != nil && current_user.id == @n.user_id
       @user = User.find_by(id: @n.user_id)
       @event = Event.find_by(id: @n.sender_id)
-      @a = @event.attending.build(:event_id => @event.id, :user_id => @user.id)
+      @a = @event.attendings.build(:event_id => @event.id, :user_id => @user.id)
       @a.save
       @n.destroy #delete notification after
+      # send user confirmation that their event invite was accepted
+      @notification = User.find_by(id: @event.user_id).notifications.build(:user_id => @event.user_id, :title => 'Event Invite Accepted', :desc => getName(@event.user_id, @user.id) + ' has accepted your invitation to ' + @event.name + '.', :sender_id => @event.id, :notification_type => 4)
+      @notification.save
       respond_to do |format|
         format.html { redirect_to notifications_url, notice: 'Invite accepted.' }
         format.json { head :no_content }

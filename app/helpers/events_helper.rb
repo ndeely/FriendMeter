@@ -49,7 +49,7 @@ module EventsHelper
         end
     end
 
-    #user u is accepting an invited to event e (event id, user id)
+    #user u is accepting an invite to event e (event id, user id)
     def acceptEventInvite(e, u)
         if e == nil
             redirect_to '/events/', notice: "This event does not exist."
@@ -68,11 +68,14 @@ module EventsHelper
             elsif !isInvited(e, u)
                 redirect_to '/events/', notice: "You have not been invited to this event."
             else
-                @a = @e.attending.build(event_id => e, user_id => u)
+                @a = @e.attendings.build(event_id: e, user_id: u)
                 @a.save
                 # delete notification after
                 @n = @u.notifications.find_by(user_id: u, sender_id: e, notification_type: 3)
                 @n.destroy
+                # send user confirmation that their event invite was accepted
+                @notification = User.find_by(id: @e.user_id).notifications.build(:user_id => @e.user_id, :title => 'Event Invite Accepted', :desc => getName(@e.user_id, @u.id) + ' has accepted your invitation to ' + @e.name + '.', :sender_id => @e.id, :notification_type => 4)
+                @notification.save
                 respond_to do |format|
                     format.html { redirect_to '/events/' + e.to_s, notice: 'Invitation Accepted.' }
                     format.json { head :no_content }
@@ -197,7 +200,7 @@ module EventsHelper
             elsif isAttending(e, u)
                 @html += '<p class="green">Attending</p>'
             else
-                @html += '<a class="btn btn-success" href="/events/' + @e.id.to_s + '/' + u.to_s + '/1">Invite User</a>'
+                @html += '<p><a class="btn btn-success" href="/events/' + @e.id.to_s + '/' + u.to_s + '/1">Invite User</a></p>'
             end
         elsif (@e.user_id == u || u == nil) && !eventEnded(e) #this is other user's event
             if isAttending(e, @cuid)
@@ -205,7 +208,7 @@ module EventsHelper
                 '<p><a class="btn btn-danger" href="/events/' + @e.id.to_s + '/2">Unattend Event</a></p>'
             elsif isInvited(e, @cuid)
                 @html += '<p class="green">You are invited to this event.</p>' +
-                    '<p><a class="btn btn-success" href="/events/' + @e.id.to_s + '/' + @e.user_id.to_s + '/2">Accept Invitation</a></p>'
+                    '<p><a class="btn btn-success" href="/events/' + @e.id.to_s + '/' + @cuid.to_s + '/2">Accept Invitation</a></p>'
             else
                 @html += '<p class="red">You are not attending this event.</p>' +
                     '<p><a class="btn btn-success" href="/events/' + @e.id.to_s + '/1">Attend Event</a></p>'

@@ -110,6 +110,7 @@ class ProfilesController < ApplicationController
       @endedEvents = @endedEvents.paginate(page: params[:page3], per_page: 6)
       #check friend request status
       @frs = friendRequestSent(@cuid, @creator.id)
+      @frr = friendRequestReceived(@cuid, @creator.id)
     end
   end
 

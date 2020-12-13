@@ -21,10 +21,13 @@ module ProfilesHelper
             '<div class="col-xs-12 col-md-6">' +
             '<p class="name">Bio</p>' +
             '<p>' + getBio(@cuid, u) + '</p><br>' +
+            getAddr(u) +
             '<p>Friends Made: ' + @u.friends.count.to_s + '</p>' +
             '<p>Events Created: ' + @u.events.count.to_s + '</p>'
         if isSignedIn
-            if !@b3 && !@frs
+            if @frr
+                @html += '<p><a class="btn btn-success" href="/notifications/' + Notification.find_by(user_id: @cuid, sender_id: @creator, notification_type: 1).id.to_s + '/1">Accept Friend Request</a></p>'
+            elsif !@b3 && !@frs
                 @html += '<p><a class="btn btn-success" href="/users/' + u.to_s + '/' + @cuid.to_s + '">Send Friend Request</a></p>'
             elsif !@b3 && @frs
                 @html += '<p class="green">Friend Request Sent</p>'

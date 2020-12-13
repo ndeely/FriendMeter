@@ -37,7 +37,7 @@ class EventsController < ApplicationController
     @creator = User.find(Event.find(params[:id]).user_id)
     @b2 = isadmin || @cuid == @creator.id
     @name = getName(@cuid, @creator.id)
-    @attending = Event.find(params[:id]).attending.paginate(page: params[:page], per_page: 8)
+    @attending = Event.find(params[:id]).attendings.paginate(page: params[:page], per_page: 8)
     if Event.find(params[:id]).private && !(@b2 || isInvited(params[:id], @cuid) || isAttending(params[:id], @cuid))
       redirect_to events_url
     end
@@ -130,9 +130,9 @@ class EventsController < ApplicationController
       redirect_to "/users/sign_in", notice: "You must be signed in to attend events."
     else
       @event = Event.find_by(id: params[:eid])
-      if @event != nil && (@event.private ? isInvited(@event.id, @cuid) : true)
+      if @event != nil && (@event.private ? (isInvited(@event.id, @cuid) || @event.user_id == @cuid) : true)
         if !isAttending(@event.id, @cuid)
-          @attending = @event.attending.build(:event_id => @event.id, :user_id => @cuid)
+          @attending = @event.attendings.build(:event_id => @event.id, :user_id => @cuid)
           @attending.save
           deleteNotificationIfExists(@event.id, @cuid)
           respond_to do |format|
@@ -142,6 +142,8 @@ class EventsController < ApplicationController
         else
           redirect_to "/events/" + @event.id.to_s, notice: "You are already attending this event."
         end
+      else
+        redirect_to "/events/", notice: "You cannot attend this event without an invite."
       end
     end
   end
