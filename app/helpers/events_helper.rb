@@ -216,7 +216,7 @@ module EventsHelper
         elsif eventEnded(e)
             if isAttending(e, @cuid)
                 if !(hasReviewed(@cuid, e))
-                    @html += '<p><a class="btn btn-success" href="/events/' + e.to_s + '#reviews">Review</a></p>'
+                    @html += '<p><a class="btn btn-success" href="/events/' + @e.id.to_s + '#reviews">Review</a></p>'
                 else
                     @html += '<p>Your Review: ' + getUserStarRating(@cuid, e) + '</p>'
                 end
