@@ -34,7 +34,7 @@ class ReviewsController < ApplicationController
     @event = Event.find_by(id: review_params[:event_id])
     if @event == nil
       redirect_to root_url, notice: "This event does not exist."
-    elsif !(@event.private ? isInvited(@event.id, current_user.id) : true)
+    elsif !(@event.private ? isAttending(@event.id, current_user.id) : true)
       redirect_to root_url, notice: "You do not have the correct permissions to review this event."
     else
       @r = @event.reviews.build(review_params)
