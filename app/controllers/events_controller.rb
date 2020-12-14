@@ -39,7 +39,7 @@ class EventsController < ApplicationController
     @name = getName(@cuid, @creator.id)
     @attending = Event.find(params[:id]).attendings.paginate(page: params[:page], per_page: 8)
     if Event.find(params[:id]).private && !(@b2 || isInvited(params[:id], @cuid) || isAttending(params[:id], @cuid))
-      redirect_to events_url
+      redirect_to events_url, notice: "You do not have permission to view this event."
     end
     @isAttending = isAttending(params[:id], @cuid)
 
@@ -68,6 +68,10 @@ class EventsController < ApplicationController
   # GET /events/1/edit
   def edit
     signedin
+    @cuid = isSignedIn ? current_user.id : nil
+    if Event.find_by(id: params[:id]).user_id != @cuid
+      redirect_to "/events/" + params[:id].to_s, notice: "You do not have permission for this action."
+    end
   end
 
   # POST /events
