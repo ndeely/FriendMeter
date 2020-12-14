@@ -121,6 +121,7 @@ class EventsController < ApplicationController
   def destroy
     signedin
     if !eventEnded(@event.id) || isadmin
+      deleteEventNotifications(nil, @event.id)
       deleteEventData(@event.id)
 
       @event.destroy

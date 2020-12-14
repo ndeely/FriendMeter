@@ -21,7 +21,7 @@ module ProfilesHelper
             '<div class="col-xs-12 col-md-6">' +
             '<p class="name">Bio</p>' +
             '<p>' + getBio(@cuid, u) + '</p><br>' +
-            getAddr(u) +
+            (addrSet(u, "u") ? getAddr(u) : "") +
             '<p>Friends Made: ' + @u.friends.count.to_s + '</p>' +
             '<p>Events Created: ' + @u.events.count.to_s + '</p>'
         if isSignedIn

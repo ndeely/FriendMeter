@@ -11,11 +11,11 @@ module NotificationsHelper
         @ns = Notification.all
         @ns.each do |n|
             if u == nil
-                if (n.notification_type == 3 || n.notification_type == 4) && n.sender_id == e
+                if (n.notification_type == 3 || n.notification_type == 4) && n.sender_id == e.to_i
                     @result.push(n)
                 end
             else
-                if (n.notification_type == 3 || n.notification_type == 4) && n.sender_id == e && n.user_id == u
+                if (n.notification_type == 3 || n.notification_type == 4) && n.sender_id == e.to_i && n.user_id == u.to_i
                     @result.push(n)
                 end
             end
@@ -32,9 +32,9 @@ module NotificationsHelper
         redirect_to "/notifications", notice: "All notifications deleted."
     end
 
-    # delete all notifications related to event (user id, event id)
+    # delete all notifications related to event for user (user id, event id)
     def deleteEventNotifications(u, e)
-        @ns = getEventNotifications(u.to_i, e.to_i)
+        @ns = getEventNotifications(u, e)
         @ns.each do |n|
             n.destroy
         end
