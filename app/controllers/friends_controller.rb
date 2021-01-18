@@ -10,6 +10,7 @@ class FriendsController < ApplicationController
   def index
     @b1 = isadmin
     @friends = @b1 ? Friend.all : (params[:search] == nil ? current_user.friends : searchFriends(params[:search]))
+    @friends.sort_by{ |f| [User.find_by(id: f.friend_id).fname, User.find_by(id: f.friend_id).lname] }
   end
 
   # GET /friends/1

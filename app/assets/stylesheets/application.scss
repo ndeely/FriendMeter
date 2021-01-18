@@ -44,6 +44,10 @@ body {
     clear:both;
 }
 
+.gap {
+    margin-bottom:10px;
+}
+
 h1, h2, h3 {
     text-align:center;
 }
@@ -100,6 +104,12 @@ h1 {
     border:1px solid #efefef;
     margin-bottom:10px;
     padding:10px;
+    &:hover {
+        padding:10px 6px;
+        position:relative;
+        top:2px;
+        left:2px;
+    }
     a {
         text-decoration:none;
     }
@@ -126,6 +136,10 @@ h1 {
         max-height:200px;
         margin:auto;
     }
+}
+
+.featured .user-sm {
+    height:385px;
 }
 
 .review-sm {
@@ -156,7 +170,11 @@ h1 {
 //featured users/events
 .featured {
     h2 {
-        background-color:#49b8cc;
+        //background-color:#49b8cc;
+        background: -webkit-linear-gradient(left, #005bea, #00c6fb);
+        background: -o-linear-gradient(left, #005bea, #00c6fb);
+        background: -moz-linear-gradient(left, #005bea, #00c6fb);
+        background: linear-gradient(left, #005bea, #00c6fb);
         color:#fff;
         border:1px solid #49b8cc;
         border-radius:25px 25px 0px 0px;

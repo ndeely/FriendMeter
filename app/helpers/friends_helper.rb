@@ -52,7 +52,8 @@ module FriendsHelper
     def getFriendSm(f)
         @f = User.find_by(id: Friend.find_by(id: f).friend_id)
         @name = getName(current_user.id, @f.id)
-        @html = '<div class="user-sm col-xs-4 col-md-2">' +
+        @html = '<div class="col-xs-4 col-md-2">' +
+            '<div class="user-sm">' +
             '<a href="/users/' + Friend.find_by(id: f).friend_id.to_s + '">' +
             '<p class="image">'
         @html += getPic(current_user.id, @f.id)
@@ -73,6 +74,7 @@ module FriendsHelper
             @html += '<p>Friends with: ' + @name + '</p>'
         end
         @html += '</a>' +
+            '</div>' +
             '</div>'
         return @html.html_safe
     end

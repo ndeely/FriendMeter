@@ -9,19 +9,21 @@ module StaticPagesHelper
                 @f.push(u)
             end
         end
-        @f = @f.take(6)
+        @f = @f.sort_by{ |u| [u.events.count, u.friends.count] }.reverse.take(6)
         return @f
     end
 
     #get featured events
     def getFeaturedEvents
-        @f = Event.where(private: false).where("date > ?", Date.today).order(:date).limit(3)
+        @es = Event.where(private: false).where("date > ?", Date.today).order(:date)
+        @f = @es.sort_by{ |e| [e.attendings.count, e.comments.count] }.reverse.take(3)
         return @f
     end
 
-    #get featured events
+    #get featured past events
     def getFeaturedPastEvents
-        @f = Event.where(private: false).where("date < ?", Date.today).order(date: :desc).limit(3)
+        @es = Event.where(private: false).where("date < ?", Date.today).order(date: :desc)
+        @f = @es.sort_by{ |e| [e.attendings.count, e.comments.count] }.reverse.take(3)
         return @f
     end
 

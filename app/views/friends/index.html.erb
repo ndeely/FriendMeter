@@ -1,19 +1,19 @@
 <h1>Friends</h1>
 
-<div class="form-wrapper">
-  <%= form_tag(friends_path, method: :get, class: "form") do %>
-    </div class="col-xs-8">
-      <div class="field">
+<div class="col-xs-12 col-md-12">
+  <div class="form-wrapper">
+    <%= form_tag(friends_path, method: :get, class: "form") do %>
+      <div class="field col-xs-8">
         <%= text_field_tag(:search, params[:search]) %>
       </div>
-    </div>
-    <div class="col-xs-4">
-      <div class="actions">
+      <div class="actions col-xs-4">
         <%= submit_tag ("Search") %>
       </div>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 </div>
+
+<div class="clear gap"></div>
 
 <% if params[:search] != nil %>
     <p>Your search for "<%= params[:search] %>" yielded <%= @friends.count %> friend<%= @friends.count != 1 ? "s" : "" %>.</p>
