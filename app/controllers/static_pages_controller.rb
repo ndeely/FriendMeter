@@ -16,5 +16,9 @@ class StaticPagesController < ApplicationController
     @users = (params[:search] == nil ? User.all : searchUsers(params[:search]))
   end
 
+  def about
+
+  end
+
     
 end

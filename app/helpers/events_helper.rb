@@ -290,18 +290,18 @@ module EventsHelper
         return @es
     end
 
-    #get distance between two points of lat, lng in km (lat1, lng1, lat2, lng2)
+    #get distance between two points of lat, lng in km (user lat, user lng, event lat, event lng)
     #TODO (get working)
-    def distanceBetween(lat1, lng1, lat2, lng2)
+    def distanceBetween(uLat, uLng, eLat, eLng)
         @R = 6371
-        @c1 = lat1 * Math::PI/180 #0.927
-        @c2 = lat2 * Math::PI/180 #0.931
-        @dLat = (lat2 - lat1) * Math::PI/180 #0.004
-        @dLng = (lng2 - lng1) * Math::PI/180 #-0.004
+        @c1 = uLat * Math::PI/180
+        @c2 = eLat * Math::PI/180
+        @dLat = (eLat - uLat) * Math::PI/180
+        @dLng = (eLng - uLng) * Math::PI/180
         
         @a = Math.sin(@dLat/2) * Math.sin(@dLng/2) +
             Math.cos(@c1) * Math.cos(@c2) *
-            Math.sin(@dLng/2) * Math.sin(@dLng/2) #0.999737
+            Math.sin(@dLng/2) * Math.sin(@dLng/2)
         
         @c = 2 * Math.atan2(Math.sqrt(@a), Math.sqrt(1 - @a))
 

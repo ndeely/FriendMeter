@@ -1,10 +1,10 @@
 <div class="col-xs-12 col-md-6">
   <div class="form-wrapper">
     <%= form_tag(events_path, method: :get, class: "form") do %>
-      <div class="field">
+      <div class="field col-xs-8">
         <%= text_field_tag(:search, params[:search]) %>
       </div>
-      <div class="actions">
+      <div class="actions col-xs-4">
         <%= submit_tag ("Search") %>
       </div>
     <% end %>

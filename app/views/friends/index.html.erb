@@ -2,11 +2,15 @@
 
 <div class="form-wrapper">
   <%= form_tag(friends_path, method: :get, class: "form") do %>
-    <div class="field">
-      <%= text_field_tag(:search, params[:search]) %>
+    </div class="col-xs-8">
+      <div class="field">
+        <%= text_field_tag(:search, params[:search]) %>
+      </div>
     </div>
-    <div class="actions">
-      <%= submit_tag ("Search") %>
+    <div class="col-xs-4">
+      <div class="actions">
+        <%= submit_tag ("Search") %>
+      </div>
     </div>
   <% end %>
 </div>

@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   #set homepage and static pages
   root 'static_pages#home'
   get '/users' => 'static_pages#users'
+  get '/about' => 'static_pages#about'
 
   #set admin pages
   get '/users' => 'admin_pages#allusers'

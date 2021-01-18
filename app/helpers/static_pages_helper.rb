@@ -2,7 +2,14 @@ module StaticPagesHelper
 
     #get featured users
     def getFeaturedUsers
-        @f = User.all.limit(6)
+        @us = User.all
+        @f = []
+        @us.each do |u|
+            if u.admin != true
+                @f.push(u)
+            end
+        end
+        @f = @f.take(6)
         return @f
     end
 
