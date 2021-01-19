@@ -10,12 +10,14 @@
       <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
     <% end %>
 
-    <% if current_user.admin? %>
-      <div class="field">
-        <%= f.label :"Username" %><br />
+    <div class="field">
+      <%= f.label :"Username" %><br />
+      <% if current_user.admin? %>
         <%= f.text_field :username, autocomplete: "Username" %>
-      </div>
-    <% end %>
+      <% else %>
+        <p><%= current_user.username %></p>
+      <% end %>
+    </div>
 
     <div class="field">
       <%= f.label :"First Name" %><br />

@@ -20,7 +20,7 @@ Rails.application.routes.draw do
   get '/about' => 'static_pages#about'
 
   #set admin pages
-  get '/users' => 'admin_pages#allusers'
+  get '/allusers' => 'admin_pages#allusers'
   get '/admin' => 'admin_pages#admin'
   #create admins and premium users
   get '/upgrade/:id' => 'admin_pages#upgrade'

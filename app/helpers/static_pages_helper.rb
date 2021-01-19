@@ -62,8 +62,12 @@ module StaticPagesHelper
         @usUnf = User.all # users unfiltered
         @us = []
         @usUnf.each do |u|
-            @friend = areFriends(@cuid, u.id)
-            if u.username.downcase().include?(@w) || (@friend ? (u.fname.downcase().include?(@w) || u.lname.downcase().include?(@w)) : false)
+            @friendOrAdmin = areFriends(@cuid, u.id) || ((@cuid != nil) ? (User.find_by(id: @cuid).admin == true) : false)
+            if u.username.downcase().include?(@w) || 
+                (@friendOrAdmin ? 
+                    ((u.fname != nil) ? u.fname.downcase().include?(@w) : false) || 
+                    ((u.lname != nil) ? u.lname.downcase().include?(@w) : false)
+                : false)
                 @us.push(u)
             end
         end

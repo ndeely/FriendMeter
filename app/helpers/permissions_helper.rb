@@ -26,6 +26,8 @@ module PermissionsHelper
     if user_signed_in?
       if current_user.admin?
         return true
+      else
+        return false
       end
     end
     return false

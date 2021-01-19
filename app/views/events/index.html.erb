@@ -16,12 +16,12 @@
   <div class="col-xs-12 col-md-6">
     <div class="form-wrapper">
       <%= form_tag(events_path, method: :get, class: "form") do %>
-        <div class="field" hidden="true">
-          <%= text_field_tag(:nearby, params[:nearby], value: true) %>
+        <div class="field col-xs-4">
+          <%= text_field_tag(:nearby, params[:nearby]) %>
         </div>
         <%= !@loc ? "<p class='red'>You have not set a location yet! <a class='btn btn-success' href='/users/edit'>Set Your Location</a></p>".html_safe : "" %>
-        <div class="actions">
-          <%= submit_tag ("Find Events Near Me"), disabled: !@loc %>
+        <div class="actions col-xs-8">
+          <%= submit_tag ("Find Events Within.. (km)"), disabled: !@loc %>
         </div>
       <% end %>
     </div>
@@ -30,10 +30,12 @@
 
 <div class="clear gap"></div>
 
-<% if params[:search] != nil %>
+<% if params[:search] == "" || params[:nearby] == "" || !(params[:nearby].to_i > 0) %>
+  <p>This is not a valid search.</p>
+<% elsif params[:search] != nil %>
   <p>Your search for "<%= params[:search] %>" yielded <%= @events.count %> result<%= @events.count != 1 ? "s" : "" %>.</p>
-<% elsif params[:nearby] == "true" %>
-  <p>Your search for events in <%= current_user.state %>, <%= current_user.country %> yielded <%= @events.count %> result<%= @events.count != 1 ? "s" : "" %>.</p>
+<% elsif params[:nearby] != nil %>
+  <p>Your search for events within <%= params[:nearby] %> km yielded <%= @events.count %> result<%= @events.count != 1 ? "s" : "" %>.</p>
 <% end %>
 
 <% @events.each do |event| %>

@@ -15,7 +15,7 @@ class EventsController < ApplicationController
     @cuid = isSignedIn ? current_user.id : nil
     @b1 = isadmin
     # unfiltered events
-    @ufevents = (params[:search] == nil) ? (params[:nearby] == nil ? Event.all.order('date') : nearbyEvents) : searchEvents(params[:search])
+    @ufevents = (params[:search] == nil) ? (params[:nearby] == nil ? Event.all.order('date') : nearbyEvents(params[:nearby])) : searchEvents(params[:search])
     @events = []
     @ufevents.each do |event|
 

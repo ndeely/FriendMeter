@@ -158,7 +158,7 @@ module EventsHelper
             '<p class="name">' + @e.name.to_s + '</p>' +
             '<p>' + @e.date.to_s + " " + @e.time.strftime("%I:%M %p").to_s + '</p>' +
             '<p>' + @e.address.to_s + '</p>' +
-            #(isSignedIn ? ((coordsSet(current_user.id, "u") && coordsSet(e, "e")) ? '<p>Distance: ' + userDist(current_user.id, e).round(3).to_s + ' km</p>'.html_safe : "") : "") +
+            (isSignedIn ? ((coordsSet(current_user.id, "u") && coordsSet(e, "e")) ? '<p>Distance: ' + userDist(current_user.id, e).to_s + ' km</p>'.html_safe : "") : "") +
             '<p>Attendees: ' + Attending.where(event_id: e).count.to_s + '</p>' +
             '</a>' +
             '<p>Organised By: ' + (link_to getName(isSignedIn ? current_user.id : nil, @e.user_id), '/users/' + @e.user_id.to_s) + '</p>'
@@ -189,7 +189,7 @@ module EventsHelper
             '<p>' + @e.description + '</p>' +
             '<p>' + @e.date.to_s + " " + @e.time.strftime("%I:%M %p") + '</p>' +
             '<p>' + @e.address.to_s + '</p>' +
-            #((coordsSet(@cuid, "u") && coordsSet(e, "e")) ? '<p>Distance: ' + userDist(@cuid, e).round(3).to_s + ' km</p>'.html_safe : "") +
+            ((coordsSet(@cuid, "u") && coordsSet(e, "e")) ? '<p>Distance: ' + userDist(@cuid, e).to_s + ' km</p>'.html_safe : "") +
             '<p>Attendees: ' + Attending.where(event_id: e).count.to_s + '</p>'
         @html += "<p>Public: " + (!@e.private ? image_tag("tick.png") : image_tag("red-x.png")) + "</p>"
         @html += '</a>'
@@ -248,7 +248,7 @@ module EventsHelper
             '<p class="name">' + @e.description + '</p>' +
             '<p>' + @e.date.to_s + ' ' + @e.time.strftime("%I:%M %p").to_s + '</p>' +
             '<p>' + @e.address.to_s + '</p>' +
-            #((coordsSet(@cuid, "u") && coordsSet(e, "e")) ? '<p>Distance: ' + userDist(@cuid, e).round(3).to_s + ' km</p>'.html_safe : "") +
+            ((coordsSet(@cuid, "u") && coordsSet(e, "e")) ? '<p>Distance: ' + userDist(@cuid, e).to_s + ' km</p>'.html_safe : "") +
             (isadmin ? '<p>{' + @e.lat.to_s + ", " + @e.lng.to_s + '}</p>' : "") +
             '<p>Public: ' + (!@e.private ? "Yes" : "No") + '</p>' +
             '<p>Organised By: ' + (link_to getName(@cuid, @e.user_id), '/users/' + @e.user_id.to_s) + '</p>' +
@@ -291,7 +291,6 @@ module EventsHelper
     end
 
     #get distance between two points of lat, lng in km (user lat, user lng, event lat, event lng)
-    #TODO (get working)
     def distanceBetween(uLat, uLng, eLat, eLng)
         @R = 6371
         @c1 = uLat * Math::PI/180
@@ -299,37 +298,36 @@ module EventsHelper
         @dLat = (eLat - uLat) * Math::PI/180
         @dLng = (eLng - uLng) * Math::PI/180
         
-        @a = Math.sin(@dLat/2) * Math.sin(@dLng/2) +
+        @a = Math.sin(@dLat/2) * Math.sin(@dLat/2) +
             Math.cos(@c1) * Math.cos(@c2) *
             Math.sin(@dLng/2) * Math.sin(@dLng/2)
         
         @c = 2 * Math.atan2(Math.sqrt(@a), Math.sqrt(1 - @a))
 
-        return @R * @c
+        return (@R * @c).to_i
     end
 
     # distance from user to event (user id, event id)
-    #TODO
     def userDist(u, e)
         @u = User.find_by(id: u)
         @e = Event.find_by(id: e)
         return distanceBetween(@u.lat, @u.lng, @e.lat, @e.lng)
     end
 
-    #get nearby events
-    def nearbyEvents
+    #get nearby events (distance in km)
+    def nearbyEvents(dist)
         @es = []
         @ufEvents = Event.all
         @ufEvents.each do |e|
-            #if coordsSet(current_user.id, "u") && coordsSet(e.id, "e")
-            #    if userDist(current_user.id, e) <= 50
-            #        @es.push(e)
-            #    end
-            if addrSet(current_user.id, "u") && addrSet(e.id, "e")
-                if User.find_by(id: current_user.id).country == Event.find_by(id: e.id).country &&
-                    User.find_by(id: current_user.id).state == Event.find_by(id: e.id).state
+            if coordsSet(current_user.id, "u") && coordsSet(e.id, "e")
+                if userDist(current_user.id, e) <= dist.to_i
                     @es.push(e)
                 end
+            #if addrSet(current_user.id, "u") && addrSet(e.id, "e")
+            #    if User.find_by(id: current_user.id).country == Event.find_by(id: e.id).country &&
+            #        User.find_by(id: current_user.id).state == Event.find_by(id: e.id).state
+            #        @es.push(e)
+            #    end
             end
         end
         return @es
