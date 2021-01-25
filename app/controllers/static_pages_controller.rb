@@ -13,6 +13,9 @@ class StaticPagesController < ApplicationController
   end
 
   def users
+    if params[:search] == ""
+      redirect_to "/users", notice: "This is not a valid search."
+    end
     @users = (params[:search] == nil ? User.all : searchUsers(params[:search]))
   end
 

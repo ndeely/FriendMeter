@@ -14,8 +14,12 @@ class EventsController < ApplicationController
     # TODO remove events due to distance/ sort by distance
     @cuid = isSignedIn ? current_user.id : nil
     @b1 = isadmin
+
+    if params[:search] == "" || params[:nearby] == "" || params[:nearby].to_i < 0
+      redirect_to events_url, notice: "This is not a valid search."
+    end
     # unfiltered events
-    @ufevents = (params[:search] == nil) ? (params[:nearby] == nil ? Event.all.order('date') : nearbyEvents(params[:nearby])) : searchEvents(params[:search])
+    @ufevents = (params[:search] == nil) ? ((params[:nearby] == nil || params[:nearby].to_i <= 0) ? Event.all.order('date') : nearbyEvents(params[:nearby])) : searchEvents(params[:search])
     @events = []
     @ufevents.each do |event|
 

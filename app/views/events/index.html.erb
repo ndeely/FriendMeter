@@ -30,9 +30,7 @@
 
 <div class="clear gap"></div>
 
-<% if params[:search] == "" || params[:nearby] == "" || !(params[:nearby].to_i > 0) %>
-  <p>This is not a valid search.</p>
-<% elsif params[:search] != nil %>
+<% if params[:search] != nil %>
   <p>Your search for "<%= params[:search] %>" yielded <%= @events.count %> result<%= @events.count != 1 ? "s" : "" %>.</p>
 <% elsif params[:nearby] != nil %>
   <p>Your search for events within <%= params[:nearby] %> km yielded <%= @events.count %> result<%= @events.count != 1 ? "s" : "" %>.</p>
