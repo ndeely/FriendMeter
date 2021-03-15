@@ -124,12 +124,23 @@ module PermissionsHelper
   #check user ue has location coords set (user id, "u")
   #check event ue has location coords set (event id, "e")
   def coordsSet(ue, s)
+
     if s == "u"
-      return User.find_by(id: ue).lat != nil && 
-          User.find_by(id: ue).lng != nil
+      user = User.find_by(id: ue)
+      if user == nil
+        return false
+      else
+        return user.lat != nil &&
+                  user.lng != nil
+      end
     elsif s == "e"
-      return Event.find_by(id: ue).lat != nil && 
-          Event.find_by(id: ue).lng != nil
+      event = Event.find_by(id: ue)
+      if event == nil
+       return false
+      else
+        return Event.find_by(id: ue).lat != nil &&
+                Event.find_by(id: ue).lng != nil
+      end
     else
       return false
     end
