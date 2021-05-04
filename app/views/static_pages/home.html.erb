@@ -1,19 +1,20 @@
 <h1>FriendMeter</h1>
+<div class="row">
+  <div class="desc col-xs-12 col-md-8">
+      <p>FriendMeter is a Social Media site where you can meet new people, and create and attend events in your area.</p>
+      <p>Currently boasting a whopping <strong><%= User.count %></strong> users, who have created <strong><%= Event.count %></strong> events, we are on track to be the biggest social media website in the world!</p>
+  </div>
 
-<div class="desc col-xs-12 col-md-8">
-    <p>FriendMeter is a Social Media site where you can meet new people, and create and attend events in your area.</p>
-    <p>Currently boasting a whopping <strong><%= User.count %></strong> users, who have created <strong><%= Event.count %></strong> events, we are on track to be the biggest social media website in the world!</p>
-</div>
-
-<!-- show recent reviews in slider -->
-<div class="slider-container featured col-xs-12 col-md-4">
-    <h2>Recent Reviews</h2>
-    <% if @rs.count == 0 %>
-        <p>There are no reviews to display.</p>
-    <% else %>
-        <% @alt = 1 %>
-        <div class="slider-content">
-            <% @rs.each do |r| %>
+  <!-- show recent reviews in slider -->
+  <div class="featured col-xs-12 col-md-4">
+      <h2>Recent Reviews</h2>
+      <% if @rs.count == 0 %>
+          <p>There are no reviews to display.</p>
+      <% else %>
+          <% @alt = 1 %>
+          <div class="slider-container">
+            <div class="slider-content">
+              <% @rs.each do |r| %>
                 <div class="slider-single">
                     <div class="review-sm slider-single-image" alt="<%= @alt.to_s %>">
                         <a href="/users/<%= r.user_id %>">
@@ -26,48 +27,49 @@
                     </div>
                 </div>
                 <% @alt += 1 %>
-            <% end %>
-        </div>
-    <% end %>
-</div>
-<%= javascript_pack_tag "carousel" %>
-
-<div class="clear"></div>
-
-<!-- featured users -->
-<div class="featured col-xs-12 col-md-6">
-    <h2>Featured Users</h2>
-    <% if @fUsers.count == 0 %>
-        <p>There are no users to display.</p>
-    <% else %>
-        <% @fUsers.each do |u| %>
-            <%= getUserSm(u.id) %>
-        <% end %>
-    <% end %>
+              <% end %>
+            </div>
+          </div>
+      <% end %>
+  </div>
+  <%= javascript_pack_tag "carousel" %>
 </div>
 
-<!-- featured events -->
-<div class="featured col-xs-12 col-md-6">
-    <h2>Featured Upcoming Events</h2>
-    <% if @fEvents.count == 0 %>
-        <p>There are no events to display.</p>
-    <% else %>
-        <% @fEvents.each do |e| %>
-            <%= getEventSm(e.id) %>
-        <% end %>
-    <% end %>
-</div>
 
-<!-- featured past events -->
-<div class="featured col-xs-12 col-md-6">
-    <h2>Featured Past Events</h2>
-    <% if @fpEvents.count == 0 %>
-        <p>There are no events to display.</p>
-    <% else %>
-        <% @fpEvents.each do |e| %>
-            <%= getEventSm(e.id) %>
-        <% end %>
-    <% end %>
-</div>
+<div class="row">
+  <!-- featured users -->
+  <div class="featured col-xs-12 col-md-6">
+      <h2>Featured Users</h2>
+      <% if @fUsers.count == 0 %>
+          <p>There are no users to display.</p>
+      <% else %>
+          <% @fUsers.each do |u| %>
+              <%= getUserSm(u.id) %>
+          <% end %>
+      <% end %>
+  </div>
 
-<div class="clear"></div>
+  <!-- featured events -->
+  <div class="featured col-xs-12 col-md-6">
+      <h2>Featured Upcoming Events</h2>
+      <% if @fEvents.count == 0 %>
+          <p>There are no events to display.</p>
+      <% else %>
+          <% @fEvents.each do |e| %>
+              <%= getEventSm(e.id) %>
+          <% end %>
+      <% end %>
+  </div>
+
+  <!-- featured past events -->
+  <div class="featured col-xs-12 col-md-6">
+      <h2>Featured Past Events</h2>
+      <% if @fpEvents.count == 0 %>
+          <p>There are no events to display.</p>
+      <% else %>
+          <% @fpEvents.each do |e| %>
+              <%= getEventSm(e.id) %>
+          <% end %>
+      <% end %>
+  </div>
+</div>
